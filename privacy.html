@@ -42,7 +42,7 @@
   <li><code>claude.ai/api/organizations/…/usage</code> — to retrieve your usage limits</li>
   <li><code>claude.ai/api/account</code> — to retrieve your account name and plan</li>
 </ul>
-<p>The app does not send your data to the developer or any analytics service. The only other network destination is <strong>optional and entirely under your control</strong>: if you configure a webhook (e.g. a Slack or custom HTTP URL) in the app's settings, the app will send your usage percentage to that URL so you receive alerts. This is disabled by default and only active if you set it up.</p>
+<p>The app does not send your data to the developer or any analytics service. The only other network destination is <strong>optional and entirely under your control</strong>: if you configure a webhook (e.g. a Slack or custom HTTP URL) in the app's settings, the app sends a usage alert to that URL when you cross a threshold. That alert contains your usage percentage, your Claude account email address, your plan name, and your reset time. This feature is disabled by default, is sent only to the URL you provide, and is only active if you set it up. You can remove the webhook at any time in settings to stop it.</p>
 
 <h2>Your Control</h2>
 <p>You can remove all locally stored data at any time by deleting the app and its associated data from your <em>~/Library/Application Support</em> folder (the app's container). Signing out or removing an account inside the app deletes its stored session token.</p>
