@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CapMeter — Claude Usage Monitor for macOS</title>
+<meta name="description" content="Track your Claude.ai usage limits in real time from the macOS menu bar. Never hit a limit by surprise again.">
+<meta property="og:title" content="CapMeter — Claude Usage Monitor for macOS">
+<meta property="og:description" content="Track your Claude.ai usage limits in real time from the macOS menu bar.">
+<meta property="og:type" content="website">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #d97757;
+    --orange-light: #f4a07a;
+    --bg: #0d0b0a;
+    --bg2: #141210;
+    --bg3: #1c1916;
+    --text: #f0ece8;
+    --muted: #9b9189;
+    --border: rgba(255,255,255,0.08);
+    --r: 16px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 60px;
+    background: rgba(13,11,10,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo img { width: 28px; height: 28px; border-radius: 7px; }
+  .nav-logo span { font-size: 15px; font-weight: 600; color: var(--text); }
+  .nav-cta {
+    background: var(--orange); color: #fff;
+    padding: 7px 18px; border-radius: 20px;
+    font-size: 13px; font-weight: 600; text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 140px 24px 80px;
+    text-align: center;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(217,119,87,0.12) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(217,119,87,0.12); border: 1px solid rgba(217,119,87,0.25);
+    color: var(--orange-light); font-size: 12px; font-weight: 600;
+    padding: 4px 12px; border-radius: 20px; margin-bottom: 28px;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    max-width: 720px;
+    margin: 0 auto 20px;
+  }
+  .hero h1 span { color: var(--orange); }
+  .hero p {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 40px;
+    line-height: 1.55;
+  }
+  .hero-actions { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--orange); color: #fff;
+    padding: 13px 28px; border-radius: 26px;
+    font-size: 15px; font-weight: 600; text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    color: var(--text); padding: 13px 24px; border-radius: 26px;
+    font-size: 15px; font-weight: 500; text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.10); }
+  .hero-note { margin-top: 16px; font-size: 12px; color: var(--muted); }
+  .hero-note a { color: var(--muted); text-decoration: underline; }
+
+  /* ── App preview ── */
+  .preview {
+    max-width: 360px;
+    margin: 60px auto 0;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    position: relative;
+  }
+  .preview::before {
+    content: '';
+    position: absolute; inset: -1px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(217,119,87,0.2), transparent 60%);
+    pointer-events: none;
+  }
+  .preview-bar {
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 20px;
+  }
+  .preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .preview-dot:nth-child(1) { background: #ff5f57; }
+  .preview-dot:nth-child(2) { background: #febc2e; }
+  .preview-dot:nth-child(3) { background: #28c840; }
+  .preview-ring-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    margin-bottom: 20px;
+  }
+  .preview-ring {
+    width: 80px; height: 80px;
+  }
+  .preview-label { font-size: 11px; color: var(--muted); font-weight: 500; }
+  .preview-pct { font-size: 28px; font-weight: 700; color: var(--orange); }
+  .preview-windows {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .preview-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    font-size: 12px;
+  }
+  .preview-row-label { color: var(--muted); }
+  .preview-row-bar { flex: 1; height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; margin: 0 10px; }
+  .preview-row-fill { height: 100%; border-radius: 2px; background: var(--orange); }
+  .preview-row-val { color: var(--text); font-weight: 600; }
+
+  /* ── Features ── */
+  .section { padding: 80px 24px; max-width: 1000px; margin: 0 auto; }
+  .section-label {
+    text-align: center; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 14px;
+  }
+  .section-title {
+    text-align: center; font-size: clamp(26px, 4vw, 40px);
+    font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px;
+  }
+  .section-sub {
+    text-align: center; font-size: 16px; color: var(--muted);
+    max-width: 500px; margin: 0 auto 56px;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .feature-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+  .feature-card:hover { border-color: rgba(217,119,87,0.3); }
+  .feature-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(217,119,87,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; margin-bottom: 14px;
+  }
+  .feature-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .feature-card p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+  /* ── Pricing ── */
+  .pricing-wrap {
+    max-width: 420px; margin: 0 auto;
+    background: var(--bg2);
+    border: 1px solid rgba(217,119,87,0.3);
+    border-radius: 20px;
+    padding: 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .pricing-wrap::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--orange), var(--orange-light));
+  }
+  .pricing-badge {
+    display: inline-block;
+    background: rgba(217,119,87,0.15); color: var(--orange-light);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 3px 10px; border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  .pricing-price {
+    font-size: 52px; font-weight: 700; letter-spacing: -0.03em;
+    color: var(--text); line-height: 1;
+  }
+  .pricing-price sup { font-size: 22px; vertical-align: super; }
+  .pricing-period { font-size: 14px; color: var(--muted); margin: 6px 0 28px; }
+  .pricing-features { list-style: none; margin-bottom: 32px; text-align: left; }
+  .pricing-features li {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .pricing-features li:last-child { border-bottom: none; }
+  .pricing-features li::before { content: '✓'; color: var(--orange); font-weight: 700; flex-shrink: 0; }
+  .pricing-trial { font-size: 12px; color: var(--muted); margin-top: 14px; }
+
+  /* ── Requirements ── */
+  .req { text-align: center; padding: 32px 24px; }
+  .req p { font-size: 13px; color: var(--muted); }
+  .req strong { color: var(--text); }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer p { font-size: 13px; color: var(--muted); }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; }
+  .footer-links a:hover { color: var(--text); }
+
+  @media (max-width: 600px) {
+    nav { padding: 0 20px; }
+    footer { flex-direction: column; align-items: center; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a class="nav-logo" href="#">
+    <img src="icon.png" alt="CapMeter">
+    <span>CapMeter</span>
+  </a>
+  <a class="nav-cta" href="https://muhammetcansanverdi.gumroad.com/l/claude-monitor">Download — $19.99</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">macOS Menu Bar App</div>
+  <h1>Never hit your<br><span>Claude limit</span> by surprise</h1>
+  <p>CapMeter lives in your menu bar and tracks your Claude.ai usage in real time — so you always know where you stand.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="https://muhammetcansanverdi.gumroad.com/l/claude-monitor">
+      ⬇ Download for macOS
+    </a>
+    <a class="btn-secondary" href="#features">See features</a>
+  </div>
+  <p class="hero-note">14-day free trial · <a href="privacy.html">Privacy Policy</a></p>
+
+  <!-- App preview -->
+  <div class="preview">
+    <div class="preview-bar">
+      <div class="preview-dot"></div>
+      <div class="preview-dot"></div>
+      <div class="preview-dot"></div>
+    </div>
+    <div class="preview-ring-wrap">
+      <svg class="preview-ring" viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="30" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+        <circle cx="40" cy="40" r="30" fill="none" stroke="#d97757" stroke-width="8"
+          stroke-dasharray="188.5" stroke-dashoffset="52.8"
+          stroke-linecap="round" transform="rotate(-90 40 40)"/>
+      </svg>
+      <div class="preview-pct">72%</div>
+      <div class="preview-label">Current Session</div>
+    </div>
+    <div class="preview-windows">
+      <div class="preview-row">
+        <span class="preview-row-label">Current session</span>
+        <div class="preview-row-bar"><div class="preview-row-fill" style="width:72%"></div></div>
+        <span class="preview-row-val">72%</span>
+      </div>
+      <div class="preview-row">
+        <span class="preview-row-label">7 days</span>
+        <div class="preview-row-bar"><div class="preview-row-fill" style="width:38%"></div></div>
+        <span class="preview-row-val">38%</span>
+      </div>
+      <div class="preview-row">
+        <span class="preview-row-label">Resets in</span>
+        <div class="preview-row-bar" style="background:transparent"></div>
+        <span class="preview-row-val">2h 14m</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="section" id="features">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">Everything you need to stay in control</h2>
+  <p class="section-sub">Built for developers and power users who rely on Claude every day.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Real-time usage ring</h3>
+      <p>A circular progress icon in your menu bar shows your current session usage at a glance. Color shifts green → orange → red as you approach the limit.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <h3>Smart notifications</h3>
+      <p>Get alerted at custom thresholds (80%, 90% by default). Set quiet hours so you're never disturbed while sleeping.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>Usage history</h3>
+      <p>30 and 90-day bar charts, weekly comparison, streak tracking. Export your data as CSV or JSON anytime.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👤</div>
+      <h3>Multiple accounts</h3>
+      <p>Switch between Claude accounts instantly. Each account's session is tracked independently.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🪟</div>
+      <h3>Floating widget</h3>
+      <p>A draggable mini-widget that floats above all your windows and spaces — always visible when you need it.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <h3>Slack & webhook alerts</h3>
+      <p>Send rich Slack messages or HTTP webhooks when thresholds are crossed — great for teams sharing a Claude account.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✨</div>
+      <h3>Liquid Glass theme</h3>
+      <p>Native macOS Tahoe Liquid Glass design — the app looks right at home on your Mac.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Auto-refresh & countdown</h3>
+      <p>Live countdown to your session reset. Automatically fetches fresh data the moment your session renews.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="section" style="padding-top:0">
+  <div class="section-label">Pricing</div>
+  <h2 class="section-title">Simple, one-time price</h2>
+  <p class="section-sub">No subscriptions. Pay once, use forever. Free updates included.</p>
+  <div class="pricing-wrap">
+    <div class="pricing-badge">One-time purchase</div>
+    <div class="pricing-price"><sup>$</sup>19.99</div>
+    <p class="pricing-period">Pay once · Use forever</p>
+    <ul class="pricing-features">
+      <li>All current features</li>
+      <li>Free updates</li>
+      <li>Multiple Claude accounts</li>
+      <li>Slack & webhook integration</li>
+      <li>Usage history & export</li>
+      <li>Floating widget</li>
+    </ul>
+    <a class="btn-primary" href="https://muhammetcansanverdi.gumroad.com/l/claude-monitor" style="width:100%;justify-content:center;font-size:16px;padding:14px">
+      Get CapMeter
+    </a>
+    <p class="pricing-trial">Includes 14-day free trial — no credit card required</p>
+  </div>
+</section>
+
+<!-- Requirements -->
+<div class="req">
+  <p><strong>System requirements:</strong> macOS 12.0 Monterey or later · Apple Silicon or Intel · ~95 MB</p>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 Muhammet Can Şanverdi</p>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="https://github.com/MuhammetSanverdi/capmeter/issues">Support</a>
+    <a href="https://muhammetcansanverdi.gumroad.com/l/claude-monitor">Buy</a>
+  </div>
+</footer>
+
+</body>
+</html>

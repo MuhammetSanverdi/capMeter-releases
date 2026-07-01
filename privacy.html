@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — CapMeter</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 680px; margin: 60px auto; padding: 0 24px; color: #1a1a1a; line-height: 1.7; }
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  h2 { font-size: 17px; font-weight: 600; margin-top: 36px; }
+  p, li { font-size: 15px; color: #333; }
+  .meta { font-size: 13px; color: #888; margin-bottom: 40px; }
+  a { color: #007AFF; }
+</style>
+</head>
+<body>
+<h1>Privacy Policy</h1>
+<p class="meta">Last updated: July 1, 2026</p>
+
+<p>CapMeter ("the app") is a macOS menu bar utility that displays your personal Claude.ai usage statistics. This policy explains how the app handles your data.</p>
+
+<h2>Data We Do Not Collect</h2>
+<p>The app does <strong>not</strong> collect, transmit, or share any personal data with the developer or any third party. Specifically:</p>
+<ul>
+  <li>No analytics or tracking</li>
+  <li>No crash reporting sent externally</li>
+  <li>No advertising identifiers</li>
+  <li>No account credentials stored outside your device</li>
+</ul>
+
+<h2>Data Stored Locally</h2>
+<p>The app stores the following data <strong>only on your device</strong>:</p>
+<ul>
+  <li><strong>Session token</strong> — Your Claude.ai session cookie, stored in an isolated, sandboxed Electron session. Used solely to fetch your usage data from Claude.ai.</li>
+  <li><strong>Usage history</strong> — A local log of your past usage percentages, stored in the app's sandboxed container. Used to display the history chart in the app.</li>
+  <li><strong>App preferences</strong> — Notification settings, refresh interval, display options. Stored locally via Electron's app data storage.</li>
+</ul>
+
+<h2>Network Requests</h2>
+<p>The app communicates with <strong>claude.ai</strong> on your behalf, using your own authenticated session, to retrieve your usage data. Requests are made to:</p>
+<ul>
+  <li><code>claude.ai/api/organizations/…/usage</code> — to retrieve your usage limits</li>
+  <li><code>claude.ai/api/account</code> — to retrieve your account name and plan</li>
+</ul>
+<p>The app does not send your data to the developer or any analytics service. The only other network destination is <strong>optional and entirely under your control</strong>: if you configure a webhook (e.g. a Slack or custom HTTP URL) in the app's settings, the app will send your usage percentage to that URL so you receive alerts. This is disabled by default and only active if you set it up.</p>
+
+<h2>Your Control</h2>
+<p>You can remove all locally stored data at any time by deleting the app and its associated data from your <em>~/Library/Application Support</em> folder (the app's container). Signing out or removing an account inside the app deletes its stored session token.</p>
+
+<h2>Contact</h2>
+<p>Questions? Contact: <a href="mailto:muhammetsanverdi97@gmail.com">muhammetsanverdi97@gmail.com</a></p>
+</body>
+</html>
