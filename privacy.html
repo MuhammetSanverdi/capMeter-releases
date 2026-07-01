@@ -20,20 +20,22 @@
 <p>CapMeter ("the app") is a macOS menu bar utility that displays your personal Claude.ai usage statistics. This policy explains how the app handles your data.</p>
 
 <h2>Data We Do Not Collect</h2>
-<p>The app does <strong>not</strong> collect, transmit, or share any personal data with the developer or any third party. Specifically:</p>
+<p>The app does <strong>not</strong> collect your personal data, and does not send any of your data to the developer or to any analytics, advertising, or tracking service. Specifically:</p>
 <ul>
   <li>No analytics or tracking</li>
   <li>No crash reporting sent externally</li>
   <li>No advertising identifiers</li>
+  <li>No data sent to the developer's servers (the developer has no servers)</li>
   <li>No account credentials stored outside your device</li>
 </ul>
+<p>The only case where data leaves your device to a third party is a webhook you optionally set up yourself — described under "Network Requests" below.</p>
 
 <h2>Data Stored Locally</h2>
 <p>The app stores the following data <strong>only on your device</strong>:</p>
 <ul>
-  <li><strong>Session token</strong> — Your Claude.ai session cookie, stored in an isolated, sandboxed Electron session. Used solely to fetch your usage data from Claude.ai.</li>
-  <li><strong>Usage history</strong> — A local log of your past usage percentages, stored in the app's sandboxed container. Used to display the history chart in the app.</li>
-  <li><strong>App preferences</strong> — Notification settings, refresh interval, display options. Stored locally via Electron's app data storage.</li>
+  <li><strong>Account information</strong> — For each Claude account you add, the app stores its session token (cookie), account name, and email address locally, so you can switch between accounts. Session tokens are kept in an isolated, sandboxed session.</li>
+  <li><strong>Usage history</strong> — A local log of your past usage (percentages, plan, and the associated account email), stored in the app's sandboxed container. Used to display the history chart in the app.</li>
+  <li><strong>App preferences</strong> — Notification settings, refresh interval, display options, and any webhook URL you configure. Stored locally via Electron's app data storage.</li>
 </ul>
 
 <h2>Network Requests</h2>
