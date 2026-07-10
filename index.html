@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CapMeter — Claude Usage Monitor for macOS</title>
-<meta name="description" content="Track your Claude.ai usage limits in real time from the macOS menu bar. Never hit a limit by surprise again.">
+<meta name="description" content="Track your Claude.ai usage limits in real time from the macOS menu bar. See your session, weekly, and per-model limits at a glance — never hit a limit by surprise.">
 <meta property="og:title" content="CapMeter — Claude Usage Monitor for macOS">
 <meta property="og:description" content="Track your Claude.ai usage limits in real time from the macOS menu bar.">
 <meta property="og:type" content="website">
@@ -79,19 +79,25 @@
   .hero p {
     font-size: clamp(16px, 2vw, 20px);
     color: var(--muted);
-    max-width: 520px;
+    max-width: 540px;
     margin: 0 auto 40px;
     line-height: 1.55;
   }
   .hero-actions { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--orange); color: #fff;
-    padding: 13px 28px; border-radius: 26px;
-    font-size: 15px; font-weight: 600; text-decoration: none;
-    transition: opacity 0.2s, transform 0.2s;
+
+  /* Mac App Store badge */
+  .btn-appstore {
+    display: inline-flex; align-items: center; gap: 11px;
+    background: #000; border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; padding: 11px 22px; border-radius: 12px;
+    text-decoration: none; transition: transform 0.2s, border-color 0.2s;
   }
-  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-appstore:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.4); }
+  .btn-appstore .apple { font-size: 26px; line-height: 1; }
+  .btn-appstore .txt { text-align: left; line-height: 1.15; }
+  .btn-appstore .txt small { display: block; font-size: 10px; opacity: 0.85; letter-spacing: 0.02em; }
+  .btn-appstore .txt strong { display: block; font-size: 18px; font-weight: 600; }
+
   .btn-secondary {
     display: inline-flex; align-items: center; gap: 8px;
     background: rgba(255,255,255,0.06); border: 1px solid var(--border);
@@ -100,7 +106,15 @@
     transition: background 0.2s;
   }
   .btn-secondary:hover { background: rgba(255,255,255,0.10); }
-  .hero-note { margin-top: 16px; font-size: 12px; color: var(--muted); }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--orange); color: #fff;
+    padding: 13px 28px; border-radius: 26px;
+    font-size: 15px; font-weight: 600; text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+  .hero-note { margin-top: 18px; font-size: 12px; color: var(--muted); }
   .hero-note a { color: var(--muted); text-decoration: underline; }
 
   /* ── App preview ── */
@@ -120,39 +134,27 @@
     background: linear-gradient(135deg, rgba(217,119,87,0.2), transparent 60%);
     pointer-events: none;
   }
-  .preview-bar {
-    display: flex; align-items: center; gap: 6px;
-    margin-bottom: 20px;
-  }
+  .preview-bar { display: flex; align-items: center; gap: 6px; margin-bottom: 20px; }
   .preview-dot { width: 10px; height: 10px; border-radius: 50%; }
   .preview-dot:nth-child(1) { background: #ff5f57; }
   .preview-dot:nth-child(2) { background: #febc2e; }
   .preview-dot:nth-child(3) { background: #28c840; }
-  .preview-ring-wrap {
-    display: flex; flex-direction: column; align-items: center; gap: 6px;
-    margin-bottom: 20px;
-  }
-  .preview-ring {
-    width: 80px; height: 80px;
-  }
+  .preview-ring-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 20px; }
+  .preview-ring { width: 80px; height: 80px; }
   .preview-label { font-size: 11px; color: var(--muted); font-weight: 500; }
   .preview-pct { font-size: 28px; font-weight: 700; color: var(--orange); }
-  .preview-windows {
-    display: flex; flex-direction: column; gap: 8px;
-  }
+  .preview-windows { display: flex; flex-direction: column; gap: 8px; }
   .preview-row {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 10px;
-    background: rgba(255,255,255,0.04);
-    border-radius: 8px;
-    font-size: 12px;
+    padding: 8px 10px; background: rgba(255,255,255,0.04);
+    border-radius: 8px; font-size: 12px;
   }
   .preview-row-label { color: var(--muted); }
   .preview-row-bar { flex: 1; height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; margin: 0 10px; }
   .preview-row-fill { height: 100%; border-radius: 2px; background: var(--orange); }
   .preview-row-val { color: var(--text); font-weight: 600; }
 
-  /* ── Features ── */
+  /* ── Sections ── */
   .section { padding: 80px 24px; max-width: 1000px; margin: 0 auto; }
   .section-label {
     text-align: center; font-size: 12px; font-weight: 600;
@@ -165,7 +167,7 @@
   }
   .section-sub {
     text-align: center; font-size: 16px; color: var(--muted);
-    max-width: 500px; margin: 0 auto 56px;
+    max-width: 520px; margin: 0 auto 56px;
   }
   .features-grid {
     display: grid;
@@ -188,6 +190,15 @@
   }
   .feature-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
   .feature-card p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+  /* ── Privacy strip ── */
+  .privacy-strip {
+    max-width: 720px; margin: 0 auto; text-align: center;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 32px 28px;
+  }
+  .privacy-strip h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+  .privacy-strip p { font-size: 14px; color: var(--muted); max-width: 560px; margin: 0 auto; }
 
   /* ── Pricing ── */
   .pricing-wrap {
@@ -253,27 +264,33 @@
 </head>
 <body>
 
+<!--
+  NOT: Uygulama App Store'da yayınlanınca aşağıdaki 3 "#appstore" linkini
+  gerçek App Store URL'iyle değiştir (nav, hero, pricing).
+-->
+
 <!-- Nav -->
 <nav>
   <a class="nav-logo" href="#">
     <img src="icon.png" alt="CapMeter">
     <span>CapMeter</span>
   </a>
-  <a class="nav-cta" href="https://muhammetcansanverdi.gumroad.com/l/claude-monitor">Download — $19.99</a>
+  <a class="nav-cta" href="#appstore">Get on the App Store</a>
 </nav>
 
 <!-- Hero -->
 <section class="hero">
   <div class="hero-badge">macOS Menu Bar App</div>
-  <h1>Never hit your<br><span>Claude limit</span> by surprise</h1>
-  <p>CapMeter lives in your menu bar and tracks your Claude.ai usage in real time — so you always know where you stand.</p>
+  <h1>Know your<br><span>Claude limits</span> before you hit them</h1>
+  <p>CapMeter lives in your menu bar and tracks your Claude.ai usage in real time — session, weekly, and per-model limits, all at a glance.</p>
   <div class="hero-actions">
-    <a class="btn-primary" href="https://muhammetcansanverdi.gumroad.com/l/claude-monitor">
-      ⬇ Download for macOS
+    <a class="btn-appstore" href="#appstore">
+      <span class="apple"></span>
+      <span class="txt"><small>Download on the</small><strong>Mac App Store</strong></span>
     </a>
     <a class="btn-secondary" href="#features">See features</a>
   </div>
-  <p class="hero-note">14-day free trial · <a href="privacy.html">Privacy Policy</a></p>
+  <p class="hero-note">Free 14-day trial · No credit card to install · <a href="privacy.html">Privacy Policy</a></p>
 
   <!-- App preview -->
   <div class="preview">
@@ -290,18 +307,18 @@
           stroke-linecap="round" transform="rotate(-90 40 40)"/>
       </svg>
       <div class="preview-pct">72%</div>
-      <div class="preview-label">Current Session</div>
+      <div class="preview-label">Current session</div>
     </div>
     <div class="preview-windows">
       <div class="preview-row">
-        <span class="preview-row-label">Current session</span>
-        <div class="preview-row-bar"><div class="preview-row-fill" style="width:72%"></div></div>
-        <span class="preview-row-val">72%</span>
-      </div>
-      <div class="preview-row">
-        <span class="preview-row-label">7 days</span>
+        <span class="preview-row-label">All sessions</span>
         <div class="preview-row-bar"><div class="preview-row-fill" style="width:38%"></div></div>
         <span class="preview-row-val">38%</span>
+      </div>
+      <div class="preview-row">
+        <span class="preview-row-label">Opus (weekly)</span>
+        <div class="preview-row-bar"><div class="preview-row-fill" style="width:54%"></div></div>
+        <span class="preview-row-val">54%</span>
       </div>
       <div class="preview-row">
         <span class="preview-row-label">Resets in</span>
@@ -316,12 +333,22 @@
 <section class="section" id="features">
   <div class="section-label">Features</div>
   <h2 class="section-title">Everything you need to stay in control</h2>
-  <p class="section-sub">Built for developers and power users who rely on Claude every day.</p>
+  <p class="section-sub">For anyone who relies on Claude every day — from casual chats to heavy coding.</p>
   <div class="features-grid">
     <div class="feature-card">
       <div class="feature-icon">📊</div>
       <h3>Real-time usage ring</h3>
       <p>A circular progress icon in your menu bar shows your current session usage at a glance. Color shifts green → orange → red as you approach the limit.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>Limit prediction</h3>
+      <p>CapMeter watches your burn rate and tells you when you'll hit your limit — so you can pace yourself before you're locked out.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧩</div>
+      <h3>Per-model limits</h3>
+      <p>See your session, weekly, and per-model caps (Opus, Fable and more) side by side — pulled live from your Claude account.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🔔</div>
@@ -331,72 +358,69 @@
     <div class="feature-card">
       <div class="feature-icon">📈</div>
       <h3>Usage history</h3>
-      <p>30 and 90-day bar charts, weekly comparison, streak tracking. Export your data as CSV or JSON anytime.</p>
+      <p>14-day charts, weekly comparison and trends. Export your data as CSV or JSON anytime.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">👤</div>
       <h3>Multiple accounts</h3>
-      <p>Switch between Claude accounts instantly. Each account's session is tracked independently.</p>
+      <p>Switch between Claude accounts instantly. Each account's usage and history is tracked independently.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🪟</div>
       <h3>Floating widget</h3>
-      <p>A draggable mini-widget that floats above all your windows and spaces — always visible when you need it.</p>
+      <p>A draggable mini-widget that floats above all your windows and spaces — perfect while coding in the terminal.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🔗</div>
       <h3>Slack & webhook alerts</h3>
-      <p>Send rich Slack messages or HTTP webhooks when thresholds are crossed — great for teams sharing a Claude account.</p>
+      <p>Send rich Slack messages or HTTP webhooks when thresholds are crossed — you choose the destination.</p>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">✨</div>
-      <h3>Liquid Glass theme</h3>
-      <p>Native macOS Tahoe Liquid Glass design — the app looks right at home on your Mac.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">⚡</div>
-      <h3>Auto-refresh & countdown</h3>
-      <p>Live countdown to your session reset. Automatically fetches fresh data the moment your session renews.</p>
-    </div>
+  </div>
+</section>
+
+<!-- Privacy -->
+<section class="section" style="padding-top:0">
+  <div class="privacy-strip">
+    <h3>🔒 Your data stays on your Mac</h3>
+    <p>CapMeter reads your usage from your own Claude.ai session and stores everything locally. Nothing is ever sent to a server — there are no analytics, no tracking, and no developer backend. CapMeter is an independent app and is not affiliated with Anthropic.</p>
   </div>
 </section>
 
 <!-- Pricing -->
 <section class="section" style="padding-top:0">
   <div class="section-label">Pricing</div>
-  <h2 class="section-title">Simple, one-time price</h2>
-  <p class="section-sub">No subscriptions. Pay once, use forever. Free updates included.</p>
+  <h2 class="section-title">Try it free, then pay once</h2>
+  <p class="section-sub">Download free and use every feature for 14 days. One in-app purchase unlocks it for good — no subscription.</p>
   <div class="pricing-wrap">
-    <div class="pricing-badge">One-time purchase</div>
-    <div class="pricing-price"><sup>$</sup>19.99</div>
-    <p class="pricing-period">Pay once · Use forever</p>
+    <div class="pricing-badge">One-time unlock</div>
+    <div class="pricing-price"><sup>$</sup>9.99</div>
+    <p class="pricing-period">After a free 14-day trial · No subscription</p>
     <ul class="pricing-features">
-      <li>All current features</li>
-      <li>Free updates</li>
-      <li>Multiple Claude accounts</li>
-      <li>Slack & webhook integration</li>
-      <li>Usage history & export</li>
+      <li>Real-time usage & limit prediction</li>
+      <li>Session, weekly & per-model limits</li>
       <li>Floating widget</li>
+      <li>Usage history & export</li>
+      <li>Notifications & Slack / webhook alerts</li>
+      <li>Multiple Claude accounts</li>
     </ul>
-    <a class="btn-primary" href="https://muhammetcansanverdi.gumroad.com/l/claude-monitor" style="width:100%;justify-content:center;font-size:16px;padding:14px">
-      Get CapMeter
+    <a class="btn-primary" href="#appstore" style="width:100%;justify-content:center;font-size:16px;padding:14px">
+      Get CapMeter on the App Store
     </a>
-    <p class="pricing-trial">Includes 14-day free trial — no credit card required</p>
+    <p class="pricing-trial">Requires an active Claude.ai account · macOS 12+</p>
   </div>
 </section>
 
 <!-- Requirements -->
 <div class="req">
-  <p><strong>System requirements:</strong> macOS 12.0 Monterey or later · Apple Silicon or Intel · ~95 MB</p>
+  <p><strong>System requirements:</strong> macOS 12.0 Monterey or later · Apple Silicon or Intel · Requires an active Claude.ai account</p>
 </div>
 
 <!-- Footer -->
 <footer>
-  <p>© 2026 Muhammet Can Şanverdi</p>
+  <p>© 2026 Muhammet Can Şanverdi · Not affiliated with Anthropic</p>
   <div class="footer-links">
     <a href="privacy.html">Privacy Policy</a>
-    <a href="https://github.com/MuhammetSanverdi/capmeter/issues">Support</a>
-    <a href="https://muhammetcansanverdi.gumroad.com/l/claude-monitor">Buy</a>
+    <a href="https://github.com/MuhammetSanverdi/capMeter-releases/issues">Support</a>
   </div>
 </footer>
 
