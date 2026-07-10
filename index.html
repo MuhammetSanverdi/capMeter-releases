@@ -185,11 +185,20 @@
   .hero-shot img { width: 100%; display: block; }
 
   /* ── Showcase ── */
-  .showcase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-  .shot-card { border-radius: 20px; overflow: hidden; padding: 14px; }
-  .shot-card img { width: 100%; display: block; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
-  .shot-card p { font-size: 13px; color: var(--muted); text-align: center; margin-top: 14px; }
-  .shot-card p strong { color: var(--text); font-weight: 600; }
+  .showcase-wide { max-width: 900px; margin: 0 auto 28px; border-radius: 22px; padding: 14px; }
+  .showcase-wide img { width: 100%; display: block; border-radius: 13px; border: 1px solid rgba(255,255,255,0.08); }
+  .showcase-wide p { text-align: center; font-size: 13.5px; color: var(--muted); margin-top: 14px; }
+  .showcase-wide p strong { color: var(--text); font-weight: 600; }
+  .showcase-pops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; max-width: 900px; margin: 0 auto; }
+  .pop-card { text-align: center; }
+  .pop-card img {
+    width: 100%; display: block; border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 22px 55px rgba(0,0,0,0.5);
+  }
+  .pop-card p { font-size: 13.5px; color: var(--muted); margin-top: 16px; line-height: 1.5; }
+  .pop-card p strong { color: var(--text); font-weight: 600; }
+  @media (max-width: 720px) { .showcase-pops { grid-template-columns: 1fr; max-width: 320px; } }
 
   /* ── Sections ── */
   .section { padding: 80px 24px; max-width: 1040px; margin: 0 auto; }
@@ -324,11 +333,15 @@
 <section class="section" style="padding-top:0">
   <div class="section-label">See it in action</div>
   <h2 class="section-title">Right where you work</h2>
-  <p class="section-sub">From the menu bar to a floating widget over your terminal — always a glance away.</p>
-  <div class="showcase-grid">
-    <div class="shot-card glass"><img src="shot-widget.jpg" alt="Floating widget over a terminal"><p><strong>Floating widget</strong> — stays visible while you code</p></div>
-    <div class="shot-card glass"><img src="shot-history.jpg" alt="Usage history charts"><p><strong>Usage history</strong> — trends, streaks & export</p></div>
-    <div class="shot-card glass"><img src="shot-accounts.jpg" alt="Multiple accounts"><p><strong>Multiple accounts</strong> — switch in one click</p></div>
+  <p class="section-sub">A floating widget over your terminal, and a rich popup one click away in the menu bar.</p>
+  <div class="showcase-wide glass">
+    <img src="shot-widget.jpg" alt="CapMeter floating widget over a terminal">
+    <p><strong>Floating widget</strong> — stays visible above every window while you code</p>
+  </div>
+  <div class="showcase-pops">
+    <div class="pop-card"><img src="pop-history.jpg" alt="Usage history and charts"><p><strong>History &amp; trends</strong><br>14-day charts, streaks &amp; export</p></div>
+    <div class="pop-card"><img src="pop-notifs.jpg" alt="Notification settings"><p><strong>Alerts your way</strong><br>Thresholds, quiet hours, Slack</p></div>
+    <div class="pop-card"><img src="pop-accounts.jpg" alt="Multiple Claude accounts"><p><strong>Multiple accounts</strong><br>Switch in one click</p></div>
   </div>
 </section>
 
