@@ -176,6 +176,21 @@
   .preview-row-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
   .preview-row-val { color: var(--text); font-weight: 600; }
 
+  /* ── Hero product shot ── */
+  .hero-shot {
+    max-width: 940px; margin: 68px auto 0; border-radius: 22px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.14);
+    box-shadow: inset 0 1.5px 0 rgba(255,255,255,0.28), 0 44px 110px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.3);
+  }
+  .hero-shot img { width: 100%; display: block; }
+
+  /* ── Showcase ── */
+  .showcase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .shot-card { border-radius: 20px; overflow: hidden; padding: 14px; }
+  .shot-card img { width: 100%; display: block; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
+  .shot-card p { font-size: 13px; color: var(--muted); text-align: center; margin-top: 14px; }
+  .shot-card p strong { color: var(--text); font-weight: 600; }
+
   /* ── Sections ── */
   .section { padding: 80px 24px; max-width: 1040px; margin: 0 auto; }
   .section-label {
@@ -282,43 +297,9 @@
   </div>
   <p class="hero-note">Free 14-day trial · No credit card to install · <a href="privacy.html">Privacy Policy</a></p>
 
-  <!-- App preview -->
-  <div class="preview glass">
-    <div class="preview-bar">
-      <div class="preview-dot"></div><div class="preview-dot"></div><div class="preview-dot"></div>
-    </div>
-    <div class="preview-top">
-      <svg class="preview-ring" viewBox="0 0 92 92">
-        <circle cx="46" cy="46" r="34" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="9"/>
-        <circle cx="46" cy="46" r="34" fill="none" stroke="url(#g)" stroke-width="9"
-          stroke-dasharray="213.6" stroke-dashoffset="60" stroke-linecap="round" transform="rotate(-90 46 46)"/>
-        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#f4a07a"/><stop offset="1" stop-color="#d97757"/>
-        </linearGradient></defs>
-      </svg>
-      <div class="preview-hero-txt">
-        <div class="preview-eyebrow">Current session</div>
-        <div class="preview-big">72%</div>
-        <div class="preview-sub">Resets in 2h 14m</div>
-      </div>
-    </div>
-    <div class="preview-windows">
-      <div class="preview-row">
-        <span class="preview-row-label">All sessions</span>
-        <div class="preview-row-bar"><div class="preview-row-fill" style="width:38%"></div></div>
-        <span class="preview-row-val">38%</span>
-      </div>
-      <div class="preview-row">
-        <span class="preview-row-label">Opus</span>
-        <div class="preview-row-bar"><div class="preview-row-fill" style="width:54%"></div></div>
-        <span class="preview-row-val">54%</span>
-      </div>
-      <div class="preview-row">
-        <span class="preview-row-label">Fable</span>
-        <div class="preview-row-bar"><div class="preview-row-fill" style="width:12%"></div></div>
-        <span class="preview-row-val">12%</span>
-      </div>
-    </div>
+  <!-- App product shot -->
+  <div class="hero-shot">
+    <img src="shot-main.jpg" alt="CapMeter running in the macOS menu bar" loading="eager">
   </div>
 </section>
 
@@ -336,6 +317,18 @@
     <div class="feature-card glass"><div class="feature-icon">👤</div><h3>Multiple accounts</h3><p>Switch between Claude accounts instantly. Each account's usage and history is tracked independently.</p></div>
     <div class="feature-card glass"><div class="feature-icon">🪟</div><h3>Floating widget</h3><p>A draggable mini-widget that floats above all your windows and spaces — perfect while coding in the terminal.</p></div>
     <div class="feature-card glass"><div class="feature-icon">🔗</div><h3>Slack & webhook alerts</h3><p>Send rich Slack messages or HTTP webhooks when thresholds are crossed — you choose the destination.</p></div>
+  </div>
+</section>
+
+<!-- Showcase -->
+<section class="section" style="padding-top:0">
+  <div class="section-label">See it in action</div>
+  <h2 class="section-title">Right where you work</h2>
+  <p class="section-sub">From the menu bar to a floating widget over your terminal — always a glance away.</p>
+  <div class="showcase-grid">
+    <div class="shot-card glass"><img src="shot-widget.jpg" alt="Floating widget over a terminal"><p><strong>Floating widget</strong> — stays visible while you code</p></div>
+    <div class="shot-card glass"><img src="shot-history.jpg" alt="Usage history charts"><p><strong>Usage history</strong> — trends, streaks & export</p></div>
+    <div class="shot-card glass"><img src="shot-accounts.jpg" alt="Multiple accounts"><p><strong>Multiple accounts</strong> — switch in one click</p></div>
   </div>
 </section>
 
