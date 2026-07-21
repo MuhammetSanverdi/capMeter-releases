@@ -18,12 +18,14 @@
     --muted: rgba(246,243,240,0.62);
     --faint: rgba(246,243,240,0.42);
     --glass-bg: rgba(255,255,255,0.065);
-    --glass-bg-strong: rgba(255,255,255,0.09);
     --glass-brd: rgba(255,255,255,0.14);
     --radius: 26px;
   }
 
-  html { scroll-behavior: smooth; }
+  /* scroll-padding-top keeps anchor targets clear of the fixed glass nav on jump/scroll.
+     The #idemo demo is exempt — a JS handler scrolls it a bit past its top so the sticky
+     demo pins full-screen and the nav fades (negative scroll-margin is clamped to 0 in Chromium). */
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
@@ -34,22 +36,20 @@
     overflow-x: hidden;
   }
 
-  /* ── Background liquid-glass orbs ── */
+  /* ── Background ── */
   .bg {
     position: fixed; inset: 0; z-index: -2; overflow: hidden;
-    background:
-      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(217,119,87,0.10), transparent 60%),
-      #09080e;
+    background: url('icons/tahoe-dark.jpg') center/cover no-repeat;
   }
-  .orb { position: absolute; border-radius: 50%; filter: blur(100px); }
-  .orb.a { width: 560px; height: 560px; top: -140px; left: -100px; background: #d97757; opacity: 0.45; }
-  .orb.b { width: 520px; height: 520px; top: 22%; right: -160px; background: #7b5cff; opacity: 0.28; }
-  .orb.c { width: 480px; height: 480px; bottom: -160px; left: 28%; background: #f4a07a; opacity: 0.30; }
-  .orb.d { width: 400px; height: 400px; bottom: 12%; right: 20%; background: #d97757; opacity: 0.18; }
-  /* subtle noise/vignette */
+  /* dark overlay for text readability */
+  .bg::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(0,0,0,0.38);
+  }
+  /* subtle vignette */
   .bg::after {
     content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 120% 100% at 50% 50%, transparent 55%, rgba(0,0,0,0.5) 100%);
+    background: radial-gradient(ellipse 130% 100% at 50% 50%, transparent 40%, rgba(0,0,0,0.45) 100%);
   }
 
   /* ── Glass primitive ── */
@@ -69,13 +69,39 @@
   /* ── Nav ── */
   nav {
     position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 100;
+    transition: opacity 0.3s;
     width: min(1040px, calc(100% - 32px));
     display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 12px 10px 18px; border-radius: 20px;
+    padding: 10px 12px 10px 18px; border-radius: 9999px;
+    backdrop-filter: url("#liquid-glass-1") saturate(1.4);
+    -webkit-backdrop-filter: url("#liquid-glass-1") saturate(1.4);
+    /* Dark scrim under the white glass highlight dims whatever shows through the filter,
+       so bleed-through content (e.g. the hero heading) can't drown the nav-link text. */
+    background:
+      linear-gradient(170deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.07) 100%),
+      rgba(18,18,28,0.34);
+    border: 1px solid rgba(255,255,255,0.28);
+    box-shadow:
+      inset 0 1.5px 0 rgba(255,255,255,0.55),
+      inset 0 -1px 0 rgba(255,255,255,0.06),
+      inset 1px 0 0 rgba(255,255,255,0.08),
+      inset -1px 0 0 rgba(255,255,255,0.08),
+      0 8px 40px rgba(0,0,0,0.40),
+      0 1px 3px rgba(0,0,0,0.30);
   }
   .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .nav-logo img { width: 30px; height: 30px; border-radius: 8px; }
   .nav-logo span { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+  .nav-links { display: flex; align-items: center; gap: 2px; }
+  .nav-links a {
+    color: rgba(246,243,240,0.92); font-size: 13.5px; font-weight: 600; text-decoration: none;
+    padding: 7px 13px; border-radius: 10px; white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.09); }
+  /* Center links don't fit alongside logo + CTA on narrow pills — drop them, keep the CTA */
+  @media (max-width: 820px) { .nav-links { display: none; } }
   .nav-cta {
     background: linear-gradient(180deg, var(--accent2), var(--accent));
     color: #fff; padding: 8px 18px; border-radius: 14px;
@@ -112,31 +138,6 @@
   }
   .hero-actions { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
 
-  /* App Store badge */
-  .btn-appstore {
-    display: inline-flex; align-items: center; gap: 12px;
-    padding: 11px 22px; border-radius: 15px; text-decoration: none; color: #fff;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.16);
-    backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 10px 30px rgba(0,0,0,0.4);
-    transition: transform 0.2s, border-color 0.2s;
-  }
-  .btn-appstore:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.32); }
-  .btn-appstore .apple { font-size: 27px; line-height: 1; }
-  .btn-appstore .txt { text-align: left; line-height: 1.15; }
-  .btn-appstore .txt small { display: block; font-size: 10px; opacity: 0.85; letter-spacing: 0.02em; }
-  .btn-appstore .txt strong { display: block; font-size: 18px; font-weight: 600; }
-
-  .btn-ghost {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 13px 24px; border-radius: 15px; text-decoration: none;
-    color: var(--text); font-size: 15px; font-weight: 500;
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    transition: background 0.2s;
-  }
-  .btn-ghost:hover { background: rgba(255,255,255,0.10); }
   .btn-cta {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     padding: 14px 28px; border-radius: 15px; text-decoration: none; color: #fff;
@@ -149,46 +150,13 @@
   .hero-note { margin-top: 20px; font-size: 12.5px; color: var(--faint); }
   .hero-note a { color: var(--faint); text-decoration: underline; }
 
-  /* ── App preview (glass) ── */
-  .preview {
-    max-width: 380px; margin: 66px auto 0; padding: 26px; border-radius: 28px;
-    position: relative;
-  }
-  .preview-bar { display: flex; align-items: center; gap: 7px; margin-bottom: 22px; }
-  .preview-dot { width: 11px; height: 11px; border-radius: 50%; }
-  .preview-dot:nth-child(1) { background: #ff5f57; }
-  .preview-dot:nth-child(2) { background: #febc2e; }
-  .preview-dot:nth-child(3) { background: #28c840; }
-  .preview-top { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
-  .preview-ring { width: 92px; height: 92px; flex-shrink: 0; }
-  .preview-hero-txt { text-align: left; }
-  .preview-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
-  .preview-big { font-size: 30px; font-weight: 700; color: var(--text); line-height: 1.1; }
-  .preview-sub { font-size: 12px; color: var(--muted); }
-  .preview-windows { display: flex; flex-direction: column; gap: 9px; }
-  .preview-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 9px 12px; border-radius: 12px; font-size: 12px;
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07);
-  }
-  .preview-row-label { color: var(--muted); }
-  .preview-row-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.10); border-radius: 3px; margin: 0 12px; overflow: hidden; }
-  .preview-row-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
-  .preview-row-val { color: var(--text); font-weight: 600; }
-
-  /* ── Hero product shot ── */
-  .hero-shot {
-    max-width: 940px; margin: 68px auto 0; border-radius: 22px; overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.14);
-    box-shadow: inset 0 1.5px 0 rgba(255,255,255,0.28), 0 44px 110px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.3);
-  }
-  .hero-shot img { width: 100%; display: block; }
-
   /* ── Showcase ── */
-  .showcase-wide { max-width: 900px; margin: 0 auto 28px; border-radius: 22px; padding: 14px; }
-  .showcase-wide img { width: 100%; display: block; border-radius: 13px; border: 1px solid rgba(255,255,255,0.08); }
-  .showcase-wide p { text-align: center; font-size: 13.5px; color: var(--muted); margin-top: 14px; }
-  .showcase-wide p strong { color: var(--text); font-weight: 600; }
+  /* !important needed: base look is set via inline style, which otherwise beats this rule's specificity */
+  #d4Widget:hover {
+    background: rgba(28, 28, 36, 0.92) !important;
+    border-color: rgba(255,255,255,0.24) !important;
+  }
+  #d4Widget:active { cursor: grabbing; }
   .showcase-pops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; max-width: 900px; margin: 0 auto; }
   .pop-card { text-align: center; }
   .pop-card img {
@@ -214,17 +182,22 @@
   .feature-card:hover { transform: translateY(-4px); }
   .feature-icon {
     width: 44px; height: 44px; border-radius: 13px;
-    display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
     background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
     border: 1px solid rgba(255,255,255,0.10);
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+  .feature-icon svg, .feature-icon i svg {
+    width: 20px; height: 20px; stroke: var(--accent2);
+    stroke-width: 1.75; fill: none; stroke-linecap: round; stroke-linejoin: round;
   }
   .feature-card h3 { font-size: 16px; font-weight: 650; margin-bottom: 7px; letter-spacing: -0.01em; }
   .feature-card p { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
 
   /* ── Privacy strip ── */
   .privacy-strip { max-width: 760px; margin: 0 auto; text-align: center; padding: 40px 32px; border-radius: var(--radius); }
-  .privacy-strip .lock { font-size: 30px; margin-bottom: 14px; }
+  .privacy-strip .lock { margin-bottom: 14px; display: flex; justify-content: center; }
+  .privacy-strip .lock i svg { width: 32px; height: 32px; stroke: var(--accent2); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   .privacy-strip h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.02em; }
   .privacy-strip p { font-size: 14.5px; color: var(--muted); max-width: 580px; margin: 0 auto; line-height: 1.65; }
 
@@ -270,62 +243,352 @@
     .preview-top { flex-direction: column; text-align: center; }
     .preview-hero-txt { text-align: center; }
   }
+
+  /* ── Trust strip ── */
+  .trust-strip {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;
+    padding: 56px 24px 0; max-width: 860px; margin: 0 auto;
+  }
+  .trust-item {
+    display: flex; align-items: center; gap: 7px;
+    padding: 9px 20px; border-radius: 9999px; font-size: 13px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+    color: var(--muted); white-space: nowrap;
+  }
+  .trust-item strong { color: var(--text); font-weight: 600; }
+  .trust-icon { font-size: 15px; line-height: 1; }
+
+  /* ── How it works ── */
+  .steps-wrap { padding: 80px 24px; max-width: 860px; margin: 0 auto; }
+  .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; position: relative; }
+  .steps::before {
+    content: ''; position: absolute; top: 22px; left: 22%; right: 22%;
+    height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+    pointer-events: none;
+  }
+  .step { text-align: center; padding: 0 24px; }
+  .step-num {
+    width: 44px; height: 44px; border-radius: 50%; margin: 0 auto 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; position: relative; z-index: 1;
+    background: rgba(217,119,87,0.12); border: 1px solid rgba(217,119,87,0.30);
+    color: var(--accent2);
+  }
+  .step h3 { font-size: 16px; font-weight: 650; margin-bottom: 9px; letter-spacing: -0.01em; }
+  .step p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+  @media (max-width: 680px) {
+    .steps { grid-template-columns: 1fr; gap: 36px; }
+    .steps::before { display: none; }
+  }
+
+  /* ── Interactive Demo ── */
+  @keyframes idemo-pulse {
+    0%,100% { opacity:0.55; box-shadow:0 0 0 0 rgba(52,199,89,0.4); }
+    50%      { opacity:1;    box-shadow:0 0 0 6px rgba(52,199,89,0); }
+  }
+  .idemo-step { transition: opacity 0.45s ease, transform 0.45s ease; will-change: opacity,transform; }
+  .idemo-dot  { transition: background 0.3s, transform 0.3s; }
 </style>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body>
 
 <!--
-  NOT: App Store'da yayınlanınca aşağıdaki 3 "#appstore" linkini (nav, hero, pricing)
-  gerçek Mac App Store URL'iyle değiştir.
+  NOT: App Store'da yayınlanınca aşağıdaki 3 "#pricing" CTA linkini (nav, hero, pricing)
+  gerçek Mac App Store URL'iyle değiştir. (Şimdilik hepsi pricing bölümüne kaydırıyor.)
 -->
 
 <div class="bg">
-  <div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="orb d"></div>
 </div>
 
 <!-- Nav -->
-<nav class="glass">
+<svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; width: 0px; height: 0px; pointer-events: none;">
+    <defs>
+      <filter id="liquid-glass-1" color-interpolation-filters="sRGB" x="-8%" y="-92%" width="116%" height="284%">
+        <feImage result="map" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAy4AAACqCAYAAABLehv4AAAQAElEQVR4Aey9C7dsW1Ue2scYs6r2OSDgg6eCDxQVTIxiYqKoGDXx3uYDkxaj9/6Z/I60tJbktuQazQ0hyFnxgYKA4AtQHoogKCLKSwGV89g1H/f7xhh91VhjzVk1q1attWqv1Vfb3+mvr/cx5ldznz3GroP6f/fv/t1gMA3sHbB3wN4BewfsHbB3wN4BewfsHbB34JTfAS/2YwqYAldUwNpNAVPAFDAFTAFTwBQwBa5bAbu4XLfCNt8UMAVMAVNgtwLGMAVMAVPAFDAFdihgF5cdAlnZFDAFTAFTwBQwBUyBR0EB26MpcNcVsIvLXf+E7flMAVPAFDAFTAFTwBQwBUyBO6DADVxc7oBK9gimgClgCpgCpoApYAqYAqaAKXCrCtjF5Vblt8VNgZkKGM0UMAVMAVPAFDAFTIF7roBdXO75C2CPbwqYAqbAfVHAntMUMAVMAVPg0VbALi6P9udnuzcFTAFTwBQwBUwBU+CmFLB1TIFbVcAuLrcqvy1uCpgCpoApYAqYAqaAKWAKmAJzFLgbF5c5T2ocU8AUMAVMAVPAFDAFTAFTwBR4ZBWwi8sj+9HZxk2B4ypg00wBU8AUMAVMAVPAFDhlBezicsqfju3NFDAFTAFT4FFSwPZqCpgCpoApcI0K2MXlGsW10aaAKWAKmAKmgClgCpgC+yhgXFNgWgG7uExrYxVTwBQwBUwBU8AUMAVMAVPAFDgRBeziMvODMJopYAqYAqaAKWAKmAKmgClgCtyeAnZxuT3tbWVT4L4pYM9rCpgCpoApYAqYAqbAwQrYxeVg6azRFDAFTAFTwBS4aQVsPVPAFDAF7q8CdnG5v5+9PbkpYAqYAqaAKWAKmAL3TwF74kdWAbu4PLIfnW3cFDAFTAFTwBQwBUwBU8AUuD8K2MXldD5r24kpYAqYAqaAKWAKmAKmgClgCkwoYBeXCWEsbQqYAo+iArZnU8AUMAVMAVPAFLirCtjF5a5+svZcpoApYAqYAqbAIQpYjylgCpgCJ6qAXVxO9IOxbZkCpoApYAqYAqaAKWAKPJoK2K6vRwG7uFyPrjbVFDAFTAFTwBQwBUwBU8AUMAWOqIBdXI4o5umPsh2aAqaAKWAKmAKmgClgCpgCj6YCdnF5ND8327UpYArclgK2rilgCpgCpoApYArcigJ2cbkV2W1RU8AUMAVMAVPg/ipgT24KmAKmwCEK2MXlENWsxxQwBUwBU8AUMAVMAVPAFLg9Be7lynZxuZcfuz20KWAKmAKmgClgCpgCpoAp8GgpYBeXR+vzOv3d2g5NAVPAFDAFTAFTwBQwBUyBa1DALi7XIKqNNAVMAVPgKgpYrylgCpgCpoApYApcVsAuLpc1sYwpYAqYAqaAKWAKPNoK2O5NAVPgDipgF5c7+KHaI5kCpoApYAqYAqaAKWAKmAJXU+D0uu3icnqfie3IFDAFTAFTwBQwBUwBU8AUMAUqBeziUgli4ekrYDs0BUwBU8AUMAVMAVPAFLh/CtjF5f595vbEpoApYAqYAqaAKWAKmAKmwCOngF1cHrmPzDZsCpgCpoApYAqYArevgO3AFDAFbloBu7jctOK2nilgCpgCpoApYAqYAqaAKWAKiOypgV1c9hTM6KaAKWAKmAKmgClgCpgCpoApcPMK2MXl5jW3FU9fAduhKWAKmAKmgClgCpgCpsCJKWAXlxP7QGw7poApYArcDQXsKUwBU8AUMAVMgeMqYBeX4+pp00wBU8AUMAVMAVPAFDiOAjbFFDAFLihgF5cLclhgCpgCpoApYAqYAqaAKWAKmAKnqMAhF5dTfA7bkylgCpgCpoApYAqYAqaAKWAK3GEF7OJyhz9ce7RTVsD2ZgqYAqaAKWAKmAKmgCmwjwJ2cdlHLeOaAqaAKWAKnI4CthNTwBQwBUyBe6WAXVzu1cdtD2sKmAKmgClgCpgCpsBGAfNMgUdJAbu4PEqflu3VFDAFTAFTwBQwBUwBU8AUuKcKnOjF5Z5+GvbYpoApYAqYAqaAKWAKmAKmgCkwqoBdXEZlsaQpcAcUsEcwBUwBU8AUMAVMAVPgDilgF5c79GHao5gCpoApYAocVwGbZgqYAqaAKXA6CtjF5XQ+C9uJKWAKmAKmgClgCpgCd00Bex5T4GgK2MXlaFLaIFPAFDAFTAFTwBQwBUwBU8AUuC4F7u/F5boUtbmmgClgCpgCpoApYAqYAqaAKXB0BezicqCkD97+dnnR6/+HfMMv/Ly88r/9nLwaeA38H3n9/5QffcP/kh/9X2+Uf0m88RflR4AfBn7kF98kxA/DEj8EG/GmJ+Sfj+AHkRvDa5EnfgB2DN+P/Bi+D/kxvAZ54nthx/A9yNf4Z8gp/in8Gt+NXI1/glyJf4y4xnchV+PVyJX4TsQ1vgO5Gv8IOcW3w6/xD5Ebwz9Anvg22DG8CvkxvBJ54lthx/AtyI/hm5EnXgE7hm9CfgzfiDzxctgxfAPyY/h65Imvgx3D1yJf42XI1Xjpm56QEl8DTo2vRq7GS5Ar8WLENV6EXI0XIqd4Afwaz0duDF+FPPGVsGP4CuTH8OXIE8+DHcNzkR/Dc5Anvgx2DM9GfgzPQp54HHYMjyE/hgfIEyvYMSyRr7FATtHAH0NAvoZHTuHgj0GQrzEgV6NHTtHBr9EiN4Y18sRD2DE8g/wYnkaeeAp2DE8iP4YvIU/8PewY/g75Mfwt8sQXYcfwBeTH8Hnkib+BHcNfI1/jc8gpPgt/DJ9BvsSnEZf4FOIx/BXyJf4ScYlPIq7xF8jV+ARyJf4ccYmPIx7DnyE/hj9FnvgY7Bg+ivwY/gR54iOwY/gw8mP4Y+SJD8GO4Y+QH8MfIk98EHYMH0C+xvuRU7wP/hj+APkSv4+4xHsRj+E9yJd4N+ISv4e4xu8iV+N3kCvx24hL/BbiMbwLecU74df4TeTG8A7kFW+HX+NtyI3hN5Afw1uRJ94CO4ZfR34Mb/7FNwnxq7AlfgVnPOKXYX8JZz/if+Ms+CacCd+As+H/wBnxf/y3/1deD/+NODv+5tvfduDp09rs4jL3Hfj85+XZv/5m+eaf+y/yo//99fJDn/28vNqv5JtXz5aXPf5c+cpnPU8eh5XV49IuHsjDxUra5WPJIu6WD87za8TrXF/nfMsY+dJ2RUz+GjFtC9uCX9YZM78+IN9i3npLX4u6zh+z3EdX9Zcx6+xTq/M0Vsv8VN9UnnPrPsbMc672jdkez1Xn2ad5teWcsj6VZ18PPWjL+YzrfDmvrjNmP23dp3naAc+hdbWap2U/re5X4219OmebLfs5v4yn+sZ42qeW+xugXxnXfWVdebTb8gKdtK6W+yzzjLk+LefRlnXtox3Ll3zWBc9BS/62ebv62K9z1HJemXd4vno9rdf5Mi77duV31cfW4361r7Rj6+6qc7720TroS8u+0pZ5rr+tj3Xtr/vKvIe+WlfLeplnXM5jXNYn+qTM8zkYa59a5jmPlvUpS76HLrQlT+PSlryQn0/rOl/j0pZ9zGu8zXK+1rmvMma+jjl3jFfn2RfwvLScU9cZl3mNya/7yNuWZ72BTqFaj3n2lbZch/mm6AtFP/s0ru22vqaaNxVvy4/NV75a7q/BfjUu7VQ+ZP5UXfO1Zd8CzzU3X/L26SvXYd8C+6XVeWW9KfYTyMO5boFzm/LPLfLsZ7w8rz+QFc6EPBs++1k8Iz5PHsOZsfEr+fxnvyBv+IXXy3/HmfItOFt+AWfMucfR+86zi8uONyB88APyD//rf5If/7V3yA9+4Rl5+WNfKQ4vIg/Ha7zEPHg+hKWvdr3EpQUvO3MtLeI1LOuMW8QtXvI1+lrk14ulsL5GTPsQ8UPkHxZxi3id4zXq5K1H4ha8hyP1lF/ldS6utwa/Rd8a89poN3XGbVFf53rK63NO88lb5/42z29zvM7xOsct4nUxf424zXHKp/Va8LuY38TkteAz36KuMe0accpf5reYU/LJW4PfxvxKGHeIadtiPuMOceItI6+sp/zl/pRPfPbzkNzm+YzT3KWk/CrO7UbqibfKvGXmbfjaT8t+Wh6OaTVusf80Z9PPejuyHvPdCF/7tZ7sxXk95qX8Ku63y3FfzKvraW7i9+DzkN6BTx7jZFeS8ss4ty/qKb/K+cv1qX72DXk9zmPc53jAfI3Lfq33RT3xNuszZj8PtX01b0Cc8qv4PKyX81lnf1/NHxAn3jL3bfo5j3X2DZhPq/0aD+gnr891xuQNiFM+zWOc8puY9SH3D+BrnXlBTDsUdcZSxCV/AJ+HZK0L4pJfxuSRX9dTfiUpv8x2E7MuWD/ZTZ2xw3q0rGs/Y1fxB8RaT3aFC8cDaD89j3Mkz+e81LeMfYJ5Wk/5NM9lflknz4Hv8e8ll+sOMfOCOOUv9mvdoU6eA5888jVOdikpv4rWgc/Yg1/WHWLmHeopn/geccqv4nOxzthv4Yf4HBf7le/zPI/+xFvGfTFOc5eS8qmf69X7Keu+mlfGnMd+8j3WY+wLfh2TR37Kr+I+AvjMe/Qnm/YXECdeist6yl/uT/nEZ38DnXyeHzCP8wPiJuYv9oeinngraSJvMy/llzmf6iHPa9DfgB9yHIo4xPxFPuspn+YxbiIvxQ36QxEHxE2OUz7Na0bWI68BP2Q+44C4yfECtslxc95/cV6DOnkh1xk3sW8pKX+ZX9bJJ68p+hkvEEeLy8kS5zjWY4z1NE5zVrIEJ9VXWBMxOM05HsjqwbPk8ce+Qv4eZ8vfwBnz53HW/OAH3rfjVGplbxKMK+D/9KPyrT/3n+T//KOP4xuVF+FgyEP/Ct+a0D7ABYCH9VX+RoX5Zaw9xEu5xm+ONV7uFkh2FfkxxqVlHTnsV6T6eoyPXJv5bfTTOhv/YswZPODV9ZQnl9D90icuxvv0p7kX+9uZ++3y83Tgt+f+MmrdIVb0qKufbFqvP+es0MO+JT6DJQ6rq/OY/B79nE8/4WK9Q73Ls8gjX+NkV3nuMs9dZTsej/VzTo81Ei7293n9HnXyuiruc9yh3kekfvopt8IzLyMYd5nPesLqwn77XB/irCX6LvYPqPfntVTvqljrA/JDxWc8xDx7iTRfc0PBHyJvU+fcAfUh5tm7xMFwU0/5FJNLDOAnu8SzEKk+YEbKpzj5ywvzUm6FHPPLS/2cMWD+gFkE+VLEzDFmnn7CKs6R3DMUfPKkiIfISfzkL4V1QZ5IuVXcH+OEFLNWxvRTLtXHYuYE60sx3xVxym/6NU6WeyNW2CPtMu5rqt/lNaSYz/25IhZwGDNPP2Ezv47JIz/l0x4kz3OYJYDLcfKXOEyneQ61lFshx/wyP8cqWtYTUkwu4fI8j34XsbrQ71FP+WXOr+I8H7nMrXKePnEx9iP9nOfRnzDOZy3xUr2OU22JQ//qwvoe6/k8mxyH2OU45Tf8MqafeCvMXEZonGzK+TyPOUJjjzUYu1xnnLCZV8cOPQH8lL84P6DGfEA9wCc0TnaJiwVx4y+MjgAAEABJREFUcX4AX+vJpnrAjDJO/ng/uQQ5vpjHXEAcMGuDVd4HZy1xabgYB/A9+A0QIjb1lN/EWmc++Zx5ua418hrM1zjZVfzsmrjWxf4xfoP+BlyC/Q3iZPksxCo+X5M5DerNuZ/qGrNvMVJPeXKJFTSiVVyM2U++zmwwj/HifM0NP+U3cRM50/vljAXmkbeI3KUsEC/gE8w3iJscM6eXE+aIxYX6SpY4DzLfxPxKUp12Gf1FUX/88RfJn3zoL+QXcPb804/9yfjh1LLiTYOLCrhPfkJe/vP/UX7s9z4sL3/w1TjwPcChdRWxxovHg20CLxvMX7x8pNpS2uUD4SWG366s8ZJH4NKi9RhrHlbzantygW4EnKko68wxVktfMTWPeeWonepnnXyCPqG+WuYIxgrGCs3RMlda+iVYV9R5xqzREvQJ9Wl3Qfklb8h6lzn62/KsEeQpGCs0t82SyzqtQuPS0ifIKS19gvkaY3nBc+6Tr2fWMefVual4al3yOYegT6ivljmCsUJjtZqndXjOffPsK8F+BfP0abfhkHXZQ5RzGSu25clhnbaEx/OP5ZkjyC0tfYJ5BWOF5tROzT8kzx5CZ9MyVmhcWvolyOVeyxx95ktLn2BewVihOVrmSktfEaCv1jVHuy3Peg3yFXVt3/lT/LH5mqMt12WsYJ6+WvqKBs8/lte62jm8sTlTfYfk2UNwT6VVv84zVpAzF9pDW/YwVpR5+gvoyBr9EtvyJY/+VD9rnKPQuLT0CXJKS7/EVJ15Rc0v8/RZpyXoE+rTllhClzKe8snTOSWHecZq6ROMFYxrsMZ5zWJ54RK1QKwoa0vuc7HERQSIPi4m+dsW8hY4Oy5ynfEScROxjPN5eVkgJph/DGfP9777I/L/4Sz6qb/65MVDqkV2cSnfgcd+89flR9/+AXnV4mUS/zcpDS4geNlaWF40WrxYayDZVIuXE+R4CCbW4F9GuuBo3xr8NXiM28LGNfHS89JT1xmvJ/ranO9g22Jei3iNeJ0t4xZxi7jNdp2txrSc0yHfFTzm2x0x+V3R12U+bVfkdU6HepfzalvELfItbFfZtoi7XN9lW/Ba9I3x+pF8C/5Ynv2aV9sV/bv6+mpuGffFnA68LseaL22Pej9S73NebZdjtWW+K/o1r7bLfRqr5d90D+hjrLbPMS37xvID5g2ZV9qhyLO/R9xnHm1Rx7cXK2CJv91fAcn2BX9A34B4KCzrjNUOuc64B6/PsebV1nnGAr7W97FTfcwL1peRudvWU77aIfdrrFbzapmXar0ylmKOZJ7aAbFDXWO1zAvyagU8QSzZMj/Wx7rm1cqBfex3WM/l/tK6nFcrOVZb5qXo17xayX0aq2VedvR51JWvVibmbauPzSGfeY95vlqHsR/Ju8zzsH6k7pF3E3lf5H3muWw1Vsu8z/zSBvDL2CN2mafW51gt82N9rGtercc8j36N1fqcV8t8KHjMl3HIfNqQeWp9jmk9eGP5UORDweeBVGO1HnUPvocNsKGyzE/11XnGDfqbPEdtyDEt59EG8ELOk9cgbnK8Kz9V137aZsc8rdc2HNjHOTz0L9C/wHMwbiq7Lb8Y6VugnxeaJS4gtFPzyGvQ34DfwDJeLBayiP4yWZzrFpjTILe8wGMdlxzkF8gHnDVpG9jV8jH0vkze8bb3yTve/mvlUfXe+/aNS34FXvSG/yL/4i8Hafi/X2kWwstKhxeJ4OF+jRepw8tF/2HTCC3BA+t6sYjxQ/aB0yJmvrSJi7m53mVL3qYfczFjzfmFfYi4LeK6zph18tY7ePvWOXeN9dfVXOZb5NsqrzzNqy3z7Y6+st7m+bRt7lO7RrzeUW9Rb8FrZ9oOvPUW/lSd+RZ9alvMaRG3ldX6mO3A78Dvsm0ry3yLejuS75DvkG9hW9iusF2O59gefdt4rOv8kjeV7/K8qTrzPfbXZ57y1TLfj9R78PucL23Z1+U6bQd+l+OS3+d8ly3jvuANE/ke+T7zOljyNC4t88OWel/M6QvegPyAuIftCzvkmHbYkh/AG1AfYOv+Iedp8dd9wvoA3lDkB8SaVzsU9W195B1aZ5/20w7YxzBj3Tl9nKO8Ic9lLJgviCXbobKaL60r+GV+QH6Y0S/gSebNsVzPge8m+ph3I3UHvov5hYyt46o6Y/JoXe5Tq3m1mqf1mDOWd8i7PGesvqvv0Dr7uG5tXbEfh32x7rPVWC3zboTvMr+s+8yj9XvUA/pKvq9i1sv1tD6V31VnX8D+QrVO2RdG6gH8kPNqPWKPvIcNlfVFHHJdrUfsJ+rNRD4gH9AXYH22YcKyzjlT9X3yOod2gXNdg3NbU9hFjmkXyNM2sE3MLyXZhWj/AmfKBvUF6gtYXlDo05KzjHX2rWIP80tcYD77KSdvfMN/zadVM/7eS/DUk/KtP/fz8t3dS6XHS7PGb4wWtsWLRf+Z83ghvBi0MV6K1ttFuoywxgsIY15S1vhNteEspQOPOSJx2JfAWg1ymKstc0SZp08wf2xwbo+9T829Sl3nqq3XYF5R1xhrrbSaV1vW6GuelmCuBHMDnrfMlf6uOrnb+rXOOfSnMFXnbIJ9aukrmCMYq6WvYG4MWqc9tD7WpznOxV8f4RuTxSiuWtd1xizXVVy1Xs6hz3mlpU+UefoE8zcNruvwPk+tu62ufWrrGcwr6hpjrZVW82rLGn3Nq2WuBPMez1PmSn9Xndxt/VrnHPpTmKpzNjHVxxrBulr6CubGoHXaQ+tjfZrj3ABdNa7tdda5rqJel7HWaBnXYL4GOczVljmizNMnmL9pcN0Guk+tu62ufWrrGZpXO1ZnrQQ5jNXSL6F5tWWNPvPxQI5nYlxjV538bf1z61yH3BqcTdR5jVkjGKulr1jguZgv0eCsx8tQgzNjBM6IC/CYp10gT9sg3yC/QEw+bYM45HyDPLFgHGcu8a+ZJS4wS+Hz9Dij/sLP/Zw8+eSX7v2x/X5fXD79SXnN698ir1h9jXT4RmWNF6bDy9PCtohb+IzXeInafJlp8aK1yCe7kC77tAkLacHvwEt9KV5zJnLMxzo4tIo14hLMM6atoXm1Y3XWiLpWxx3WrXNlzPq2OayTr5Z+Cc2rLWv0NU9bg3VFXWOstdJqnraEcpijT1tD82rrOmP+7fO2Ojm76uRwjoJxDa3R1jXGmqetMadOTol6BuOr1jlDwb+F5jyNazunzh7yCPpjYE2xqz7G01xpp+YwX/LU17xazatlXqG5KYs/tWSqxvzc+hRP82o5s4TmaWvUvG115ZJDXy39EpqnrUEec2rpl9C82rJW+rvqJXfK59+CK8Y4WqOdqjPPeg3ma5Scusa4rKvPvEJzpdUaLfNq6dfg32Jftc6ZnKNgXENrtHWNMfM1mK9BDnO0BP0SmqOtUfP2rZf8gD9fy7j2Wed6dV5j1umrpV9C82rLGn3N09ZgvQY5zKmlX0LztDXIY04t/RKaV1vWSn9XveRO+Q10V4xxtEY7VWee9RrMl+DlY4GznfKSvxDmyaNtcE6kXYAXcBZcnMdLXE4WAO1S4gzUFjhvLmCbzF3gPMq+1epl8r/+51vlU3/1F/f68nJ/Ly74puV73/x++crHvlK6sJAOLwbR4kVZw0+H9QUuIQvhhYTxOtYWssZvihbgJYS+gjn6zNPn3yLzsLbxF5jXAJsZrBHklWAvwVk1mM/At0SLCHKYU0t/DFqnVYzxNEeO+rss//Z2G4d1BXn0aaegdbU1j/kaNUfjmqex1mk1V1rma5R19cmhr5b+NpCn2MXDv9VkG6escWYZj/k6T+0YhznWFYxraK205DCmrcF8jZJT18qYPMa0BP1tIMfhD4ltHNbm8DhHwZ5tOPY8rsW1S0u/BOs1yrr6NYcxa6Wlvw3kK3bx+LfF2zisK7bxtEYufbX0SzBfo6yrX3MYs6ZWfcZTUI7abTz+bem2Omuco2A8BXKmanV+27rksq7QmHYK5LKmln4J5muU9dqvuYxLDuMpkMeaWvrHAOc1+PfGtlmsK7bxtEYufbX0SzBfo6yrX3KYY0yrYFyDNeZoazBfo+TUtbF4Lp88HtrHZpS5uTzOIsreKZ88xRhHa6Ulj3HAOa9Gg5yCtQbnwmj53qCmfgM/YZEuJDnmXKJBXxNzRT1fVjZ51pYSwF3gXOrDQh7HmfUtv/5+eQpnWLmnP/f24vKq//nL8ny8ALy0tA0vFLxM0C4lXSAW5xcUXkZavGA8FLZ4OXmYb9Gj+Ra1EusQcDlpRG3XBPgecwPQAEF69Ci4XtlPn71Ey1lbQA5Bnlr6Y9C62jHOVXL7zO3yM6mdWlfrtMQUT/PkKDS3zSq3tCW/zI/5ymWNPu0ukNfj+XfxWCePfPpzQL5iG58c1tXS3wbyxlD3kMMcbQ3ma9ScsZg9zKulPwbWFazTp92GIX4O+P0Iu42nNfLVH7Nap60xxZ/LY3/NLWPWFWV+yieXNbX0jwXJes6Zx/XJn8NVHi2xq4ccxTYuOazT1mC+BjnM0ZZgrgRrjGnH4KDTtnrdQ36d2xaTr9jFY51c2ilonbbGWE/NKeN9+ezVHvVpp6Bc2ilOnfchyD78un8q9iEIaz4kS38bfAjiQ8IYz4c0x4fE8eGyZZ8P83jkEj5cnuPDxRx5Ch8u1nwYjwPy7PFhvO5Dys/l+bDhs4fwIeV8mLbkKXzYzvMhXLhwNDizhQopl3gh+MwPeIVSjvUG579km/O6xrzALBYN/i4ofduyyPMbnC+b6C9izwKXlhBzC7wXjTz22FfJG9/wy3Jff/x9fPAXvvG/yTetXipt4CVigYvEIl40eIEgWrwgvJTwokLLHNHiRYoWL3SHl7FH3Gbbw3YEaj3zeImZa6PlOg3Ww8UFdR6oWlgFY/7hPaBPwRn0abeBnBLkMqatwfwUyGWNtgRz20Au62rpz4Hy1c7pUQ5+J4v62yx5im28uqY9tHWtjskZQ80rY/IZ0yo0pq2hnDFLLvO0NZifArmsqaU/B8qnJeb0kEOuw/tNfx/s08f5in3W0B7aOX3k1ThmXz17LB5bb4ynOfLp0yoY7wK55NAS9OeAXP4nH3O4yqvt3F7t28Unr8auHtbrHsbMj4G1bTikh/PKPsZzcUhfwO/TufOVx3XCnn26jlqdtc2SS5Cjlv4YWK9BHnO0U2C9xj7csnesr6xP+WXfFGcsf0hfg89tbNZUTvlqp3h1Xvlq67rGrNdgjTnaKbBeg1zmaGswPwVyWaNV+BDihSRM2MTPHJwFIw/a+oAcY/icRZ4PKecD7UJCUb94eWGNaKTBuTRhiX00sly+TN6Is+x9PMP7+/bQz37rG+R7nnlF+s/DAi8TG3R4MfRyQp/fIHR42Zgj1riEtABzRPTx4tG2sPECAn4HDg9cHXK8kKilT6TYYw8X0Xonii77tDWUM2bJZZ52CqzXIJc52jkglyBXLf1tIE9BHn3afdBv0WXbHPYptvHqmvbQ1tPqG5UAABAASURBVLVtMfk1dvFZr3vKmPUarDNHOwXWa5DLHO0ckEuQq5b+XAz43G66j2sSc/dIHvk1mN+Fuofxrh7WydsGcsawraeusZ85tfTnQPlq5/QoR/B5H9rHGeynnQvyFXN7yNOe2rK2DTV/LB7rH+PVuUP7dE7Zr7l9LPv34ZPr8Hkf2qf9tHPB9cilrcH8FMhljbYEc9tQcqf8sf4p7li+7B+rT+UO7dN57Fd/rvX4vMmlJejPgXJpiTk95CiXtgbrUyCXNdopsF6DXOZoFQHnuhI+xkF82CBknzbwMgJOgzNhjOEHwAd+G0PwMtLgEuKBTayXm3Mb+bi8wAacWUs8xFn2ne+8f9+8+Ht1cfnbz8trPvUS6fG1W4cXoKPFS9XhwkK08HkBoe3gdzHPiw2+KYlxg29nGmnx8rV4iYgOfge/Bzr48TAOv/VemOuR6+B3+I1OMB6Q68EZCjCei7Kv9jmDOdopsD4F9rBGuw3kzAFnkKeW/j7QPlrFPv3K1V5aze1rJX9eag/pZy+xby/57FNoTLsL2rPNXnUG+zmfdgqs7wJ7yaFVMN4X7GWPWvr7QPvU7tOrXP6nEQrm6NPuA/YQ7FFLfx+wT3Fon/ar5Rz6tFNgfQrsYY12CqzPBWeQq5b+PtA+WmKf3pLLXkWZ38f3Iez1nxXVs30I54epujYn9uGwfh82fT6M+9vW92G8x4dNflu/1nzY8H3Y7h/S48NmpvbT+rDJ+zDPZ5/Ch3k9PlzkBcQKHy7WfNgday+tD7v5PlzmsJfwIeD1D+fvnw/bffZsgw/b+30Icb2pGT6kug9hck9TvWN5HzZzWPc4ywXA43ynCCHEPXnvs3WwydfaxnrhxUbBvPobu8gc2g1CSP4nPv4V8sUv/o3cpx9/nx72pb/6G/LY8tm4eAR827EAGmAR43QJQczLCl48xm3gNyIBFx3kkesuwOeLCeox74UXFB6M9YJCyxwtD0Cplnl4qfsCA/waZX2uzxnk0tZgfhfYQw5tgpfaap12F9hLDu0UWJ8Ce1ij3RfsU+zbO8bnLObV0j8E7JeRz3ufWdqvdp/eMS7nKMbqu3LsJYe2BHP7gL3k09Zgfi7YSy7tFFifAntYo90F5dFOgTNYo90F8mqwhznafcE+xb69Nb+cQ7+uz40d3n9ya8vcIbjqnLKffol99lP2jflzZ7GXXNopsL4LU71j+bFZY7xdOc4hh7YG8/uinLFv7xj/2PPG1pib8/h9oJjbs42ns2i38aZq7NuFqV7m2auW/i6Quw27+sv62BzWmafdF+yrMTWDFw4i1R1eMSch+GwDrI9xwFkxIB9GbfrWJdUC+AlN/OaG38womOc3MIwXslw9Lr/25rfJffrx9+ZhP/ER+c7um6T1QQbcVPUS0uIF6vntCyz97tx6oU/0eNE6IFrcrEvbg98jN+BfQHjTpIfPgykxIEeb4CTFLnN22wGzavQ5R7sv6lllzFmMaXdBebS7wFnk0E6B9X3BWeyhnQLr+4Kz2ENbg/lDwVnsrS1zVwHnSX4nrjKn7NV5asvavj5njGHfOeSPzalz5M1F3bst3jaTfazTTgKf0ViNfTXGePvmypn79t4030Eb7vdY63Ke4hgzdVZpD51bzhjz95k71j+VmzN3qndbnnNZp1VoTHsodBbtoTPG+jjP430bqx2S4yyCvWrpHwL21+Ac5mj3BfumwFms0e4L9k2Bs1ijnQNy54CzyKOdAuv7grPYQ1uD+f3gxfsEl22KnfjghTmHd8+zFhIvZMt69BGHEHCUJHy2vKAk3wfmGdMSjXiPv1jvvlE+85lPyn358fflQV/xmx8Tt1hKHy8p+KBh6fObkHRhYS6cX1Y6vCAdXqIeWONF64HWOyGfPt4o4aFxQK5HjT4xwCfwNsW6oD4AvXPSO5EhWifkHALOZR9tDeYPBWexl3YKrO8LzmIP7RyQOwecRR7tvmDfFDiLNdpDwf4anMUc7aFgfw3OYo72WNB5ao81V+dc11zOd/j9p2B8LOjM0h5jdjlP/euaq/NpD12DvXOxzxpzZ5a8OfNL/qH+2DqHzir7rmuurlHO19yxrcfvN65zHXM5myhnX9XXebQlrmsu17jKbO2nncIh8zmLfbRzQO4ccBZ5tPuCfVPgLNZoDwX7a3AWc7SHwDkc6s4h+K3gxOG85wHOVaTZTqINHhY+LOs+BAmZHzxqwUsAfED+HA1yQRrEPgTxOL8GoAFoF4uVvPWt75P78uPvw4OGj7xXXtm8XDreTD0uJ0CPD7yDbWHp93gZBqDDC0OrcYsXaUCuBwT1Hi9Ygo+Xj87xEkJ4XExoE3hJ6VEjBDMUQ/aZ10sM/WOA86bA+azRHgr2zwXXIJd2H7BnH3A2+bRzQf6+4Gz20O4CeVcF1+AMWgXj64KuQXtda3Au5wt+X9C/bug6ao+9HucqjjlbZ45ZrsM87VXAGXPANcij3Rfs2xdcgz20u0DeVbFrDdavukbZz3mKMn8sn7M5Sy3968RNrOOcwyMkwJHrgHNpvnMX7THWcu7iTOcux1zHOXfQsznn0D4PIF77Gs5t9rLPes5t+pw7zN+2nnOHzXTuch/XcQ55nOd8AV5EnEM+QnDsc4AHPVmP86Nz6nvU6DthXxMQA8HThnxJ8Th2BvEhnFteVjw4AWdX9nmca4ngXyF//KHfkxk/jzzFP/JPMOMBvv13nxIJC3wDEmSA7fAS9D5IHy0uHIEIkvIeeQAvRgfESwtsD/CSQkt0TqRzTga8iLyM8EBGP1rk1Qr6+C/3HnxigCWkssxdJ8r16Cuua03O52zaKbB+VXA2Z9BOQeu0h4Kz2Uu7L9i3L7gGe2gPBfvn4tA1yr45a5FPHu2xwHlT4Bqs0R4LnFfjWLO3zeGarKulf93Av8rwLTH+JYt/X133Wpx/G+txTYLrXze4To1jrsnZnEc7BdaPhak1xvLHWHNs7lTuptfTfRyyLnvZR3sVcMY2XGV23bttHa3VPceIOZtzaGswf53Q9bgGfdqLcDjyeXHOFRDkXIw9zoMeZ0bnGAvy/hzOZz8kq7EDv8FZ1YeAy0wjzKdLS5CA82xA3nv6jbz7PQ/lPvz4O/+Qf/vX8rXNV0uPD5aIlxH6+LDpp8tKEPo9XpAeLw+RLiwOfR5w8YKS6skfwBPyncM3LRIxwN9A4h/4g0sWby1iNwrWagyYxRztdYJrjOE619TZ5+vmZy1jchjTXhU6h3ZfXHVt9u+7Jvnsuyo451BwbfbSzgX5x8LcNck71prlHJ1LW6PkXbdfrn3da5Xzb2td7sE5B5MAR24KzqU1nXM3tiafzTkHcxFI4Je7ln045+Js53ZbEI+2B+d2r+dc4nBd59yV1nbOYczVgAF778G5q63pnNt7Td2ncw7u1YEh+OW27sM5FznOXZ/FApf24JyLOeccytcDDMYvF9eBc26dcwi34ZwKHv2Sy5hw4nF29J4XFPVLm/IheAk4p3rwXOY7+PESA6s174MoFjjrfvGLn5O7/uPv+gN+2bt/V6TBty0O37DgA+4r8ALS4aXo8SLUYI3fkvR4WdO3K/7CxYP58g/40hfnhehFRJHfZJljnXOR55wD3UUfzo1Z5xyWuwgkbnR9rufcxT04525sD7e5vnMOy28HCNemhXMuznbOYZlxoBA512GdG1/Tuen8MffhnIvP5pzD2P2Ahth7DOvc/LWd23CvurZzm1nOHeZfdQ/sd+6wtZ1LfZxxCJxL/c5d3R66Pvucu/r6zqUZnLcvnEu9zh3fbtuLcy7+HnLOgXY9wOC4xjbr3PWs7dxm7tj6zm3qzl2vP7U+885d79rObeZzvRrOberOXa9fru2ci++Gcw7peZDix+H8lzCv1+P86ZxyRRhPgZcXj3NsDYczboOz7nvec/f/czGcrgu176D70k8/V3p8oD0+6ME3+OZELzAe36QQIebiJQUvT49LDC8pncOFA/GQIcgPeLF65mEH2CFbgSV4QRlkEPoS6yKSa7SosHoQJP9wBl3amwbXVdz02uV6uofSlvXr9st1a59rM0d73eA6u8A9kEN7bHDuXHBtcmmvC5w/F9wDubTHBufuC+6BPbTHAGddBdwD+2kPBfuvikPX1r6rrl/369x9bD3jmPEp7YPPddv7OcL6fIyjYc5+jrbYjEFj+5nRdm2Ucj/XtsiWwVyfZbX0D4VzDsc8hWRf8s+QY9Yl+6WV6rLiwGFdzvPB++yHbBnTbxATAQ1ePv3pZ8td//F3+gGHQV7uvlaGfGnh5aXnJQYvWO98zvt8gYFFPnGdCF6SAXEPDA6XmGwHWL5RaunzwkKb4HEx4fXFwcospD4skmdvi51LPOeS3ca9zppzDuMvAgm5LTh3cS/OuVvZi3NpXeccpBgHCvjlbmR/zqV1nHNxTecuWxTwy13rfpxL851zcS3n5ls0HH1vzrk40zmH8fsBDbH3mNY5F2c65zD2MKAxzjiGdc7FWc45jDsMaIwzrmKdO2xt5y73XWUf2uvc5bnOXS2nsw+xzl1tbecu9x+6D/Y5d3mec8fLcY1tcO54azm3e9a2vbDm3O4Zzl0Ph+vXcO561nJu99x6L4yd293n3PVwdH21zs1bR/b64UzBEh5wwh/nXPSdq60UeY8jqCLzcCb15wjgcibhwA1AIwF/OS/yMhlw9pVb/bnexf31jr/d6cv3vUua5oGIC5IuILhU4INPlxMfc71Ti4sGar2TnHewIoNzEXhLCisSY8EP6uc+Ql5ZBljBHOecOLcb5B8CLqM4pP/YPbqX0nINxrQ3Da67Cze9J67HPamlPwbWbwpcn2vR7oLyaG8Ku/Y0Vr/OvY2tNzfHfZFLe2xw7lVxzD1ddS9l/zH2Vc47ls99cRbtoWD/scG9cCbtvmDfTYF741q0c0DuTWLXnm5yL+Vau/bFesm/KV/Xpa1xU3vYtk65p228bTXndp/pnCOHU7gibYJzzLsYOOdwPhSAVqGx2pTnhcW55DucWZ1z4vEX8h5nVg+bcl4czrrLxbPlfTj7yh3+8Xf42eQ5n3hKxHnpgAEfaA9bYsCH3jsnAjvAjiNdXvitSnwFyRPkAMk+Xa0558UBIrjwSOKxtg2gXfmXu/KE6xnAffHZr2f6/KljzFPdF/dK3WhPDdzXKeumenGf6p+S5b5OVb9T3Rc/P+pGe2rgvk5Rt1PdV/35nfI+T/FzVf2om/qnZLmvU9Xt5vflxOEsmOAufEzObWLnLvrOOXFuHB5nVeecqHUunTdLK8h9gmdfubs//u4+msizn34c35oEfFPSALSEh18CFwx80OnSwrwTfvCMxdG/iPjy53z0JV1OnAMv+8wTIszdDAas5YCbXHPOWqe6L+79FPXivohT1e1U90XNSpzqPk91X9Ruxu8HkVv6d8yp6naq++LndMqfJ/dHmH5O5IDfU6eq26nuixq7A3Rm3+GQCz/OuRzTQinEztEXcc5tgc81WoJ4OEU4AAAQAElEQVRcWoX+Z2MBg4J418gzz6zkLv/4u/xwz2qfJYIPUeLFRC8tyaYcLype4rcpkePA97jYpMuIOFxqhEjxIMkKcpJ/mHMOfYjpw9zKL+7gNtefeuhT3dfUfk8lf6q6neq+6s/tVPd5qvuq9Tu1+FR1O9V9ndrnN7Wf+6nflBrz86eq26nui8qewvnIOVWIlrtSS18xiHMp75yLvsP51DkXCcn34mKO1olzQRzgAUG+5dk3su/mP/zdfKz0VI/3XyaD4CIC8MOU/KHSDvhw8XqIwCakC4o4Wod8aRmmnAN/kHSBoWUsQq7c6g/3cqsbmFic+4JyE1VLTylA3aZqt5nnvh6Fz5P7vE2dptbmvk5RP+5ras+nkD/V/XFfp/h5nsJnNmcPpt8clS5zqNvl7O1nuK9T/P1wOvty4nCGLD8pxs4x72KaMR3nGDtxzjGM1qGXYILW4Uyb4MWhJjjrOgnSdc+Tu/zj+XB3Fc9yXyYOH6wA6QLDC4bHZYbWieCD5gs9SBk7cc6JCHMSf1zmMeD/+J62xBCD1CNyO9bd0rq7npf7Gk50b6e6L2pK3WhPDdzXKeumenGf6p+S5b5OUb9T3Zd+dtyf+qdkua9T/Dyp0anui3tTmH5O5IA/H90BPYess28P93WK793p7EtGfobznMNZMwUOxolzLlse1ZOPBPIBRmPWEhzOugI49xzU7+4vPu2dfbpnh/SNi+AGKvkmKuJE4Cc4cfiQJb4sDvmEQTaXlgHZ9CvVBDWJP4yjcxL/4D5Pa0dJllPdF3d3ZL048mg4Vd1OdV+18Ke6z1PdF/Wz3w9UYT/Y57mfXjXb9KsVmRefqm6nui+qenr/ftMd0SrqnV7MO5xVHc+swjyP78nyL+YF59wBcID3d/v/lwufXO7sz8BbaYPH42MGfNOSrMQP3YnEC4yD5S9agj5BP4G/GZnZgHlGtAT92wV3cXmft7snrn6q++LeThmnqtup7qv+LE91n6e6r1q/24vHVz5V3U51X+Mqnl7W9DvsMzlV3U51X4epfF1dVIngfLX0CY1pCeYInl0ZKzTmGdfhREvrYflfFMHigsOuuwp/Vx+Mz/X3/dMwHh8mP1R+uB6xA2gJfLMyICbAQgG/EMN3AAL8k56DWwLhif06xUsLJeK+qBx9w3wFqNt89s0xua9H4fPkPm9OlfkrcV+Pgn7zn+hmmNTtZlbabxXu6xQ/T+5rvye5HTb3eYr63Y4a81elblvZt1TkvuzznCu+KkWrYC99temcykhwGh0g8HB+XtUaLyvs4Tk3gBWk656Ru/zDJ7+zz/el4Slxg5cBcJK+eXH4Gs3hmxZC8AI4fMz0iRRDErwcEvNO0o+LEX3Hf0SUHv3bhcMO5QTBfQ0nuC9qdar74t6oG+2pgfs6Zd1UL+5T/VOy3Nep6neq++LnR91oTw3c1ynqdqr7qj+/U97nKX6uqh91U/+ULPd1qrqdzr5k4od/ka4lB4fxAMszLGOcTXF2FZyn0uVF44BMEEGNZ90e590BZ18k7uwvPvlNPNytrPGkfxLrhvSh4pIi+EB5OVHr8EGn2MX/M2EpFvAhC94XF+sSa8OABH8BDgwF05JjucUfbAu7uMUNTCx9qvvidh3/caI4Vd1OdV/1x3iq+zzVfVE/+/1AFfaDfZ776VWzTb9akXnxqep2qvuiqrf/7zfugJcR3c0m5jkynjFxiht4VsXZc6CY5zb1DagREvO80JTg/xyC591GfDz7cp27CZzQ7+aD8am+FJ7GpSMADt+8hAIe/gYeL4HnNzF4KdJFRvD6OPTRghcjd/5PZiX+pFx64STW5ZZ+HNaN7znsKf061X2dkkZjexnXbYx5s7lT3Vetwqnu81T3Vet3avGp6naq+zq1z29qP6bflDLb86eq26nui2re7vmIyuBIOeguUiw4NV4GeYIfXlYIxumCIjir8luVBNaYp8WlJZ5fvfSwTYOzLybc1V/+rj4Yn+vp1dO4oASgAfwEXMyn/y+UAp9xgvAdq4AK3iKJcDD85fDylZcXxoQgf1MYbnCtfZ6J+7ppLfbZ36lyqdsp7o37ehQ+T+7T9HMiM/+9cKp66f6Pur+Zmuja2yz35Y44b9tad7Fm+jmRA94f6nZI33X3cF/ugOe5+/vCkTFeWpxI1IdxAmOWNuBFhDW1XlKNMX1agj6RLi3DQBvQ2Mhy+bTc5R9/lx/ui89vxQ8elxEiZOuRC4BH7KLlpcXhlpq4LuYZJ0iM0YXXzeGlQBy9jS/4ccjxopNeMCQQMzcX7LgK3FWar7GX+xqucf5VRp/qvvhM1I321MB9nbJuqhf3qf4pWe7rFPU71X3pZ8f9qX9Klvs6xc+TGp3qvrg3hemnSuxnqdt+Hcdnj03kvk7xvTvevjhpPvQ8SCs4E0r84aWDTpqzqfESkmoDzqMXkWp9jyMozrTpksJcuqxsYo9vXLw8//kdF7iz8Hf2yfBgT736VfJM2+Fy0gABSNbhg3e9F8LjluoRb+DAQw0vDnPp8uJkYwW+4O0RvIYuWsHvVIcoZ+A55AfckufDxa79/8k1Fft3H79D91La468yf2K5j9qfP+X4zHovY/HxV52eOLb+VG56yvErU3uYkz/+bpwIfp9eFQ4zjg3uiTNpDwX7jwXugbNojwXOOxTcA3tpjw3OPRTcC3tpjw3O3RfcA3tobwpcby5uak9cZ86eyLstbNsf98Q67U2D69bgHpijvS1wfQX3QJ92H/C/rJkPyT/u3A44KxKCPwNoE3hZUfDoqD6txzmyRpC+d0CZD+A10g+NdF0vr371K+Uu//i783AjT7J8IH82fEx4QXF9iNbDelxaPC8ssA4vQIJH3QG0Agv//PKCGD4vLwIrePmSL0Lfi4/WIS+oO6Qdcg4v51xI7JU4Z5efXnZQ9+jZNXOfOtcnn7YG8zeNeg9lfNN74Xrl+lM+eTeFqT2U+ZvYS7neXP869zV3DyXv1Paje+O+6NMeC5x3KLgH9tIeCvYfC9wDZ9EeCvYfG9wLZ9LuC/YdG9wDZ9LuC/ZdN3bt6brXr+ef2n50f9wXfdoSzN0GuAeuS1uCudsA98B11dKfA8GZbj/wcsG/wHa4WAh+GKez24Cz4oAzXALrCnK8pMuJgxWAljki+fyWpccZNiGA42XA+bbvPypLnH2x2J39hRP3nX22+GB//sJPSsAtNF1UAi4kXjw+XI8PnOCFxiPm5cUjF+K3LwE95OHagYuNR076Qdwg4vGyMabv4Dvk+PI7+nipPcBY8Da6XEsxtoPYoX4IBH2KQ/qv2sO1OaO2zN0kuH6Nm16f69V7KGPWrxtcj2vQ7gJ5s4H3bB/urrXL+j5zD+WW6+3yD11jWx/XZJ12X7DvWNh37TH+VfbCeeynPRTsvyoOXXus75C9cA77aI8Nzp2LY689Nm/uXsgb6z9GjrPngGuRR3ud4BrbwLVZp70JcK0x3MTaY2voXlijT3vT4LqKQ9fGcY9Hvgq8sODQh7/E5twBZ8QBYYLLXFw2cr7P/xlYjzMnMeDcmcBLCfgxDz7Oq+my4qWPPuvJH/AX8i/EmVfu+I+/488nf/edL5W+deL7BgiXEHhZyXCwriOX8BIvM3ipaANeCNp0acFrjnzp83LikNtYJ4IY1x+8tumfDodCwYs7F+kFx5g9eubO3sYr11WffPq0NwWuV+Om1uY69dqMNU973eB6U+DarNFeFzh/F25z7bG9HXM/Y/N35bg+ObTHAufti2Osve+aJZ/rM6Y9FOy/Km5rbd0316dPuy/Ydyzsu3bJP9Yeyjnl/Cm/5B/b55qcSTsF1q8bXJtr0JZg7iZRrq3+Ta/P9XTt0jJ/Uzh0XeHZDic9yRhw9tuAZzhcPHCO2+Q8Li7MER4XkMu2x3mUF5gOZ9IBF5QOYK6LeV5WgjDfx3wjA/6CvsVZ99Wvfpnc9R9/1x9QnvsV8uftx88vLAEfsic6LwGXGQfrEDPfROvFM9fhFcQL4iMcLjGCGS5ah5uxw+1XYHl58XhJCca8vCSIOLyoCv6GcODVkJyjrVFzryOu12R8HevUM3Ud2inUPVeJp9bYlr/Ketq7bf6ums44xHI2+2gPBfvngmuQS3sMcNYccC3yaI8Nzq1x7DXmzOMeyFNL/yag66m9iTX5BzvXUUv/JqDr0RI3sSbX0LVoa7B+bHANzqSdC/KPhblrkneVNbWf9lAcsj7XYh/tVcAZh+Aqa9a9c9ave44c4zDucOq/jOtYp5459vw152KMreLMN1wALyQOFxPWXHyeAd+k9P2AnAMkg74iXWR4YelwFuXFhJeVAWdR+r3muiDM9zjHxjzOr2ucdZ/znC+Xu/5z9y8u+AT/4Ds/ikuHfuPSCC8rAR82LyjxsoIXgX76tiXgQuOBZD1uu+ny4jFjg4CXj3C4vDhcYvQCQ59/0KfY460UXGCceFxQCIeXWiHZV6v567Jcp8Z1rcW59VplrHXaq6KcO+VfdQ32T83elmffodg2d1eNa5JDuwvkXRVcgzNod4G8Y4FrcRbtFFg/FsbW4Gzmaa8LOl/tda1Tz+V6/IO4zl9XfNPr8dkIPo9a+tcFrlGC6zCmPRY4bwpcgzXaY4Cz9sFV15y7Ftchl/Yq4Ix9wLXIp90X7Lsqdq151fl1/02vp+uPrau167TluhfXcflS4uJFZMD5MEFjh7pHzQECH9+WgNPHywjzBGtBOvyleY9LiF5UosUZtcNFpQc61OgP0TaY54EANPJd3/Wnch9+cLK++4/Zfcs3y4cefgCXkQW+TQnS4NKSLi8Bl5ggAS+DBwJeDg+wpvB4OTwvLwReMs9LSoQX+iH+J2Qi8cLCPC8osI4XGvgOL6dDLBEiyTphXi83x7CctwtXWYez2U87F+Tvi7mzS94+a7CPfNp9wb652Hf2GH9srTHeVXPlOpzFmPa6cN3zuW/B7zsF42ODszmztsxdBeU8+mO4ynztHZs7ldOefSxnkU+7L9g3F/vOrvm71iGfHNpjgLMIzlJL/5jgXMUx507N4lpTtavmefjjDFqC/nWAs8dw1bXGZk7lDlmLs9hHOwfkHoI5s8c4c9diL7m0h4L9U+BM1miPhTgP57oB6HHeS9ZJzOPsx1yPGtejTUAZZ8bk88LBy0pChzNmh0vLgDNnH33Us21xLu0A2r7jZSXggsPLCi3jRh7ijPuKV3wTDpl3/5e/+4+YnvCPvvczIq3D5QXfvMRLCi8xjTTwPRAAtfQTPC41AC468QKDiwsvNPQdXjDBS0XrkOclJh7I4AteVo+XkxcW5gUvtceL7HGYUrB2KATzaxw6q+yrZ5YxeYxp9wX75mKf2XNnljzOZ0w7BdavirHZV53J/uuay9kE55eW/rHBf8Efeybnca6C8bGgM0vL2YxpDwX7a3AWc7RXAWdswyGzt82ra5zPHO0ckHsIds0+ZGbZw/mMaWswfyg4i720NZg/FsrZx5pZzuH8vAW5ewAAEABJREFUHn8elblj+TpX7THncmaJY8wu56l/XXPL+fQPWYd9c7HP/LkzSx7nM6adAuuHgjPZS1uD+UPBSwmhl5UBZz3OGvB7QnAGpB1wJiSnR26A3+HsmC4muMTES4rHtyVBBvgDzpodLigdzqMl4jctyNG2qPe4vHQRAb2NrNci3/uaz8p9+bk3F5fhZV8rHxjeHb9xCR0vLQGXkuYCGuQbvAxEwMsR8KIk4PKSY/6nZR4XloAXLOBF4yUm4GWkdch7vJw+xh7fyIzBIT8fDvNqpDXmzyCfM9TSHwPrczHWP5XbNpM9rNPuC/btwr4zyR+bqXnaQ1HOPXRG3ceDA+fW+UNjzlMcOqPs01mlLev7+uWc2t9nFnvJp90F8nZh14yx+thM8pinvQo4g7jKjLr32PPq+ceIeVDgHFqC/lXAGVM4ZO7UrDI/c66QV/bt8smfAntZo90X7Kux74wxPmcyr5b+VdHjz9Orzij7OU9R5g/1dVZpD5nFfvbRToH1fTE1q8zvM7Ps2+XPmbtrxlh9bC55zNPOAy8fU3DCi8qA82KPs+HG8v/nCmrM43zZ4bzZndsQv1HpcB4t0SLucU7tIpf9xEKc+x156UtfJvflx9+XB+Vz/slrn5Rh7eLlpcGHH/ASBNgGlgh4GXwbcJkJ+CaG38Y00fetj7HnNzbgRB4uKQEvmQcCch5xutR4fKvjsYZLFi9qABzqRMBLSpSXG8f6BEreXH9sHnuZp90F8nZh14yyvm0WeazTToH1Q1HOPHQG+zintPQPheCz1nmHzmAf55SW/iE45hzOKnHofsoZpb/PvLKv9jmHOdopsD4XUzPK/JxZ5JNHW4P5fVHO2Ld3jH/MeQN+HyjG1to3x1nsUUt/H7Cvxj795Nb9dUzOXNS9Y/GuWWM9YznOYZ62BHOHoJyh/qFz2HeVGexX6Bxazd225WFWcdW9lHPo7zuPPdswZ962/rq2a17N3xWPzdve4/GNxWVwDvtoSzB3EfzGI+CS4SJ6nO96XI57/Lutw5kvWY81QqynCwe5ZRykxRmTNbXpshLQE3JtAb/BBYgXlQB/AdBfyPphJz/w2lbu04+/Tw8rL3ih/Mbz3oRLyCJeSEKLiwkvKtk2sAteZGBDzOMCAz9eavBi0aZLDPK47ARcWPifmoXzy4vHXCLg4uIjWOPlhpeagJeZlxeCOcKhl9bjJU829U3FyucM+hs4UT/NcXH95HNmislh7tB+9hLb+rlGWSdfnyfVPPa62W/KTcdX7df5nEM/2en1yCn3z1jw+Th8VgLQuhwnf/fzSOZL7tfY5djl+q5YwE/Yf/+pz0uyLluPz8LDd9FOrS/YX+ojl3DooVW4nf3ufO/scZf6dT55DuvRCnqSneaTI+Any9mEi/thzmGGjNRZ28Bd2o9Dn0L27B8yf8CMhMvzN2un/Y7FqdeLzttw5s1jP3v27SefvRs47IH7UGxfn/1p3Q1/M4u5q/ePzWMurXt5v6xtcLnOPgX3v+Gm/c6Jr9rf431JuLy/Oeuzl7we75/6A2YOiJPlsxDj8/vI9TggOcAXn7krfOYvxn2ez/4EF/uT7+G7rf3DjP4+722IdnweOQkOa3JdxeU4zfFxXz3WT30+913mj9WHuBf2uDyHPuHyHPrEdMwZPdYfMGuzxjQ/cVK9yz08JKtf1pO/fX1yjtW/2UPaH2cnjMfkJ/Aw73EYV6Q49U7vn73k6P4ZJ6R++qz30DdZziLSfrS+rZ8cresMxsnnHABnux6XFuY7nAs7fC4JoXgm9Xnh4HPShnwxaWADuLSEj3GL82fXLc99xgmJ2+Ec+qIXv1Ge//wXyH36wZ+Y9+lxRb7wL79Bfse9BRcMXl74rcoiXWTwgmwuMkHo8yLDC0yy6ZLT5AsN8yFfZgJe1IAXlRebgBeJPuGRrxGQIzz4RIBNwJqdF15wErAefiOEc6SYNeb4f2CA/gZ4FnAZsx7yf8qWfMzOsdbH+jfcDX+TS+trXPan3MX6tvW5B/anPq5FzO9PffP4iRvE4/k99GGc7O5+8hR8HvrsT5juJ0/XS37At28N9kCraJBTn7aJdeXX/RqntRNf/dSzvZ/7V36y2/m6Xpq9/3pj/Q766zyfP49dMffqYt9++/WY72JfkGTn95Pvcn/yAz6b7f1jfPb6vAePeRs/zXOobdDEfdbxpmezfuKM81ONz5zq7GfOY303Yz3lePDZS7jYl+YlfzN/Kvbol9hHLjG/P/U1kix7iWZUH3e+RnPOT33NTr72ki95v8nfvV7Nr2OHeTo/2bQfnV/zNU7cy+trfU4/OVyfdoMm6rMr5voDNJ27ns7jeqkv5HXmrcd+9vG/7adlnLC7n/wNmvi/EUi93MN0f+pJ/ORv56eZF/m637KffuJenMd8za9j6k2e9tf1qZj81Ld9f1P97OWBe1udnLE6+xRj9dQX4udS1lNPE7+F2HCazLvMT5wm8lNvgJ9i1pgr5zNXxqz3+P2YLHuJ3f0lv8O5rcNZTdGfx7xAYB5i5kpsuE28kKSY/CZfRMK57XCubCO0tkBNffLoN5izKIB3HGfZ7/+BV9yvQzye1gP37tdf/NRz5cPPvB8XlmW8oPCSssCttmkXMaZNaHKc7CLXyQ94yRpcduI3MLDMeeZwcaGNF5h4sQlYpxEPP/agHvCSN7AEeWo98g48BXt2QbmlHethnXnaKbBeY4pb5sueMr/LZx85aunvghT67OKyTj5Bfw6Uq3ZXD3k1dvWwXvcwZr6G5mmnUPcwJlct/TGwrhirT+W0h3aKU+eH/LnV+V0x+3Zxyjr5Q+uFtsxP+cqjVUxxmVdObVnbhprPeIyvedopHKOPszmHdhfIU+ziar3H580ejXdZ8hW7uGVde2jLfO1rnbZGzS3jmqtxySl9rU/ZkkufPLX0p0AOMVUfy5OvYJ0+7TZ0+Nzm8OoZ+/aRzxlq6c8B+YptfHJYp63B/BTIZY22BvM1as5YXPcwHuOVOXII5tTS3wbyFOTRp92GFp/3HJ7OIJ++WvpzoHy1Uz1ap60x1VPm6x7GZV19zdNOQbm06ULCi0ONgItEg0tGADz8EMGZPc54Hc6EXbSo4ZzYAjEXbSNdtutsU13zC8xcgLOAbfAN3iLaFufQrlvIMw8/KD+Fs+y9O8Djge/lxUW8lz/8qS/KZ5/6NC4VS2nwIhAh2hTzksJcaQNergbQnMbxQoI8v41hvUSq4fKCF5gXFA/LHHvVV1v2RR8vZ7MD/E/bFNu45LCulv6xEXbstV5P+WrrusasKzS3zSqXdhuPNXJKaI6WKGtjPjmKsfpYzmedxmp1jrPJr/NTMbkE62rpj4F1xVi9zim3tDWHcVlXX/O0JbQ+ZffhcsYhfIfPg71zwPm7eJxXY6pnjMfcGJ/5KZDPWm2ZG8Nc3ljvnBznC3SdwyWP/DlccshXMN6Gkkd/Dpc8xTH4OmvMcv4AncZqYznyx/JTOc4mWFdLfwxaVyvdQqZ45JQgjzFtDeZrkMMcbQnmtmEulzzOUUt/Dsjv8XnM4e7L4VzFnF5yyVNLvwTzUyCPNbX0x6B1WsUYT3Pk0FdLfw7I52F7F3cur5zDuYoyX/vKoWVNLf0xtDjTXQQuJTi/pYsH/XTB4CWlw+WkRS3xQ75gNNluYl5UNjzW02Wkw9mzJdaaY36BS8syzujapaxZBzq8n0899Tn5ydd9HkfZe3qEx+Xlfv567HF552vfJX//9JekwbctHi+pXkgavCQNXpCI9UKaiEYWyC1Yw8vVrEOMG/jMpdpCQs7zYtJgZoMe+kQT40Ya5OpLjl5myEsIcRbnJfgYe8xn7NdePPwN/M66ctkf0B+qfq0n68/nJ94mruuM3cx5Dmsm7J6X5oa8j4t8h/W07uJML8mGSb7Wk/WRzxmEwzwX54SYdzlmLcHnuSFarbvznt115XKew/xkp+c5zBYg8XzeV8j2sJjz0tzt/YL9JV4QwR4kx8wlpH6JNXJ85oXR/Unul4qfZgX0+thX18tYubSCeXI+K/WX8bCjLrk+YMbceeQSgh7J/RL9zfqsb5vHOnsG9A/nvZt+1hI8NAlCTkKKU23DTzXy/DmXnAHzaRUaD1gzYZyfahfnpVziz5lHfp/Xp5+Q+pMfhHX6fd5PDz7jDS7ze3CJxJmuk9NjXg9+4gZos5u/4Ya4P/Zv4JFjXuExM/ns6/N6PdZM8JHfId5WJ5f1Af0DuIwTUn/yuU6K58xLPYmf/E1/HXNewnZ+h/2xtzvf40V+V9Q7cDrEXbRcm7jM13qyXmi5BtGhP9kQ84y7PC9ZH/Ulh+jA76q6xrvqiZfWbzFjG5918lus14JLPyH1Jz9gzykmJyHFY3Xm2jyvxcyEi/wW9cQL0kbOxXo3Uk+8gL0QF/ntDv62ejuyfot5bcyH8/2V8XpHvS3qXZzj85zpeWvwiBa2LfrbItb6ekZ9jb4NPC4NTYEQ/RZnuIQQLxT0eenokN9gEWuMW5z11jgj0irWOaYlWpwpWVN/jfMm4w2WuLQ0mLkU/u9dnn76SXntD75LHsMZ9n4e3kXwp+F9fXSR4atfIm9+3W/Lh555Dy4TSwl4yRq8NCUWeKkavGjJLnCJaeKFhXHIeVpFgxn02ZP8kPmpl3nW41rgkkMssI5efpJdYk/oOeekmLUGuQX4DewGl+vKTZxUTz7npnjDSfFYPe11vE6+1pPlbGLDZz5gv7TkJ4zXySGags9Y+5Of5tNPs1KsPvNj/KvUy3keuoe8v7TWAu/OEqBVbI89+n2cs5BkL/NTfnudnIRlnrPI+0hxqi1QS3HAmswFrE9f4RH7XKMNOQ7IET7HHnHCZl5ALkzUPWpEQN1l30eb+pO/wJ6Xsq3ucz85BGPtTTb1s0bsqrs8j701n7HWk78414/8hIvrKZ819nB92g0Sf1e95u+KdZ6uP8YX6O3wvBLtIursECtXYn4pyY7XBXzWFS7HDr0SkfqTzxkpZj1hmddd5HWW2S5yfpntIuYlzy/nOaxDpNwy8xLfgc8aIeAJ4mRTvYyHHfXUd3F+2a/1NGchyV7mp/z2OjkJyzxnfL8Dnoc8rp3sxfW0zlrC5Xkpn/ajfM5LSPwN52LM5++h26H1Afvv0a8YEG9mcU9L6as64w1nGfVhzHyP/mQXsW9APKB/g2XM98gRw456j3oP7gAke7G/H6kPmUt+n+vJ555S/3DOSfFYvYuc8Tr5Wk+Ws4kNn/kO69OSnzBeJ4fod/B31XU9ziLIT+suhPG+9ZLfQo8u7y/N4kwc2mOePrE9btHfZn6yl/kpv8CFYIE9j9fJSVhmHrnEEj0NLleNrHEOJBJvgTigRpvqHfbRgnMO7o0x8wB71zh3tsivY36JGewnOH+BeUugkYcP3yM/8bp3yYtf8qL7e3DHk9/riwueX+Txx+VDP/uU/FZ4E76xWOTLwhJ2hQvHKuYWbbZr5IEANHjRltkusm2QW9ZGJYEAABAASURBVBB4AZOf+PQD8kSDF3VBICa3wYtKBNgazCvqGmOt0WpMuwN4puYcfmTdsn9OXdcv+9Rn/1ideXLU0i+hebVljb7maWuwrqhrjLVGy7iEy3qUudKfUy/5h/pT6zCvGJutNdpddXIUytW4tmWdfl0X6DaWV95V65yzbf5UneuyppZ+Cc3TKnbVp3iaV7trDuvKPdQO0H1b75z62D60T229hubVbquTU4Jcxmrpl2BeUebp9/l56Y/hqvWxmWM5rjOVZ424ap0ziHIO4zEohzX6tCU66DaWV85117nO2PpclzW19Etonlaxqz7F07zaeo7m1bKu/qGWh9VtvXPqY/vQPrX1GppXu61OTglyGaulX4J5RZmnz4M3a/THcNX62Mx9clxfMdanNdrt9UW8XPCy0uE81+I8R6xh1zgP0rawrNPfgJeZJXqXuPQQi2hZZ3+Ls6Pajn4G6z48IT/9M0/hyPqseHS9z/+wi0v+9D/9uufKr7zo/xF56HFhWUYEvITL6tKywMvIC8divcK3L+AhDvhDYQFLNLAN+hbZsr/JcfKX6Fvg4pBQ8hfoIWeBl3WBdRUN4pRfYV/EMlv6xFJYb857Ltd1VrLz65y7wPqL89krXOpSv67XVPVFjpvc0+R4gbiJuNi/2FFvUG9iH9cmLvY3I/UG/ADQNhP1ZqS+QC5s4W+rB/RyZpjoD6gnLKEhnyMhgB/Oa7gkI05zLteZb4p66lviGwv2Jf62es2v4ybuYzNvrM5vE1I+rRnyfnzsZe5yP+eO1Znz6A/o9QBtyHHIsUfs4RPMecTJrvBNCLHMdpV1WEbr0ZN4KU7+CtwlQLvKvGW0U3WH9Thrg6X4dnU+g/VNL/Op7rB+wiZOM1Kc/A1fY4f1XO5NuYt8N1F3ucftWeffprvz3hW++VjGZ2OO67tinou8VJforyI/5ekTy9h/aF2wnmA2keYuscYqgvsR1FM+5VyOBT0OkBzTT0j9ghpjqeqMBbUNEp9cQsCXkfomt8S3P6sI8h34ruJvuORt+Cm/PR4wb8A8Yhtf6wP4ibfCtxREmj9gRsqnmD5zQ+YPuT4gHuBvkPiMU88yz+VsItX7857LdfaO1TmvH1mPfOIq9R77SZjez1i9x3763Ms9DIgHxIoecY+YSLk0n3HCEt/2rCLm1PtiXh/nXuznATbl08wefM7tIpe5Db+PuWX8fMbqzHXoJ6+L3Iv9zHVVvYw79HSod9Gyl1jGZ2UuzU1x8lf4pmAJ0K4ybxntVJ2Hd87aYHnez9yc+mb2Cr0X+7ti/118ju11rpcuI8t4yYgXC5zpkl3iErLAtzEr2FTvMJ+XFl42kk15zmhxbmSefoL2qV3KOve32FsL/+Ezg7wAZ9OfeN1zxH6SAnZxSTrEfz71fS+TN33/L8j723eIf9jEy0HAC7rAy7bAC9TA50VjgbjJPuPV+kG8jNBf4PJBqN9wTuaHhwthbYF4UfAaxE2eR07zcCkh9uGAG3k4kKK+gN8Ai4LPuEHMfTaoJSQ+/QVyC9Sbor/JcYNawoavMecF1Imm4i8Qs96gnrASjckPRT1ETqonn8+0iZkLmR8id1Pn7JTb7I9xKPgh9ozPY3/CeJ29CZu6n5jnoV9AjfVQrc/Yo861AjihqCvfox5iDZ8t6h4xa0RAHBCHGXUPjgffZ75HHHJMP2ElPtdDVS9j+iWfvqv4zHnMd5jHGsHYI/bgJqyE9eQvsXZanzH5LvczTlhFviv6x+axTviif1vMWkKa7zGfsc/9yV/G/el+mXNF3cWe1fn+GJf9jF3FZ12gh4u9S/SuRBD7IuZ6DrEADv2CevIT3yF2qAngUXc5Zs4hlhwL6g6xK2JBLDl2I3U3UhfwBVzCoe4QuxwLYkEsiAfAFTFzkmMXa2n/kvmCnKA+IHbRX0KLpIcg5jzJdUGccLHuUBf0p1rq5zz2ElLUGQ+IWRfMGwDJMf2ElWhdRuqS+YJayaffIye5zjhhM4/xWL3H/gf0JiR+8pfYy37xtvncX4/99Xm9Pq65EsbJv7heyl2ukz+gV+tDMa/P8/uJ+pDrA+oJm/mpZyXd1LzYs4ImC2CJfRMr2AWwRN8S+RX8FJfz6Hfo7/P6PXzGHWKuxzhh09+B04/UyWeNYL3HfntwGXeZ3+W4RzxW71FPWGHfC2CZscKBN+0/zVghv6n3mMf1e/TX9Ra5PtdTjTNXcV4Zd9gv4xb8Fvw2xx3iDnG3I25RbyP34vyUu7we+R34rLeY36K/y3GX4xZxF5H6GSdsjzv0d8W8FnGLuMUsoqviFjEvAy3qvAy0Rdwi1yJui/4yLvnJX0LbFS4hC1njvPYQWOM8Vven9chbJj7Oay3W4gz20Wpc2ofglDF5CYt8+aE2mInz5kOs/XD9Tvm+H3y9vAZn03hItX9EBeziEmXY/GN48QvkYz/9jLzp1f9ZPvz0e3EhWeICA+BysmgfwOchOsf4DcFDPA+stEvE9Inkk0ssZcn+Ne0qzQSXPQvkiAZxA1+xQOzx4oZzLIV+k+N0uVnEXMovhTWCccBvtmQXkUO+z70pf3FeKPg+8lI9cTljKcwrwgjfxz5yF+AmPvtTPsX0iVD1e8Qe/YqQ43CeS/2ME1Lscz2An/Jcm7hY96j7zE12Ka6KmQ/IpfzF/oD+lOdsYlNP+c08xq7gM/aIPWZvsOlPudRPLlHyGZfzSj591qf4rAnWdVifvoJ8iflF1MHlOudJzF/cj8t17a9jztvUOHO6XybmM69wxXqS+cly9kIEdY2TXSLHvCLFDr0DIJlPLuEQp/xlvkzwHfLEWF0wL+XTPId4an7Kp/0JZiYsJeUX2W7qKX+xPozMJ2+DDb/HGkPma73cb8pt+Nv2k7jcY+Iz7ifmpzy5ROJzdsqnmP1Ej/2l/EKSXUZLnxhQH+I6qd4j7nM8RLvMuqX6gHrKL2KecQ+eYijqPfID4j7axO+LOOWXF/ZT1jv0aUwuMeT+PtYW6B3vZ539Hfi0jBOm+awPE/wB66U5l/tTfiHJLqOlT/TFPMZj+0n51F/W27jmxXldnqc9nN9G3sV+rXfgtyP1HrmUvzh/ah75aeZFflvM13m0ig71DmsRLWyLmLaDn7AUxhtsjzv0p75F7GPc5lm0LerJbuo88G5yaX6HnpRPsda7qr9FnHhpHuMWvQTz65F6yi/iAb3mM2ad/QnL+Bz0U36Z+xY5vzyPyzp9gvPYSzDetZ+yXvKTv8BaaT2NOf8hnlfjdX5exg+Rf4iYdg0/YSkaJ7vETM5N4DxeKHjJSFhJsuDhnNbiPLeOlvFK1jivEeQku5KHyDEmmFtH/ipyW9TWQItch29WOpwtY4wLyxq5p55+n3zHd/0n+Tf/9ml54Qu/anNAnfDuW9ouLhOfeP8NL5E//tnPydm3/Af5+JMfloCXiZeJBFxgctzg5dPcuf+Q9RW+XVlJQ97DZBtwA37jLHKc+lbgPcDFhnYV+eQ17AN/kS3jBnGDuMl2ka3GtLrPpuA14G3Ls95k/jbe1HoN5je5v7Q1v4y5ToM+tU3uZxxyntYfkGdfQF8o5oSRuBmpH2O9qbkB63G+hw15P76yc/Ie/b7qY+wn8gH5UPDJc1XsEXvwpvI+12tLvst9vrLM+9znKlvmXdE3lXdFvwO/5HnELtd9thqrLfOu4LuC73bkWRfwad0M6/M8V1j2b8uzTj6toE/yOrV1RV4K3j559g0jc7blBXzJ69Hu208++6SaMxa7Yh2ts38qL+CzTit5PuOhyA8z89v6hzyPth+Zty0/gD/M7CeP8/uKz7gfmdOD1+/Ia13tkPkaqy3zfTG3L/j9lvxUf5kfcn89R2PabmS9Ms+6xh3mdeBrrLZDvi/yjLsc75vXPtqumtsj7jC3K2w8mBZxh/oU76r5q/Z32OfYfjXfjtRbPE+LPA/btG2Oaeu+NvP2zbOvLea2mNOOxPvOneKvMX+d55d2HS8rvMA8wOVjiYvMSh7iQrQG2syP8Xn/A9RX4D6I3Pa8n7nywgNe7F/Kk099RF7xrf9BfvpnPyNf9/UvmTidWtouLjvegfbbvkbe93//qbzxh/6r/Ppz/6N89Kk/kO5pwQWDl4wVLh2r6PNQTjS4lCzwEi7wktJfrh9DfQneA1xOHsAnEONywwNu5IHfgE+ffH5bQ8t4EftX6H0szmC8wG+MZB8gx/wq2weRl+Y+htymznlpDeY3/DQnxVov+5u8PnlN3ONjeIaLfN0P603kX6xzXso/QO/l/rLOdcp5jFmnXWD9NCfND0Wc8g/wzGm+xrQh69WM8Ju832RTfwC/ifkHuLA+BqzivnW9gHpAPVTzGIeYT/wm1wP4Tcw/yHNSPeS6Rz3kerKp7lHXONnNfjTm3F39rHvM98W81LffvFD0B8wLVazzuV7IdQ+rsc98xj7mL67vUfcxv4Lm1D3Vyec8V9QTL9Ud9NM42dQ/xtd6spf7HdbXeS6vx9jF/ANJfatoHeou5lPsEfscp/xlPuuC/Wo92dQvRT95HnFZd4j9jvkOdc5PvAfCWPfP+WXs8jzyHfocYhftZj8aJzs+r+wX9GsseR5jifnL/czzAMv5Ar5E3kqSfZDtJiaP/Lqe8pf5iZf6hzy/7B+wnsZDVddY91/HAn5aN81nPEzMS/mL+xvQLwVfEA9FPCCWHA/Rpn7uV2NaHlgT74EwrutlTB75ibfhp3yKWe+xXo/1E28V52rMeso/kD7yxuv9SH9f8DvUNU52M09jrsMDpsbJpvXYz3q5nzJmXfnJPsjPscr7fhAt56e+FHOe8pPd8MkjP+UfSIfn0bjLz8O4i/mL8zrUu5jfzOMc8pO9zGe+xb8vUt/F9XgQTvlV3semnvJp3q5+1lvsqy32x37GbcxfnD/G5z673D9W7+KctD/WGXfgl/NbxF3krXDQfwxIfOqT8g+QewwXgVV8XvLbgr9Gfxm3iNm3hn5t5KX+FnHKb+K6zniN/mRXcd0WfWvk1jivtbAPcdajXSNeY/4a9Rb5FnaN892aFngYLza8rHCOWq69lGeedris/L582XP/s/wAzpj/9v/6mLzyVV+z41RqZW8SzFTgy58rX/qhF8iHfvYv5Vf+7S/Jm5//7+U9w5n88TO/JZ948kPyuS99Sp588ilxzwQcTnlAXeIQzQPoChYxXt4GL/ESL/YCaPCyx29e8PIv8JIzblBPeICDW9VPfq5rf+KuztdjHMAZq4eiv8nrk59wcb26Xs9jHDCPvQHrNZgXcsxck+OAGtEgbkbqzUg9xFzaD+sJKU619LxhZF6IvRfrzDVY34Mfcj0gDhOxB6fZUg8TdY95DWqsB/Qz9ogJjVkbi5vMD5nvq1j7U+8K78YDHJyXsCscTDcx6wkPkF/GOmP2B+wv5PmMXRHreuQ6cFj3qHv4CWle8ldYO61fxq7i+y1xOd9hDYfndRWfsYu1tJ5DXffP/TJ2Vd3nuJxHTs3VskleAAAMDElEQVTXOms8lJZ1ztCYPjka0094gAP1EjqsoDPxAHYJrJBfIf8AdnkeC55PsH/2CvY4NU/r3J+AL+AypzF9ibkHmH1x/gB+WZeJmBydJ5g1AGXMHPc7oD/5fKYH8XnKmHXOSrnLdSn6p+ZrP+ucJ9hLwvS8ARzyJc9nPEDfoYh1/wO4EvEAB9bLetV1clMu8cu4L+breuT2xXzG7NH16dd1ctjfT8wr6/R7zCd/AH+Az1jnMyYY90WdfMY9+KyXccql52ONcQ/9uqp/KGLW+xwPceYDHPiXAA/gK2h7Oea8HtyEBzhoLsFb5Z4UpxpzF/t1PdY7zKj3z3qX90OOxh24hMbcq9Z78Ptc57yuiJWvdY078JkrYx5Ky7is0089m+dh3EHftliPcYe4w/wWKOcxx3o7s678LvM7zKv7GXe53qLe5v108IlyfdbJbzOfdY1b8AmNWWPMeWvwk7/CZ50+37Leoq6x9rd5Xpv3o/FYfV31M1Z+i/51UW8Rt4hbzF8DU/O03oK/Bn8NLnNtjnW/jFvUW9TXOK/xUnLxMvIYLjb4BoU1cMhfZ36LWQ+f8fKlJ5+UL33p07AfkqdxZuyGJ+SrXvTv5adwlvw3OFP+4A89X56HM+bM0+i9p9nF5cBX4Onve7F86l/18rGf/mv54M98TN79M++Vd/z0b8iv/usz+aXXvVF+6Sd/UX4Z+JWf+EX5lZ94k/zqTzwhv/rjsMCbf/wJ+bUfP5M3R0v/Cfn1HzsDaBPekuO3/NgTknAW7Vtz/FbU6f8G4oQzoX1bjt+GOn3F23P8dtQTzoT2HYiJ30T9HfB/8xxnQv+dOX4n6vQV70L8LtR+C0j2TOgrfhv130ZtgzOh/zvIEb+L+u/A/91znAn930OccCbJPhHtu8F/N2rvAZI9E/qK96L+XtQUv5/j30eO+APEfwB/gzOh/z7kEs6E9v05fj/49D+AOOFMkn0i2g+i/kHUFH+Y4z9EjvgjxH8EX/GhHH8IuYQzof3jHH8YdfofRpxwJrQfyfFHUKev+JMcfxT1PwE+ipi+4mM5/hhqCWdC+6c5/jPU6f8Z4oQzof14jj+OOn3FnyP+c9Q2OBP6n0CO+AvU/wL+BmdC/5PIJZxJsk9E+5fg/yVqf3WOM9n4T8inUP8UaopP5/jTyBGfQfwZ+IrP5vizyCWcCe3ncvw51On/NeKEM6H9mxz/Der0FZ/P8edRJ76A+AvwFV/M8ReRSzgT2r/N8d+h/rfw/+4cZ0L/73P896jTV3wJ8ZdQexJI9kzoK55C/UnUnjrHmdB/GjHxDOpPw3/mHGdC/2GOH6JOX7FGvEatBZI9E/qKDvUOtQ3OhH6PHDGg3sMfznEm9AVxwpkk+0S0DnyHmsLn2CNHBMQB/gZnQr9BLuFMaBc5XoBPf4k44UxoVzleoU5f8SDHD1AnHkP8GHzF4zl+HLmEM6F9Vo6fjTr9ZyNOOBPaL8vxl6FOX/GcHD8X9ecAz0VMX/G8HD8PtYQzof1yxMRXoJ7sE/IVyDGm/croPyFfiTp9xVch/irUng8keyb0FS9A/QWobXAm9F+IHPEi1JN9Ql6EHGPaF8NPOJNkn4j2JeC/BLWvBpI9E/qKr0H9a1BTvDTHL0WOeBnil8Hf4Ezofy1yCWdC+3U5/jrw6Su+PsdfjzrxDYi/Ab7i5Tl++Y89IQlnQvuN4NB+E+rfCP+bznEm9F+R41egTl/xzYi/GbVvAZI9E/qKb0X9W1D71nOcCf1XIiZehfor4b/qHGdC/9ty/G2o01f8A8T/ALV/CCR7JvQV3476t6O2wZnQ/0fIEd+B+j+C/x3nOBP634k44UySfSLaV4P/atS+C0j2TOgr/jHq/xg1xT/J8T9BjvhuxN8Nf4Mzof9PkUs4E9p/luN/Bj7970GccCbJPhHt96L+vagpXpPj1yBHfB/i74Ov+P4cfz9yCWdC+wM5/gHU6Stei/i1qP0gkOyZ0Ff8c9Tp/3PUE86E9odxZiN+BOe3H4b/IxFvEtp/gXPevwT+Bc58P/qTb5If/ck3yv+Bs+CP/ev/La/76bfJv/qZ98i//pmPyU/hzPgT/2qQf/o9Lz7w9GltdnGxd8AUMAVMAVPAFDAFTAFTwBQwBcYUOKmcXVxO6uOwzZgCpoApYAqYAqaAKWAKmAKmwJgCdnEZU8Vyp6+A7dAUMAVMAVPAFDAFTAFT4F4pYBeXe/Vx28OaAqaAKbBRwDxTwBQwBUwBU+BRUsAuLo/Sp2V7NQVMAVPAFDAFTIFTUsD2YgqYAjeogF1cblBsW8oUMAVMAVPAFDAFTAFTwBQwBUoF5vt2cZmvlTFNAVPAFDAFTAFTwBQwBUwBU+CWFLCLyy0Jb8uevgK2Q1PAFDAFTAFTwBQwBUyB01HALi6n81nYTkwBU8AUuGsK2POYAqaAKWAKmAJHU8AuLkeT0gaZAqaAKWAKmAKmgClwbAVsnilgCqgCdnFRJcyaAqaAKWAKmAKmgClgCpgCpsDJKnDwxeVkn8g2ZgqYAqaAKWAKmAKmgClgCpgCd04Bu7jcuY/UHugRUsC2agqYAqaAKWAKmAKmgCkwUwG7uMwUymimgClgCpgCp6iA7ckUMAVMAVPgvihgF5f78knbc5oCpoApYAqYAqaAKTCmgOVMgUdEAbu4PCIflG3TFDAFTAFTwBQwBUwBU8AUuM8KnPLF5T5/LvbspoApYAqYAqaAKWAKmAKmgClQKGAXl0IMc02Bu6eAPZEpYAqYAqaAKWAKmAJ3QwG7uNyNz9GewhQwBUwBU+C6FLC5poApYAqYAiehgF1cTuJjsE2YAqaAKWAKmAKmgClwdxWwJzMFjqGAXVyOoaLNMAVMAVPAFDAFTAFTwBQwBUyBa1Xgnl9crlVbG24KmAKmgClgCpgCpoApYAqYAkdSwC4uRxLSxpgC91YBe3BTwBQwBUwBU8AUMAVuQAG7uNyAyLaEKWAKmAKmgCmwTQGrmQKmgClgCuxWwC4uuzUyhilgCpgCpoApYAqYAqbAaStgu7sHCtjF5R58yPaIpoApYAqYAqaAKWAKmAKmwKOugF1crvsTtPmmgClgCpgCpoApYAqYAqaAKXBlBezicmUJbYApYApctwI23xQwBUwBU8AUMAVMAbu42DtgCpgCpoApYArcfQXsCU0BU8AUeOQVsIvLI/8R2gOYAqaAKWAKmAKmgClgCly/ArbCbStgF5fb/gRsfVPAFDAFTAFTwBQwBUwBU8AU2KmAXVx2SnT6BNuhKWAKmAKmgClgCpgCpoApcNcVsIvLXf+E7flMAVNgjgLGMQVMAVPAFDAFTIETV8AuLif+Adn2TAFTwBQwBUyBR0MB26UpYAqYAtergF1crldfm24KmAKmgClgCpgCpoApYArMU8BYWxWwi8tWeaxoCpgCpoApYAqYAqaAKWAKmAKnoIBdXE7hUzj9PdgOTQFTwBQwBUwBU8AUMAVMgVtVwC4utyq/LW4KmAL3RwF7UlPAFDAFTAFTwBS4igJ2cbmKetZrCpgCpoApYAqYAjengK1kCpgC91oBu7jc64/fHt4UMAVMAVPAFDAFTAFT4D4p8Cg/q11cHuVPz/ZuCpgCpoApYAqYAqaAKWAK3BMF7OJyTz7o039M26EpYAqYAqaAKWAKmAKmgCkwrYBdXKa1sYopYAqYAo+WArZbU8AUMAVMAVPgDitgF5c7/OHao5kCpoApYAqYAqbAfgoY2xQwBU5XAbu4nO5nYzszBUwBU8AUMAVMAVPAFDAFHjUFrm2/dnG5NmltsClgCpgCpoApYAqYAqaAKWAKHEsBu7gcS0mbc/oK2A5NAVPAFDAFTAFTwBQwBR5ZBezi8sh+dLZxU8AUMAVuXgFb0RQwBUwBU8AUuC0F7OJyW8rbuqaAKWAKmAKmgClwHxWwZzYFTIEDFbCLy4HCWZspYAqYAqaAKWAKmAKmgClgCtycApuLy82taSuZAqaAKWAKmAKmgClgCpgCpoApsJcCdnHZSy4jmwLbFbCqKWAKmAKmgClgCpgCpsD1KGAXl+vR1aaaAqaAKWAKHKaAdZkCpoApYAqYAqMK2MVlVBZLmgKmgClgCpgCpoAp8KgqYPs2Be6mAv8/AAAA//9BKI13AAAABklEQVQDAHiT1WvBk2w+AAAAAElFTkSuQmCC"></feImage>
+        <feDisplacementMap in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="B" result="dispRed" data-channel="red" scale="-110"></feDisplacementMap>
+        <feColorMatrix in="dispRed" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red"></feColorMatrix>
+        <feDisplacementMap in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="B" result="dispGreen" data-channel="green" scale="-104"></feDisplacementMap>
+        <feColorMatrix in="dispGreen" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green"></feColorMatrix>
+        <feDisplacementMap in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="B" result="dispBlue" data-channel="blue" scale="-98"></feDisplacementMap>
+        <feColorMatrix in="dispBlue" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue"></feColorMatrix>
+        <feBlend in="red" in2="green" mode="screen" result="rg"></feBlend>
+        <feBlend in="rg" in2="blue" mode="screen" result="output"></feBlend>
+        <feGaussianBlur in="output" stdDeviation="2"></feGaussianBlur>
+      </filter>
+    </defs>
+  </svg>
+<nav>
   <a class="nav-logo" href="#">
     <img src="icon.png" alt="CapMeter">
     <span>CapMeter</span>
   </a>
-  <a class="nav-cta" href="#appstore">Get on the App Store</a>
+  <div class="nav-links">
+    <a href="#idemo">Demo</a>
+    <a href="#how">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+  </div>
+  <a class="nav-cta" href="#pricing">Get on the App Store</a>
 </nav>
 
 <!-- Hero -->
 <section class="hero">
-  <div class="hero-badge">macOS Menu Bar App</div>
-  <h1>Know your <span>Claude limits</span><br>before you hit them</h1>
-  <p>CapMeter lives in your menu bar and tracks your Claude.ai usage in real time — session, weekly, and per-model limits, all at a glance.</p>
+  <div class="hero-badge">For Claude.ai · Pro &amp; Max</div>
+  <h1>Stop getting blindsided<br>by <span>Claude's session limit</span></h1>
+  <p>CapMeter sits in your menu bar and shows your Claude.ai usage in real time — so you know exactly when the limit hits before it interrupts your work.</p>
   <div class="hero-actions">
-    <a class="btn-appstore" href="#appstore">
-      <span class="apple"></span>
-      <span class="txt"><small>Download on the</small><strong>Mac App Store</strong></span>
+    <a class="btn-cta" href="#pricing">
+      <span style="font-size:20px;line-height:1">&#xF8FF;</span> Get on the App Store
     </a>
-    <a class="btn-ghost" href="#features">See features</a>
   </div>
-  <p class="hero-note">Free 14-day trial · No credit card to install · <a href="privacy.html">Privacy Policy</a></p>
-
-  <!-- App product shot -->
-  <div class="hero-shot">
-    <img src="shot-main.jpg" alt="CapMeter running in the macOS menu bar" loading="eager">
-  </div>
+  <p class="hero-note">Free 14-day trial · <a href="#pricing">$14.99 once</a> · <a href="privacy.html">Privacy Policy</a></p>
 </section>
 
+<!-- Trust strip -->
+<div class="trust-strip">
+  <div class="trust-item"><span class="trust-icon">🔒</span><strong>Fully private</strong> — zero servers, zero analytics</div>
+  <div class="trust-item"><span class="trust-icon">💰</span><strong>$14.99 once</strong> — no subscription, ever</div>
+  <div class="trust-item"><span class="trust-icon">🍎</span><strong>macOS 12+</strong> — Monterey and later, Apple Silicon &amp; Intel</div>
+  <div class="trust-item"><span class="trust-icon">🔓</span><strong>Not affiliated</strong> with Anthropic</div>
+</div>
+
+<!-- ═══ Interactive Demo ═══ -->
+<div id="idemo" style="height:500vh;position:relative;isolation:isolate;margin-top:40px">
+  <div style="position:sticky;top:0;height:100vh;overflow:hidden">
+
+    <!-- macOS Tahoe wallpaper -->
+    <div style="position:absolute;inset:0;background:url('icons/tahoe-dark.jpg') center/cover no-repeat"></div>
+
+    <!-- macOS menu bar — full width -->
+    <div style="position:absolute;top:0;left:0;right:0;z-index:30;height:32px;display:flex;align-items:center;padding:0 17px 0 20px;font-size:13px;line-height:1;color:rgba(255,255,255,0.96);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',system-ui,sans-serif;letter-spacing:-0.008em;-webkit-font-smoothing:antialiased">
+      <!-- Left: Apple + menu items -->
+      <div style="display:flex;align-items:center;gap:23px">
+        <svg style="display:block;width:19px;height:23.3px;flex-shrink:0" viewBox="0 0 814 1000" fill="currentColor"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57.8-155.5-127.4c-58.3-81.3-105.9-207.6-105.9-329.1 0-193.9 126.1-296.6 250.1-296.6 65.9 0 120.9 43.3 162.2 43.3 39.5 0 101.1-45.9 176.3-45.9 28.5 0 130.9 2.6 198.3 99.2zm-234-181.5c31.1-36.9 53.1-88.1 53.1-139.3 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 83.6-55.1 135.5 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 103.5-30.4 135.5-71.3z"/></svg>
+        <span style="font-weight:700">Finder</span>
+        <span style="font-weight:475;color:rgba(255,255,255,0.82)">File</span>
+        <span style="font-weight:475;color:rgba(255,255,255,0.82)">Edit</span>
+        <span style="font-weight:475;color:rgba(255,255,255,0.82)">View</span>
+        <span style="font-weight:475;color:rgba(255,255,255,0.82)">Go</span>
+        <span style="font-weight:475;color:rgba(255,255,255,0.82)">Window</span>
+        <span style="font-weight:475;color:rgba(255,255,255,0.82)">Help</span>
+      </div>
+      <!-- Right side -->
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px;white-space:nowrap">
+        <!-- CapMeter item -->
+        <div id="idemo-mbcap" style="display:flex;align-items:center;gap:5px;padding:2px 5px;border-radius:5px;transition:background 0.35s;flex-shrink:0">
+          <svg width="23" height="23" viewBox="0 0 14 14" style="transform:rotate(-90deg);flex-shrink:0">
+            <circle cx="7" cy="7" r="5" fill="none" stroke="rgba(120,120,128,0.75)" stroke-width="1.7"/>
+            <circle id="idemo-mb-ring" cx="7" cy="7" r="5" fill="none" stroke="#34C759" stroke-width="1.7" stroke-dasharray="31.4" stroke-dashoffset="19.5" stroke-linecap="round"/>
+          </svg>
+          <span style="font-weight:700;color:rgba(255,255,255,0.96);font-variant-numeric:tabular-nums">38%</span>
+        </div>
+        <!-- Control Center -->
+        <img src="icons/control-center-icon.png" alt="" aria-hidden="true" style="display:block;width:auto;height:18px;filter:brightness(0) invert(1);opacity:.95;flex-shrink:0">
+        <!-- Date + Time -->
+        <div style="display:flex;align-items:center;gap:10px;margin-left:6px">
+          <span style="font-size:12.5px;font-weight:680;font-variant-numeric:tabular-nums;letter-spacing:-0.025em;color:rgba(255,255,255,0.92)" id="idemo-mb-date"></span>
+          <span style="font-size:12.5px;font-weight:680;font-variant-numeric:tabular-nums;letter-spacing:-0.025em;color:rgba(255,255,255,0.92)" id="idemo-mb-time"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop area -->
+    <div style="position:absolute;top:32px;left:0;right:0;bottom:0;overflow:hidden">
+
+      <!-- STEP 1: desktop, menu bar item pulsing -->
+      <div class="idemo-step" id="idemo-s1" style="position:absolute;inset:0;opacity:1;transform:translateY(0)">
+        <div id="idemo-s1-ring" style="position:absolute;top:-27px;right:0;width:58px;height:26px;border-radius:6px;border:1.5px solid rgba(52,199,89,0.85);box-shadow:0 0 18px rgba(52,199,89,0.5),0 0 40px rgba(52,199,89,0.2);animation:idemo-pulse 2s ease-in-out infinite;pointer-events:none;visibility:hidden"></div>
+        <div id="idemo-s1-arrow" style="position:absolute;top:24px;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;visibility:hidden">
+          <svg width="14" height="26" viewBox="0 0 14 26" fill="none"><path d="M7 24V4M2 9L7 2L12 9" stroke="rgba(255,255,255,0.75)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="background:rgba(0,0,0,0.65);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.12);padding:6px 14px;border-radius:10px;font-size:12.5px;color:white;white-space:nowrap;font-family:-apple-system,sans-serif">Live usage ring</div>
+        </div>
+      </div>
+
+      <!-- STEP 2: real CapMeter popup (iframe) -->
+      <div class="idemo-step" id="idemo-s2" style="position:absolute;inset:0;opacity:0;transform:translateY(10px)">
+        <div id="idemo-s2-inner" style="position:absolute;top:4px;right:120px">
+          <iframe src="demo-popup.html" scrolling="no" style="width:300px;height:440px;border:none;border-radius:0 0 16px 16px;box-shadow:0 32px 80px rgba(0,0,0,0.75);display:block;" title="CapMeter popup"></iframe>
+        </div>
+      </div>
+
+      <!-- STEP 3: History popup -->
+      <div class="idemo-step" id="idemo-s3" style="position:absolute;inset:0;opacity:0;transform:translateY(10px)">
+        <div id="idemo-s3-inner" style="position:absolute;top:4px;right:120px">
+          <iframe src="demo-history.html" scrolling="no" style="width:300px;height:440px;border:none;border-radius:0 0 16px 16px;box-shadow:0 32px 80px rgba(0,0,0,0.75);display:block;" title="CapMeter history"></iframe>
+        </div>
+      </div>
+
+      <!-- STEP 4: macOS desktop + browser + floating widget -->
+      <div class="idemo-step" id="idemo-s4" style="position:absolute;inset:0;opacity:0;transform:translateY(10px)">
+        <!-- desktop wallpaper — shared base layer (line ~409) already shows through; just darken to match site-wide overlay -->
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,0.38)"></div>
+
+        <!-- browser window: generic AI chat -->
+        <div style="position:absolute;top:5%;left:5%;right:5%;bottom:17%;background:#1a1b1e;border-radius:12px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.06);display:flex;flex-direction:column">
+          <!-- browser chrome -->
+          <div style="height:38px;background:#141518;display:flex;align-items:center;padding:0 14px;gap:8px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,0.05)">
+            <span style="width:11px;height:11px;border-radius:50%;background:#ff5f57"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#febc2e"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#28c840"></span>
+            <div style="flex:1;max-width:420px;margin:0 auto;height:24px;background:rgba(255,255,255,0.06);border-radius:7px"></div>
+          </div>
+          <!-- chat body -->
+          <div style="flex:1;display:flex;overflow:hidden">
+            <!-- sidebar -->
+            <div style="width:200px;background:#141518;flex-shrink:0;padding:14px 12px;display:flex;flex-direction:column;gap:9px;border-right:1px solid rgba(255,255,255,0.05)">
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 9px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.09);border-radius:8px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:12px;color:rgba(255,255,255,0.85);font-weight:600">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                New chat
+              </div>
+              <div style="height:9px"></div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.3);font-family:-apple-system,sans-serif;text-transform:uppercase;letter-spacing:0.06em;padding:0 9px">Recents</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.55);font-family:-apple-system,sans-serif;padding:5px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Refactor auth flow</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.55);font-family:-apple-system,sans-serif;padding:5px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Draft launch email</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.55);font-family:-apple-system,sans-serif;padding:5px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Explain vector DBs</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.55);font-family:-apple-system,sans-serif;padding:5px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">SQL query help</div>
+            </div>
+            <!-- conversation -->
+            <div style="flex:1;padding:22px 32px;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,sans-serif;display:flex;flex-direction:column;gap:16px;min-height:0">
+              <div style="max-width:760px;margin:0 auto;width:100%;flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:20px">
+                <!-- user msg 1 -->
+                <div style="align-self:flex-end;max-width:80%;background:rgba(255,255,255,0.08);border-radius:14px;padding:11px 15px;font-size:13.5px;line-height:1.55;color:rgba(255,255,255,0.88)">
+                  Can you rewrite this function to use async/await and add error handling?
+                </div>
+                <!-- assistant msg 1 -->
+                <div style="display:flex;gap:12px;align-items:flex-start">
+                  <div style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.14);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8H20l-4.9 3.6 1.9 5.8L12 14.6 7 18.2l1.9-5.8L4 8.8h6.1z"/></svg>
+                  </div>
+                  <div style="font-size:13.5px;line-height:1.65;color:rgba(255,255,255,0.82)">
+                    <div>Here's the refactored version using <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:12px">async/await</code> with proper error handling and retries:</div>
+                    <div style="margin-top:12px;background:#0f1012;border-radius:8px;padding:12px 14px;font-family:'SF Mono',Menlo,monospace;font-size:11.5px;line-height:1.7;color:rgba(255,255,255,0.7)">
+                      <div><span style="color:#c586c0">async def</span> <span style="color:#dcdcaa">fetch_data</span>(url):</div>
+                      <div>&nbsp;&nbsp;<span style="color:#c586c0">try</span>:</div>
+                      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#c586c0">async with</span> session.<span style="color:#dcdcaa">get</span>(url) <span style="color:#c586c0">as</span> r:</div>
+                      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#c586c0">return await</span> r.<span style="color:#dcdcaa">json</span>()</div>
+                      <div>&nbsp;&nbsp;<span style="color:#c586c0">except</span> <span style="color:#4ec9b0">ClientError</span> <span style="color:#c586c0">as</span> e:</div>
+                      <div>&nbsp;&nbsp;&nbsp;&nbsp;logger.<span style="color:#dcdcaa">warning</span>(<span style="color:#ce9178">f"retry: {e}"</span>)</div>
+                    </div>
+                    <div style="margin-top:12px">The key changes: the call is now non-blocking, and network failures are caught and logged instead of crashing.</div>
+                  </div>
+                </div>
+                <!-- user msg 2 -->
+                <div style="align-self:flex-end;max-width:80%;background:rgba(255,255,255,0.08);border-radius:14px;padding:11px 15px;font-size:13.5px;line-height:1.55;color:rgba(255,255,255,0.88)">
+                  Nice. Can it retry a few times before giving up?
+                </div>
+                <!-- assistant msg 2 -->
+                <div style="display:flex;gap:12px;align-items:flex-start">
+                  <div style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.14);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8H20l-4.9 3.6 1.9 5.8L12 14.6 7 18.2l1.9-5.8L4 8.8h6.1z"/></svg>
+                  </div>
+                  <div style="font-size:13.5px;line-height:1.65;color:rgba(255,255,255,0.82)">
+                    <div>Sure — wrap it in a loop with exponential backoff so each retry waits a little longer:</div>
+                    <div style="margin-top:12px;background:#0f1012;border-radius:8px;padding:12px 14px;font-family:'SF Mono',Menlo,monospace;font-size:11.5px;line-height:1.7;color:rgba(255,255,255,0.7)">
+                      <div><span style="color:#c586c0">for</span> attempt <span style="color:#c586c0">in</span> <span style="color:#dcdcaa">range</span>(<span style="color:#b5cea8">3</span>):</div>
+                      <div>&nbsp;&nbsp;<span style="color:#c586c0">try</span>:</div>
+                      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#c586c0">return await</span> <span style="color:#dcdcaa">fetch_data</span>(url)</div>
+                      <div>&nbsp;&nbsp;<span style="color:#c586c0">except</span> <span style="color:#4ec9b0">ClientError</span>:</div>
+                      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#c586c0">await</span> asyncio.<span style="color:#dcdcaa">sleep</span>(<span style="color:#b5cea8">2</span> ** attempt)</div>
+                    </div>
+                    <div style="margin-top:12px">This gives it three attempts with 1s, 2s, then 4s waits — enough to ride out most transient network blips.</div>
+                  </div>
+                </div>
+              </div>
+              <!-- input box -->
+              <div style="max-width:760px;margin:0 auto;width:100%;flex-shrink:0;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;font-size:13.5px;color:rgba(255,255,255,0.35)">
+                <span>Send a message…</span>
+                <div style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- floating widget on top — straddles window edge onto wallpaper for contrast -->
+        <div id="d4Widget" style="position:absolute;bottom:20%;right:2.5%;width:220px;height:60px;background:rgba(20,20,26,0.82);backdrop-filter:blur(48px) saturate(180%);-webkit-backdrop-filter:blur(48px) saturate(180%);border-radius:16px;border:1px solid rgba(255,255,255,0.16);box-shadow:0 18px 60px rgba(0,0,0,0.7),0 4px 14px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.14);display:flex;align-items:center;padding:0 14px 0 12px;gap:12px;cursor:grab;user-select:none;transition:background 0.2s,border-color 0.2s">
+          <div style="position:relative;width:38px;height:38px;flex-shrink:0">
+            <svg style="transform:rotate(-90deg);width:38px;height:38px" viewBox="0 0 38 38"><circle cx="19" cy="19" r="15" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="3"/><circle class="d4-prog" cx="19" cy="19" r="15" fill="none" stroke="#34C759" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="58.4" stroke-linecap="round" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1),stroke 0.4s"/></svg>
+            <span class="d4-pct" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#34C759;letter-spacing:-0.5px">38</span>
+          </div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+            <div class="d4-title" style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.92);letter-spacing:-0.3px;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums">3h 49m left</div>
+            <div class="d4-sub" style="font-size:10px;font-weight:500;color:#FF9500;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">⚡ limit in ~1h 18m</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5: macOS notification -->
+      <div class="idemo-step" id="idemo-s5" style="position:absolute;inset:0;opacity:0;transform:translateY(10px);display:flex;justify-content:flex-end;align-items:flex-start;padding:16px 22px 0 0">
+        <div style="width:min(360px,85vw);background:rgba(28,30,40,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:16px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 16px 48px rgba(0,0,0,0.6);padding:14px 16px;display:flex;align-items:flex-start;gap:12px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">
+          <div style="width:38px;height:38px;background:linear-gradient(145deg,#ff9f45,#e040fb);border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+            <svg width="18" height="18" viewBox="0 0 18 18" style="transform:rotate(-90deg)"><circle cx="9" cy="9" r="7" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/><circle cx="9" cy="9" r="7" fill="none" stroke="white" stroke-width="2" stroke-dasharray="43.98" stroke-dashoffset="9" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px"><span style="font-size:13px;font-weight:600;color:white">CapMeter</span><span style="font-size:11px;color:rgba(255,255,255,0.35)">now</span></div>
+            <div style="font-size:12.5px;color:rgba(255,255,255,0.62);line-height:1.5">Usage at 78% — you're approaching your daily cap. Time to pace yourself or wrap up.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /desktop -->
+
+    <!-- Bottom overlay -->
+    <div style="position:absolute;bottom:0;left:0;right:0;z-index:20;padding:20px 24px 26px;background:linear-gradient(to top,rgba(4,14,30,0.88) 0%,transparent 100%);text-align:center;pointer-events:none">
+      <div id="idemo-title" style="font-size:clamp(15px,1.8vw,20px);font-weight:700;color:white;letter-spacing:-0.02em;margin-bottom:5px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">Always in your menu bar</div>
+      <div id="idemo-sub" style="font-size:clamp(12px,1.2vw,14px);color:rgba(255,255,255,0.48);margin-bottom:14px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">A live usage ring shows your session at a glance</div>
+      <div style="display:flex;justify-content:center;gap:7px">
+        <div class="idemo-dot" style="width:6px;height:6px;border-radius:50%;background:white;transform:scale(1.4)"></div>
+        <div class="idemo-dot" style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.28)"></div>
+        <div class="idemo-dot" style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.28)"></div>
+        <div class="idemo-dot" style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.28)"></div>
+        <div class="idemo-dot" style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.28)"></div>
+      </div>
+    </div>
+
+    <div id="idemo-hint" style="position:absolute;bottom:78px;left:50%;transform:translateX(-50%);z-index:20;font-size:11.5px;color:rgba(255,255,255,0.28);display:flex;align-items:center;gap:5px;pointer-events:none;transition:opacity 0.4s;white-space:nowrap;font-family:-apple-system,sans-serif">
+      Scroll to explore <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 4l3.5 3.5L9 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+  </div>
+</div>
+
+<!-- How it works -->
+<div class="steps-wrap" id="how">
+  <div class="section-label" style="text-align:center">How it works</div>
+  <h2 class="section-title" style="margin-bottom:0">Up and running in 60 seconds</h2>
+  <div class="steps" style="margin-top:52px">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Download from the App Store</h3>
+      <p>Free for 14 days. Just install and open.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>CapMeter reads your session</h3>
+      <p>It reads your Claude.ai session automatically. No API key, no configuration.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>See your limits in real time</h3>
+      <p>A live ring in your menu bar and a floating widget show exactly how much session you have left.</p>
+    </div>
+  </div>
+</div>
+
 <!-- Features -->
-<section class="section" id="features">
+<section class="section" id="features" style="padding-top:0">
   <div class="section-label">Features</div>
   <h2 class="section-title">Everything you need to stay in control</h2>
-  <p class="section-sub">For anyone who relies on Claude every day — from casual chats to heavy coding.</p>
+  <p class="section-sub">For Claude Pro and Max subscribers who rely on Claude every day.</p>
   <div class="features-grid">
-    <div class="feature-card glass"><div class="feature-icon">📊</div><h3>Real-time usage ring</h3><p>A circular progress icon in your menu bar shows your current session usage at a glance. Color shifts green → orange → red as you approach the limit.</p></div>
-    <div class="feature-card glass"><div class="feature-icon">🎯</div><h3>Limit prediction</h3><p>CapMeter watches your burn rate and tells you when you'll hit your limit — so you can pace yourself before you're locked out.</p></div>
-    <div class="feature-card glass"><div class="feature-icon">🧩</div><h3>Per-model limits</h3><p>See your session, weekly, and per-model caps (Opus, Fable and more) side by side — pulled live from your Claude account.</p></div>
-    <div class="feature-card glass"><div class="feature-icon">🔔</div><h3>Smart notifications</h3><p>Get alerted at custom thresholds (80%, 90% by default). Set quiet hours so you're never disturbed while sleeping.</p></div>
-    <div class="feature-card glass"><div class="feature-icon">📈</div><h3>Usage history</h3><p>14-day charts, weekly comparison and trends. Export your data as CSV or JSON anytime.</p></div>
-    <div class="feature-card glass"><div class="feature-icon">👤</div><h3>Multiple accounts</h3><p>Switch between Claude accounts instantly. Each account's usage and history is tracked independently.</p></div>
-    <div class="feature-card glass"><div class="feature-icon">🪟</div><h3>Floating widget</h3><p>A draggable mini-widget that floats above all your windows and spaces — perfect while coding in the terminal.</p></div>
-    <div class="feature-card glass"><div class="feature-icon">🔗</div><h3>Slack & webhook alerts</h3><p>Send rich Slack messages or HTTP webhooks when thresholds are crossed — you choose the destination.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="hourglass"></i></div><h3>Limit prediction</h3><p>CapMeter watches your burn rate and tells you when you'll hit your limit — so you can pace yourself, not get blindsided.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="move"></i></div><h3>Floating widget</h3><p>A draggable mini-widget that stays above every window and Space — perfect while you're deep in a coding session.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="gauge"></i></div><h3>Real-time usage ring</h3><p>A circular progress icon in your menu bar shifts green → orange → red as you approach the limit. Glanceable, always visible.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="bell"></i></div><h3>Smart notifications</h3><p>Get alerted at custom thresholds (80%, 90% by default). Set quiet hours so you're never pinged while sleeping.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="calendar-range"></i></div><h3>All your usage windows</h3><p>Current session (5-hour) and 7-day usage windows, all in one view — pulled live from your Claude account in real time.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="bar-chart-2"></i></div><h3>Usage history</h3><p>7, 14, 30 and 90-day bar charts, weekly comparison and streaks. Export your data as CSV or JSON anytime.</p></div>
   </div>
 </section>
 
@@ -333,13 +596,9 @@
 <section class="section" style="padding-top:0">
   <div class="section-label">See it in action</div>
   <h2 class="section-title">Right where you work</h2>
-  <p class="section-sub">A floating widget over your terminal, and a rich popup one click away in the menu bar.</p>
-  <div class="showcase-wide glass">
-    <img src="shot-widget.jpg" alt="CapMeter floating widget over a terminal">
-    <p><strong>Floating widget</strong> — stays visible above every window while you code</p>
-  </div>
+  <p class="section-sub">A rich popup one click away in the menu bar.</p>
   <div class="showcase-pops">
-    <div class="pop-card"><img src="pop-history.png" alt="Usage history and charts"><p><strong>History &amp; trends</strong><br>14-day charts, streaks &amp; export</p></div>
+    <div class="pop-card"><img src="pop-history.png" alt="Usage history and charts"><p><strong>History &amp; trends</strong><br>7, 14, 30, 90-day charts, streaks &amp; export</p></div>
     <div class="pop-card"><img src="pop-notifs.png" alt="Notification settings"><p><strong>Alerts your way</strong><br>Thresholds, quiet hours, Slack</p></div>
     <div class="pop-card"><img src="pop-accounts.png" alt="Multiple Claude accounts"><p><strong>Multiple accounts</strong><br>Switch in one click</p></div>
   </div>
@@ -348,30 +607,31 @@
 <!-- Privacy -->
 <section class="section" style="padding-top:0">
   <div class="privacy-strip glass">
-    <div class="lock">🔒</div>
+    <div class="lock"><i data-lucide="shield-check"></i></div>
     <h3>Your data stays on your Mac</h3>
-    <p>CapMeter reads your usage from your own Claude.ai session and stores everything locally. Nothing is ever sent to a server — no analytics, no tracking, no developer backend. CapMeter is an independent app and is not affiliated with Anthropic.</p>
+    <p>CapMeter reads your usage from your own Claude.ai session and stores everything locally. Nothing is ever sent to a server — no analytics, no tracking, no developer backend.</p>
   </div>
 </section>
 
 <!-- Pricing -->
-<section class="section" style="padding-top:0">
+<section class="section" id="pricing" style="padding-top:0">
   <div class="section-label">Pricing</div>
   <h2 class="section-title">Try it free, then pay once</h2>
   <p class="section-sub">Download free and use every feature for 14 days. One in-app purchase unlocks it for good — no subscription.</p>
   <div class="pricing-wrap glass">
     <div class="pricing-badge">One-time unlock</div>
-    <div class="pricing-price"><sup>$</sup>9.99</div>
+    <div class="pricing-price"><sup>$</sup>14.99</div>
     <p class="pricing-period">After a free 14-day trial · No subscription</p>
+    <p style="font-size:12px;color:var(--faint);margin:-18px 0 24px;">Available on the Mac App Store · Apple-reviewed</p>
     <ul class="pricing-features">
       <li>Real-time usage & limit prediction</li>
-      <li>Session, weekly & per-model limits</li>
+      <li>Session & 7-day usage windows</li>
       <li>Floating widget</li>
       <li>Usage history & export</li>
       <li>Notifications & Slack / webhook alerts</li>
       <li>Multiple Claude accounts</li>
     </ul>
-    <a class="btn-cta" href="#appstore" style="width:100%">Get CapMeter on the App Store</a>
+    <a class="btn-cta" href="#pricing" style="width:100%">Get CapMeter on the App Store</a>
     <p class="pricing-trial">Requires an active Claude.ai account · macOS 12+</p>
   </div>
 </section>
@@ -390,5 +650,306 @@
   </div>
 </footer>
 
+<script>
+lucide.createIcons();
+
+/* Interactive Demo scroll driver */
+(function() {
+  var section = document.getElementById('idemo');
+  if (!section) return;
+
+  var steps  = [document.getElementById('idemo-s1'), document.getElementById('idemo-s2'),
+                document.getElementById('idemo-s3'), document.getElementById('idemo-s4'),
+                document.getElementById('idemo-s5')];
+  var dots   = document.querySelectorAll('.idemo-dot');
+  var title  = document.getElementById('idemo-title');
+  var sub    = document.getElementById('idemo-sub');
+  var hint   = document.getElementById('idemo-hint');
+  var mbcap  = document.getElementById('idemo-mbcap');
+  var s1ring = document.getElementById('idemo-s1-ring');
+  var pageNav = document.querySelector('nav');
+
+  var COPY = [
+    { t:'Always in your menu bar',       s:'A live usage ring shows your session at a glance' },
+    { t:'Full breakdown in one click',   s:'Session %, burn rate, and exact time until reset' },
+    { t:'Your usage history',            s:'14-day bar chart, averages, peak usage and streaks' },
+    { t:'Float it above any window',     s:'The widget stays visible on top of any app' },
+    { t:'Smart alerts before limits hit', s:"Get notified before you're cut off mid-task" }
+  ];
+
+  var lastStep = -1;
+
+  function update() {
+    var rect  = section.getBoundingClientRect();
+    var total = section.offsetHeight - window.innerHeight;
+    if (total <= 0) return;
+    var prog  = Math.max(0, Math.min(1, -rect.top / total));
+    var stepF = prog * 5;
+    var stepI = Math.min(4, Math.floor(stepF));
+    var stepP = stepF - stepI;
+
+    steps.forEach(function(s, i) {
+      if (!s) return;
+      var op, ty;
+      if (i < stepI) {
+        op = 0; ty = -14;
+      } else if (i === stepI) {
+        if (stepP > 0.78) { var t = (stepP - 0.78) / 0.22; op = 1 - t; ty = -14 * t; }
+        else { op = 1; ty = 0; }
+      } else if (i === stepI + 1) {
+        if (stepP > 0.78) { var t = (stepP - 0.78) / 0.22; op = t; ty = 14 * (1 - t); }
+        else { op = 0; ty = 14; }
+      } else {
+        op = 0; ty = 14;
+      }
+      s.style.opacity = op;
+      s.style.transform = 'translateY(' + ty + 'px)';
+      /* Invisible (opacity:0) steps still stack on top and would otherwise swallow clicks/drags meant for the active step */
+      s.style.pointerEvents = op > 0.05 ? 'auto' : 'none';
+    });
+
+    if (stepI !== lastStep) {
+      lastStep = stepI;
+      if (title) title.textContent = COPY[stepI].t;
+      if (sub)   sub.textContent   = COPY[stepI].s;
+      dots.forEach(function(d, i) {
+        d.style.background = i === stepI ? 'white' : 'rgba(255,255,255,0.25)';
+        d.style.transform  = i === stepI ? 'scale(1.3)' : 'scale(1)';
+      });
+      if (mbcap) mbcap.style.background = stepI === 0 ? 'rgba(52,199,89,0.14)' : 'transparent';
+      if (s1ring) s1ring.style.animationPlayState = stepI === 0 ? 'running' : 'paused';
+    }
+
+    if (hint) hint.style.opacity = prog > 0.04 ? '0' : '1';
+    if (pageNav) { pageNav.style.opacity = prog > 0 && prog < 1 ? '0' : ''; pageNav.style.pointerEvents = prog > 0 && prog < 1 ? 'none' : ''; }
+  }
+
+  /* Coalesce scroll/resize into one update per animation frame — avoids running the
+     layout-reading update() synchronously on every scroll event (measured: 2 gBR/event). */
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { update(); ticking = false; });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  update();
+})();
+
+/* Menu bar clock */
+(function() {
+  var dateEl = document.getElementById('idemo-mb-date');
+  var timeEl = document.getElementById('idemo-mb-time');
+  if (dateEl) dateEl.textContent = 'Fri Jul 17';
+  if (timeEl) timeEl.textContent = '1:30 AM';
+})();
+
+/* Position pulse ring, arrow and popup under CapMeter item */
+(function() {
+  function positionS1() {
+    var cap   = document.getElementById('idemo-mbcap');
+    var ring  = document.getElementById('idemo-s1-ring');
+    var arrow = document.getElementById('idemo-s1-arrow');
+    var s2in  = document.getElementById('idemo-s2-inner');
+    var s3in  = document.getElementById('idemo-s3-inner');
+    if (!cap || !ring || !arrow) return;
+
+    var r = cap.getBoundingClientRect();
+    var W = window.innerWidth;
+
+    /* Distance from viewport right edge to CapMeter right edge */
+    var fromRight = W - r.right;
+
+    /* Pulse ring: surround CapMeter with 4px padding each side */
+    ring.style.right      = (fromRight - 4) + 'px';
+    ring.style.width      = (r.width + 8) + 'px';
+    ring.style.visibility = 'visible';
+
+    /* Arrow: center on CapMeter horizontally */
+    var capCenterFromRight = W - (r.left + r.width / 2);
+    var aw = arrow.offsetWidth || 120;
+    arrow.style.right      = (capCenterFromRight - aw / 2) + 'px';
+    arrow.style.visibility = 'visible';
+
+    /* Popup + History: center under CapMeter (both 300px wide) */
+    var rightPos = Math.max(4, capCenterFromRight - 150) + 'px';
+    if (s2in) s2in.style.right = rightPos;
+    if (s3in) s3in.style.right = rightPos;
+  }
+
+  function init() { requestAnimationFrame(function() { requestAnimationFrame(positionS1); }); }
+  /* Run after fonts + images load for accurate getBoundingClientRect */
+  if (document.readyState === 'complete') {
+    init();
+  } else {
+    window.addEventListener('load', init);
+  }
+  /* The sticky menu bar is horizontally fixed, so CapMeter's x-position depends only on
+     viewport width — recompute on resize, not on every scroll event. */
+  window.addEventListener('resize', positionS1);
+  /* Safety fallback after 400ms */
+  setTimeout(positionS1, 400);
+})();
+
+/* Widget live animation — demo (step 4) floating widget only */
+(function() {
+  const CW = 94.25;
+  /* Steps through 5 fixed points, snapping instantly at each — reads as discrete "live updates" */
+  const STEPS = [22, 40, 58, 76, 94];
+
+  function buildSegs(hold, endHold) {
+    return STEPS.map(function(v, i) {
+      return { value: v, dur: i === STEPS.length - 1 ? endHold : hold };
+    });
+  }
+  function cycleOf(segs) { return segs.reduce(function(a, s) { return a + s.dur; }, 0); }
+  function valueAt(segs, elapsed) {
+    let e = elapsed;
+    for (let i = 0; i < segs.length; i++) {
+      const s = segs[i];
+      if (e <= s.dur) return s.value;
+      e -= s.dur;
+    }
+    return STEPS[STEPS.length - 1];
+  }
+  /* Demo (step 4) is scroll-driven — dwell time is short, so cycle fast enough to show several updates.
+     Hold must stay >= the 1.2s ring transition or the ring never settles before the next jump. */
+  const demoSegs = buildSegs(1600, 2000);
+  const demoCycle = cycleOf(demoSegs);
+  /* Ring color — matches real widget (src/widget.html): <75 green, <90 orange, >=90 red */
+  function clr(p) { return p < 75 ? '#34C759' : p < 90 ? '#FF9500' : '#FF3B30'; }
+  function hm(min) { const h = Math.floor(min/60); return h ? h+'h '+(min%60)+'m' : min+'m'; }
+  /* Title — time until the 5-hour session window resets */
+  function timeLeft(p) { return hm(Math.round((1-p/100)*300)) + ' left'; }
+  /* Secondary — matches real widget priority (src/widget.html:143-157): burn rate (%/hr) until a
+     limit prediction kicks in, then "limit in" colored by time (<1h red, else orange) */
+  function sub(p) {
+    if (p < 30) return { t:'~17%/hr', c:'rgba(255,255,255,0.32)' };
+    const min = Math.max(1, Math.round((100-p)/100*170));
+    return { t:'⚡ limit in ~'+hm(min), c: min < 60 ? '#FF3B30' : '#FF9500' };
+  }
+
+  const d4Prog  = document.querySelector('.d4-prog');
+  const d4Pct   = document.querySelector('.d4-pct');
+  const d4Title = document.querySelector('.d4-title');
+  const d4Sub   = document.querySelector('.d4-sub');
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) return;
+
+  let t0 = null, rafId = null, pausedAt = null;
+
+  function draw(ts) {
+    if (!t0) t0 = ts;
+    if (pausedAt !== null) { t0 += ts - pausedAt; pausedAt = null; }
+    const elD = (ts - t0) % demoCycle;
+    const pD  = Math.round(valueAt(demoSegs, elD));
+    const cD  = clr(pD);
+    const sD  = sub(pD);
+    if (d4Prog)  { d4Prog.style.strokeDashoffset = (CW*(1-pD/100)).toFixed(1); d4Prog.style.stroke = cD; }
+    if (d4Pct)   { d4Pct.textContent = pD; d4Pct.style.color = cD; }
+    if (d4Title) d4Title.textContent = timeLeft(pD);
+    if (d4Sub)   { d4Sub.textContent = sD.t; d4Sub.style.color = sD.c; }
+
+    rafId = requestAnimationFrame(draw);
+  }
+
+  /* Always start; pause only when widget scrolls out of view */
+  rafId = requestAnimationFrame(draw);
+
+  /* Resume while the demo section is on screen */
+  var watched = [document.getElementById('idemo')].filter(Boolean);
+  if (watched.length && 'IntersectionObserver' in window) {
+    var visible = new Set();
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) visible.add(e.target); else visible.delete(e.target);
+      });
+      if (visible.size > 0) {
+        if (!rafId) { rafId = requestAnimationFrame(draw); }
+      } else if (rafId) {
+        cancelAnimationFrame(rafId); rafId = null; pausedAt = performance.now();
+      }
+    }, { threshold: 0.05 });
+    watched.forEach(function(el) { io.observe(el); });
+  }
+})();
+
+/* Floating widgets — draggable, to let visitors feel the "floats over anything" behavior */
+(function() {
+  function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+  function makeDraggable(stage, widget) {
+    if (!stage || !widget) return;
+    let dragging = false, offX = 0, offY = 0;
+    /* Rects are cached on pointerdown — they don't change mid-drag, so reading them on
+       every pointermove would force a layout each frame (measured: 2 gBR/move). Position
+       writes are also batched into a rAF so a burst of moves paints at most once/frame. */
+    let sRect = null, wW = 0, wH = 0, nextX = 0, nextY = 0, rafPending = false;
+
+    function onPointerDown(e) {
+      dragging = true;
+      sRect = stage.getBoundingClientRect();
+      const wRect = widget.getBoundingClientRect();
+      wW = wRect.width; wH = wRect.height;
+      offX = e.clientX - wRect.left;
+      offY = e.clientY - wRect.top;
+      /* Switch from right/bottom to left/top so it can be dragged freely */
+      widget.style.left = (wRect.left - sRect.left) + 'px';
+      widget.style.top  = (wRect.top - sRect.top) + 'px';
+      widget.style.right = 'auto';
+      widget.style.bottom = 'auto';
+      widget.style.transition = 'none';
+      widget.style.cursor = 'grabbing';
+      widget.setPointerCapture(e.pointerId);
+    }
+    function flush() {
+      rafPending = false;
+      widget.style.left = nextX + 'px';
+      widget.style.top  = nextY + 'px';
+    }
+    function onPointerMove(e) {
+      if (!dragging) return;
+      nextX = clamp(e.clientX - sRect.left - offX, 0, sRect.width  - wW);
+      nextY = clamp(e.clientY - sRect.top  - offY, 0, sRect.height - wH);
+      if (!rafPending) { rafPending = true; requestAnimationFrame(flush); }
+    }
+    function onPointerUp(e) {
+      if (!dragging) return;
+      dragging = false;
+      widget.style.transition = 'background 0.2s, border-color 0.2s';
+      widget.style.cursor = 'grab';
+      if (widget.hasPointerCapture(e.pointerId)) widget.releasePointerCapture(e.pointerId);
+    }
+
+    widget.style.touchAction = 'none';
+    widget.addEventListener('pointerdown', onPointerDown);
+    widget.addEventListener('pointermove', onPointerMove);
+    widget.addEventListener('pointerup', onPointerUp);
+    widget.addEventListener('pointercancel', onPointerUp);
+  }
+
+  makeDraggable(document.getElementById('idemo-s4'), document.getElementById('d4Widget'));
+})();
+
+/* Nav "Demo" link → scroll a bit PAST the demo's top so the sticky section pins
+   full-screen and the nav fades (its own scroll behavior), instead of stopping at the
+   very top where the real nav sits over the demo's fake menu bar. Computed from live
+   heights so it stays correct on any viewport. */
+(function () {
+  var link  = document.querySelector('.nav-links a[href="#idemo"]');
+  var idemo = document.getElementById('idemo');
+  if (!link || !idemo) return;
+  link.addEventListener('click', function (e) {
+    e.preventDefault();
+    var total = idemo.offsetHeight - window.innerHeight;
+    /* ~4% in → nav hides (prog > 0) and demo is pinned, still on step 1 (steps break at 20%) */
+    var y = idemo.offsetTop + Math.round(total * 0.04);
+    window.scrollTo({ top: y, behavior: 'smooth' });
+    history.replaceState(null, '', '#idemo');
+  });
+})();
+</script>
 </body>
 </html>
