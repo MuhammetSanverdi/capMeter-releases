@@ -112,10 +112,10 @@
   .nav-cta:hover { transform: translateY(-1px); }
 
   /* ── Hero ── */
-  .hero { padding: 160px 24px 70px; text-align: center; }
+  .hero { padding: 120px 24px 20px; text-align: center; }
   .hero-badge {
     display: inline-flex; align-items: center; gap: 7px;
-    padding: 6px 14px; border-radius: 20px; margin-bottom: 28px;
+    padding: 6px 14px; border-radius: 20px; margin-bottom: 18px;
     font-size: 12px; font-weight: 600; color: var(--accent2);
     letter-spacing: 0.04em; text-transform: uppercase;
     background: rgba(255,255,255,0.05);
@@ -147,6 +147,29 @@
     transition: transform 0.2s;
   }
   .btn-cta:hover { transform: translateY(-1px); }
+  /* İkincil hero CTA — interaktif demoya kaydırır. Cam efekt, canlı yeşil "live" noktası
+     ile dikkat çeker ama turuncu primary butondan ayrışır. */
+  .btn-demo {
+    position: relative; overflow: hidden; isolation: isolate;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 14px 26px; border-radius: 15px; text-decoration: none;
+    color: var(--text); font-size: 16px; font-weight: 600; cursor: pointer;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.16);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .btn-demo:hover { transform: translateY(-1px); background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.30); }
+  /* Durağanken sade cam; hover'da tek seferlik ışık geçişi (shimmer) — sakin, premium. */
+  .btn-demo::before {
+    content: ''; position: absolute; top: 0; bottom: 0; left: -140%; width: 55%;
+    z-index: -1; pointer-events: none; transform: skewX(-18deg);
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.30), transparent);
+  }
+  .btn-demo:hover::before,
+  .btn-demo.shimmer::before { animation: btn-shimmer 0.75s ease; }
+  @keyframes btn-shimmer { to { left: 150%; } }
+  @media (prefers-reduced-motion: reduce) { .btn-demo:hover::before, .btn-demo.shimmer::before { animation: none; } }
   .hero-note { margin-top: 20px; font-size: 12.5px; color: var(--faint); }
   .hero-note a { color: var(--faint); text-decoration: underline; }
 
@@ -247,7 +270,7 @@
   /* ── Trust strip ── */
   .trust-strip {
     display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;
-    padding: 56px 24px 0; max-width: 860px; margin: 0 auto;
+    padding: 24px 24px 0; max-width: 860px; margin: 0 auto;
   }
   .trust-item {
     display: flex; align-items: center; gap: 7px;
@@ -335,26 +358,27 @@
 <!-- Hero -->
 <section class="hero">
   <div class="hero-badge">For Claude.ai · Pro &amp; Max</div>
-  <h1>Stop getting blindsided<br>by <span>Claude's session limit</span></h1>
-  <p>CapMeter sits in your menu bar and shows your Claude.ai usage in real time — so you know exactly when the limit hits before it interrupts your work.</p>
+  <h1>Know you're about to hit<br>the limit — <span>before you do</span></h1>
+  <p>Free menu-bar counters show you a number. CapMeter watches your burn rate, predicts when you'll run out, and warns you — in the menu bar, as a floating widget, or straight to Slack &amp; Discord — so a limit never interrupts you mid-task.</p>
   <div class="hero-actions">
     <a class="btn-cta" href="#pricing">
       <span style="font-size:20px;line-height:1">&#xF8FF;</span> Get on the App Store
     </a>
+    <a class="btn-demo" href="#idemo">See it in action</a>
   </div>
   <p class="hero-note">Free 14-day trial · <a href="#pricing">$14.99 once</a> · <a href="privacy.html">Privacy Policy</a></p>
 </section>
 
 <!-- Trust strip -->
 <div class="trust-strip">
-  <div class="trust-item"><span class="trust-icon">🔒</span><strong>Fully private</strong> — zero servers, zero analytics</div>
-  <div class="trust-item"><span class="trust-icon">💰</span><strong>$14.99 once</strong> — no subscription, ever</div>
-  <div class="trust-item"><span class="trust-icon">🍎</span><strong>macOS 12+</strong> — Monterey and later, Apple Silicon &amp; Intel</div>
-  <div class="trust-item"><span class="trust-icon">🔓</span><strong>Not affiliated</strong> with Anthropic</div>
+  <div class="trust-item"><span class="trust-icon">⚡</span><strong>Predicts &amp; warns</strong> — not just a live number</div>
+  <div class="trust-item"><span class="trust-icon">🔒</span><strong>Fully local</strong> — token encrypted in your Keychain, zero servers</div>
+  <div class="trust-item"><span class="trust-icon">🍎</span><strong>Native menu-bar app</strong> — macOS 12+, Apple Silicon &amp; Intel</div>
+  <div class="trust-item"><span class="trust-icon">💳</span><strong>$14.99 once</strong> — buy it, keep it</div>
 </div>
 
 <!-- ═══ Interactive Demo ═══ -->
-<div id="idemo" style="height:500vh;position:relative;isolation:isolate;margin-top:40px">
+<div id="idemo" style="height:500vh;position:relative;isolation:isolate;margin-top:20px">
   <div style="position:sticky;top:0;height:100vh;overflow:hidden">
 
     <!-- macOS Tahoe wallpaper -->
@@ -566,8 +590,8 @@
     </div>
     <div class="step">
       <div class="step-num">2</div>
-      <h3>CapMeter reads your session</h3>
-      <p>It reads your Claude.ai session automatically. No API key, no configuration.</p>
+      <h3>It reads your own session — locally</h3>
+      <p>No API key, no setup. Your session stays on your Mac, encrypted in the macOS Keychain — it never touches a server of ours and never reads your chats.</p>
     </div>
     <div class="step">
       <div class="step-num">3</div>
@@ -580,15 +604,15 @@
 <!-- Features -->
 <section class="section" id="features" style="padding-top:0">
   <div class="section-label">Features</div>
-  <h2 class="section-title">Everything you need to stay in control</h2>
-  <p class="section-sub">For Claude Pro and Max subscribers who rely on Claude every day.</p>
+  <h2 class="section-title">The part the free ones skip</h2>
+  <p class="section-sub">Anyone can show a percentage. CapMeter is built around the layer that actually saves your session — seeing the limit coming and telling you in time.</p>
   <div class="features-grid">
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="hourglass"></i></div><h3>Limit prediction</h3><p>CapMeter watches your burn rate and tells you when you'll hit your limit — so you can pace yourself, not get blindsided.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="move"></i></div><h3>Floating widget</h3><p>A draggable mini-widget that stays above every window and Space — perfect while you're deep in a coding session.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="gauge"></i></div><h3>Real-time usage ring</h3><p>A circular progress icon in your menu bar shifts green → orange → red as you approach the limit. Glanceable, always visible.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="bell"></i></div><h3>Smart notifications</h3><p>Get alerted at custom thresholds (80%, 90% by default). Set quiet hours so you're never pinged while sleeping.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="calendar-range"></i></div><h3>All your usage windows</h3><p>Current session (5-hour) and 7-day usage windows, all in one view — pulled live from your Claude account in real time.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="bar-chart-2"></i></div><h3>Usage history</h3><p>7, 14, 30 and 90-day bar charts, weekly comparison and streaks. Export your data as CSV or JSON anytime.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="trending-up"></i></div><h3>Limit prediction</h3><p>CapMeter learns your burn rate and forecasts the exact time you'll run out — "limit in ~1h 18m" — so you pace yourself instead of getting cut off mid-thought.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="bell"></i></div><h3>Alerts that reach you</h3><p>Get warned at your own thresholds — as a macOS notification or pushed straight to Slack &amp; Discord. Set quiet hours so you're never pinged while you sleep.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="move"></i></div><h3>Floating widget</h3><p>A draggable mini-widget that floats above every window and Space — your remaining session always in view while you're deep in a coding session.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="calendar-range"></i></div><h3>All your usage windows</h3><p>Current session (5-hour) and 7-day windows in one view, each with its own live countdown — pulled from your Claude account in real time.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="bar-chart-2"></i></div><h3>History &amp; export</h3><p>7, 14, 30 and 90-day bar charts, weekly comparison and streaks. Export everything as CSV or JSON whenever you want.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="gauge"></i></div><h3>Live menu-bar ring</h3><p>The baseline, done right: a color-coded ring shifts green → orange → red as you approach the limit. Always visible, zero clicks.</p></div>
   </div>
 </section>
 
@@ -609,7 +633,7 @@
   <div class="privacy-strip glass">
     <div class="lock"><i data-lucide="shield-check"></i></div>
     <h3>Your data stays on your Mac</h3>
-    <p>CapMeter reads your usage from your own Claude.ai session and stores everything locally. Nothing is ever sent to a server — no analytics, no tracking, no developer backend.</p>
+    <p>CapMeter reads usage from your own Claude.ai session and keeps everything on-device. Your session token is encrypted in the macOS Keychain, and the app talks only to claude.ai — no servers of ours, no analytics, no tracking, no backend. It never accesses your conversations.</p>
   </div>
 </section>
 
@@ -624,11 +648,11 @@
     <p class="pricing-period">After a free 14-day trial · No subscription</p>
     <p style="font-size:12px;color:var(--faint);margin:-18px 0 24px;">Available on the Mac App Store · Apple-reviewed</p>
     <ul class="pricing-features">
-      <li>Real-time usage & limit prediction</li>
-      <li>Session & 7-day usage windows</li>
-      <li>Floating widget</li>
-      <li>Usage history & export</li>
-      <li>Notifications & Slack / webhook alerts</li>
+      <li>Burn-rate limit prediction</li>
+      <li>Alerts to Slack, Discord & webhooks + quiet hours</li>
+      <li>Floating widget on top of any app</li>
+      <li>Session & 7-day windows + live ring</li>
+      <li>History & export (CSV / JSON)</li>
       <li>Multiple Claude accounts</li>
     </ul>
     <a class="btn-cta" href="#pricing" style="width:100%">Get CapMeter on the App Store</a>
@@ -938,17 +962,35 @@ lucide.createIcons();
    very top where the real nav sits over the demo's fake menu bar. Computed from live
    heights so it stays correct on any viewport. */
 (function () {
-  var link  = document.querySelector('.nav-links a[href="#idemo"]');
   var idemo = document.getElementById('idemo');
-  if (!link || !idemo) return;
-  link.addEventListener('click', function (e) {
-    e.preventDefault();
-    var total = idemo.offsetHeight - window.innerHeight;
-    /* ~4% in → nav hides (prog > 0) and demo is pinned, still on step 1 (steps break at 20%) */
-    var y = idemo.offsetTop + Math.round(total * 0.04);
-    window.scrollTo({ top: y, behavior: 'smooth' });
-    history.replaceState(null, '', '#idemo');
+  if (!idemo) return;
+  // Nav "Demo" linki + hero "See it live" butonu — ikisi de aynı immersive pin davranışını alır
+  var links = document.querySelectorAll('a[href="#idemo"]');
+  links.forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      var total = idemo.offsetHeight - window.innerHeight;
+      /* ~4% in → nav hides (prog > 0) and demo is pinned, still on step 1 (steps break at 20%) */
+      var y = idemo.offsetTop + Math.round(total * 0.04);
+      window.scrollTo({ top: y, behavior: 'smooth' });
+      history.replaceState(null, '', '#idemo');
+    });
   });
+})();
+
+/* Sayfa açıldıktan ~1s sonra "See it in action" butonunu bir kez ışıldat (hover shimmer'ının
+   aynısı) — yeni ziyaretçinin dikkatini demoya çeker. Sonra sadece hover'da tetiklenir. */
+(function () {
+  var btn = document.querySelector('.btn-demo');
+  if (!btn) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  setTimeout(function () {
+    btn.classList.add('shimmer');
+    btn.addEventListener('animationend', function done() {
+      btn.classList.remove('shimmer');
+      btn.removeEventListener('animationend', done);
+    });
+  }, 1000);
 })();
 </script>
 </body>
