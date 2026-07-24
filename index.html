@@ -197,6 +197,13 @@
     text-align: center; font-size: 12px; font-weight: 600;
     letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent2); margin-bottom: 14px;
   }
+  /* Demo bölümünü etiketleyen başlığın altındaki nazik kaydırma ipucu — fold'daki
+     peek'i kasıtlı bir davete çevirir. */
+  .scroll-cue { display: inline-flex; margin-top: 2px; color: var(--faint); transition: color 0.2s; }
+  .scroll-cue:hover { color: var(--accent2); }
+  .scroll-cue svg { width: 26px; height: 26px; animation: cueBob 1.9s ease-in-out infinite; }
+  @keyframes cueBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+  @media (prefers-reduced-motion: reduce) { .scroll-cue svg { animation: none; } }
   .section-title { text-align: center; font-size: clamp(28px, 4vw, 42px); font-weight: 700; letter-spacing: -0.025em; margin-bottom: 12px; }
   .section-sub { text-align: center; font-size: 16px; color: var(--muted); max-width: 540px; margin: 0 auto 56px; }
 
@@ -282,7 +289,10 @@
   .trust-icon { font-size: 15px; line-height: 1; }
 
   /* ── How it works ── */
-  .steps-wrap { padding: 80px 24px; max-width: 860px; margin: 0 auto; }
+  /* Dikey boşluk padding değil margin — böylece #how anchor'ı içeriğin tepesine iner ve
+     nav altındaki boşluk .section'lı bölümlerle (padding-top:0) aynı olur.
+     Üst margin = scroll-padding-top (96px), yoksa 100vh demonun alt kenarı tepede sırıtır. */
+  .steps-wrap { padding: 0 24px; max-width: 860px; margin: 96px auto 80px; }
   .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; position: relative; }
   .steps::before {
     content: ''; position: absolute; top: 22px; left: 22%; right: 22%;
@@ -305,12 +315,22 @@
   }
 
   /* ── Interactive Demo ── */
-  @keyframes idemo-pulse {
-    0%,100% { opacity:0.55; box-shadow:0 0 0 0 rgba(52,199,89,0.4); }
-    50%      { opacity:1;    box-shadow:0 0 0 6px rgba(52,199,89,0); }
-  }
-  .idemo-step { transition: opacity 0.45s ease, transform 0.45s ease; will-change: opacity,transform; }
+  /* Crossfade — farklı ekran bölgelerindeki adımlar için doğru geçiş (slide değil).
+     Material standart easing ile yumuşak. */
+  .idemo-step { transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1); will-change: opacity,transform; }
   .idemo-dot  { transition: background 0.3s, transform 0.3s; }
+  /* Sol/sağ ok butonları — carousel standardı; kenarda durur, widget/popup ile çakışmaz */
+  .idemo-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 40;
+    width: 42px; height: 42px; border-radius: 50%; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.18); color: #fff;
+    background: rgba(18,18,26,0.5); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.55; transition: opacity 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .idemo-arrow:hover { opacity: 1; background: rgba(18,18,26,0.78); border-color: rgba(255,255,255,0.30); }
+  .idemo-prev { left: 18px; }
+  .idemo-next { right: 18px; }
 </style>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
@@ -377,9 +397,18 @@
   <div class="trust-item"><span class="trust-icon">💳</span><strong>$14.99 once</strong> — buy it, keep it</div>
 </div>
 
+<!-- Demo intro — labels the interactive demo so the fold's peek reads as intentional, not cut off.
+     Sits BEFORE #idemo so the hero "See it in action" button (href="#idemo") still jumps past it
+     straight to the demo. -->
+<div style="text-align:center;padding:64px 24px 6px;max-width:760px;margin:0 auto">
+  <div class="section-label">Live demo</div>
+  <h2 class="section-title" style="margin-bottom:6px">Watch it work — right on your desktop</h2>
+  <a href="#idemo" class="scroll-cue" aria-label="Scroll to the demo"><i data-lucide="chevron-down"></i></a>
+</div>
+
 <!-- ═══ Interactive Demo ═══ -->
-<div id="idemo" style="height:500vh;position:relative;isolation:isolate;margin-top:20px">
-  <div style="position:sticky;top:0;height:100vh;overflow:hidden">
+<div id="idemo" style="position:relative;isolation:isolate;margin-top:20px">
+  <div style="position:relative;height:100vh;height:100dvh;overflow:hidden">
 
     <!-- macOS Tahoe wallpaper -->
     <div style="position:absolute;inset:0;background:url('icons/tahoe-dark.jpg') center/cover no-repeat"></div>
@@ -420,17 +449,8 @@
     <!-- Desktop area -->
     <div style="position:absolute;top:32px;left:0;right:0;bottom:0;overflow:hidden">
 
-      <!-- STEP 1: desktop, menu bar item pulsing -->
-      <div class="idemo-step" id="idemo-s1" style="position:absolute;inset:0;opacity:1;transform:translateY(0)">
-        <div id="idemo-s1-ring" style="position:absolute;top:-27px;right:0;width:58px;height:26px;border-radius:6px;border:1.5px solid rgba(52,199,89,0.85);box-shadow:0 0 18px rgba(52,199,89,0.5),0 0 40px rgba(52,199,89,0.2);animation:idemo-pulse 2s ease-in-out infinite;pointer-events:none;visibility:hidden"></div>
-        <div id="idemo-s1-arrow" style="position:absolute;top:24px;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;visibility:hidden">
-          <svg width="14" height="26" viewBox="0 0 14 26" fill="none"><path d="M7 24V4M2 9L7 2L12 9" stroke="rgba(255,255,255,0.75)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div style="background:rgba(0,0,0,0.65);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.12);padding:6px 14px;border-radius:10px;font-size:12.5px;color:white;white-space:nowrap;font-family:-apple-system,sans-serif">Live usage ring</div>
-        </div>
-      </div>
-
-      <!-- STEP 2: real CapMeter popup (iframe) -->
-      <div class="idemo-step" id="idemo-s2" style="position:absolute;inset:0;opacity:0;transform:translateY(10px)">
+      <!-- STEP 1: real CapMeter popup (iframe) -->
+      <div class="idemo-step" id="idemo-s2" style="position:absolute;inset:0;opacity:1;transform:translateY(0)">
         <div id="idemo-s2-inner" style="position:absolute;top:4px;right:120px">
           <iframe src="demo-popup.html" scrolling="no" style="width:300px;height:440px;border:none;border-radius:0 0 16px 16px;box-shadow:0 32px 80px rgba(0,0,0,0.75);display:block;" title="CapMeter popup"></iframe>
         </div>
@@ -530,28 +550,96 @@
           </div>
         </div>
 
-        <!-- floating widget on top — straddles window edge onto wallpaper for contrast -->
-        <div id="d4Widget" style="position:absolute;bottom:20%;right:2.5%;width:220px;height:60px;background:rgba(20,20,26,0.82);backdrop-filter:blur(48px) saturate(180%);-webkit-backdrop-filter:blur(48px) saturate(180%);border-radius:16px;border:1px solid rgba(255,255,255,0.16);box-shadow:0 18px 60px rgba(0,0,0,0.7),0 4px 14px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.14);display:flex;align-items:center;padding:0 14px 0 12px;gap:12px;cursor:grab;user-select:none;transition:background 0.2s,border-color 0.2s">
-          <div style="position:relative;width:38px;height:38px;flex-shrink:0">
-            <svg style="transform:rotate(-90deg);width:38px;height:38px" viewBox="0 0 38 38"><circle cx="19" cy="19" r="15" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="3"/><circle class="d4-prog" cx="19" cy="19" r="15" fill="none" stroke="#34C759" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="58.4" stroke-linecap="round" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1),stroke 0.4s"/></svg>
-            <span class="d4-pct" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#34C759;letter-spacing:-0.5px">38</span>
+        <!-- floating widget on top — straddles window edge onto wallpaper for contrast.
+             Matches the real widget (src/widget.html): top row = session, footer = extra usage. -->
+        <div id="d4Widget" style="position:absolute;bottom:20%;right:2.5%;width:220px;height:82px;background:rgba(20,20,26,0.82);backdrop-filter:blur(48px) saturate(180%);-webkit-backdrop-filter:blur(48px) saturate(180%);border-radius:16px;border:1px solid rgba(255,255,255,0.16);box-shadow:0 18px 60px rgba(0,0,0,0.7),0 4px 14px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.14);display:flex;flex-direction:column;overflow:hidden;cursor:grab;user-select:none;transition:background 0.2s,border-color 0.2s">
+          <div style="flex:1;display:flex;align-items:center;padding:0 14px 0 12px;gap:12px;min-height:0">
+            <div style="position:relative;width:38px;height:38px;flex-shrink:0">
+              <svg style="transform:rotate(-90deg);width:38px;height:38px" viewBox="0 0 38 38"><circle cx="19" cy="19" r="15" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="3"/><circle class="d4-prog" cx="19" cy="19" r="15" fill="none" stroke="#34C759" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="58.4" stroke-linecap="round" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1),stroke 0.4s"/></svg>
+              <span class="d4-pct" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#34C759;letter-spacing:-0.5px">38</span>
+            </div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+              <div class="d4-title" style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.92);letter-spacing:-0.3px;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums">3h 49m left</div>
+              <div class="d4-sub" style="font-size:10px;font-weight:500;color:#FF9500;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">⚡ limit in ~1h 18m</div>
+            </div>
           </div>
-          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
-            <div class="d4-title" style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.92);letter-spacing:-0.3px;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums">3h 49m left</div>
-            <div class="d4-sub" style="font-size:10px;font-weight:500;color:#FF9500;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">⚡ limit in ~1h 18m</div>
+          <!-- extra usage footer: label · spend rate · remaining balance -->
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 14px 7px 14px;border-top:1px solid rgba(255,255,255,0.08)">
+            <span style="font-size:10px;font-weight:500;color:rgba(255,255,255,0.42);letter-spacing:-0.2px;white-space:nowrap">Extra usage</span>
+            <span style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.42);letter-spacing:-0.2px;white-space:nowrap;font-variant-numeric:tabular-nums">~$3.20/hr</span>
+            <span style="font-size:11px;font-weight:700;color:#FFC400;letter-spacing:-0.2px;white-space:nowrap;font-variant-numeric:tabular-nums">$17.00 left</span>
           </div>
         </div>
       </div>
 
-      <!-- STEP 5: macOS notification -->
-      <div class="idemo-step" id="idemo-s5" style="position:absolute;inset:0;opacity:0;transform:translateY(10px);display:flex;justify-content:flex-end;align-items:flex-start;padding:16px 22px 0 0">
-        <div style="width:min(360px,85vw);background:rgba(28,30,40,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:16px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 16px 48px rgba(0,0,0,0.6);padding:14px 16px;display:flex;align-items:flex-start;gap:12px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">
-          <div style="width:38px;height:38px;background:linear-gradient(145deg,#ff9f45,#e040fb);border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center">
-            <svg width="18" height="18" viewBox="0 0 18 18" style="transform:rotate(-90deg)"><circle cx="9" cy="9" r="7" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/><circle cx="9" cy="9" r="7" fill="none" stroke="white" stroke-width="2" stroke-dasharray="43.98" stroke-dashoffset="9" stroke-linecap="round"/></svg>
+      <!-- STEP 5: Slack window with CapMeter alert + macOS notification toast -->
+      <div class="idemo-step" id="idemo-s5" style="position:absolute;inset:0;opacity:0;transform:translateY(10px)">
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,0.35)"></div>
+
+        <!-- Slack window -->
+        <div style="position:absolute;top:6%;left:6%;right:6%;bottom:15%;background:#1a1d21;border-radius:12px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.06);display:flex;flex-direction:column;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+          <!-- window chrome -->
+          <div style="height:38px;background:#121316;display:flex;align-items:center;padding:0 14px;gap:8px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,0.05)">
+            <span style="width:11px;height:11px;border-radius:50%;background:#ff5f57"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#febc2e"></span>
+            <span style="width:11px;height:11px;border-radius:50%;background:#28c840"></span>
+            <span style="margin-left:8px;font-size:12px;color:rgba(255,255,255,0.5);font-weight:600">Acme&nbsp;Team — Slack</span>
           </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px"><span style="font-size:13px;font-weight:600;color:white">CapMeter</span><span style="font-size:11px;color:rgba(255,255,255,0.35)">now</span></div>
-            <div style="font-size:12.5px;color:rgba(255,255,255,0.62);line-height:1.5">Usage at 78% — you're approaching your daily cap. Time to pace yourself or wrap up.</div>
+          <div style="flex:1;display:flex;overflow:hidden;min-height:0">
+            <!-- sidebar -->
+            <div style="width:190px;background:#19171d;flex-shrink:0;display:flex;flex-direction:column;padding:12px 0">
+              <div style="padding:0 14px 12px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
+                <span style="font-size:14px;font-weight:800;color:white">Acme</span>
+                <span style="width:22px;height:22px;border-radius:6px;background:#611f69;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white">A</span>
+              </div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.04em;padding:0 14px;margin-bottom:6px">Channels</div>
+              <div style="font-size:14px;color:rgba(255,255,255,0.55);padding:5px 14px">#&nbsp;general</div>
+              <div style="font-size:14px;color:white;font-weight:600;padding:5px 14px;background:#1164a3">#&nbsp;alerts</div>
+              <div style="font-size:14px;color:rgba(255,255,255,0.55);padding:5px 14px">#&nbsp;dev</div>
+              <div style="font-size:14px;color:rgba(255,255,255,0.55);padding:5px 14px">#&nbsp;random</div>
+            </div>
+            <!-- channel -->
+            <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+              <div style="height:48px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;padding:0 18px;gap:6px">
+                <span style="font-size:15px;font-weight:800;color:white">#&nbsp;alerts</span>
+                <span style="font-size:12px;color:rgba(255,255,255,0.35)">·&nbsp; usage notifications</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:14px 18px 16px;gap:14px;min-height:0;overflow:hidden">
+                <!-- earlier faint message -->
+                <div style="display:flex;gap:10px;opacity:0.45">
+                  <div style="width:34px;height:34px;border-radius:7px;background:#3a3d44;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">D</div>
+                  <div><div style="font-size:13px"><span style="font-weight:700;color:white">Devon</span> <span style="font-size:11px;color:rgba(255,255,255,0.35)">1:40&#8239;AM</span></div><div style="font-size:13px;color:rgba(255,255,255,0.6)">shipping the release now 🚀</div></div>
+                </div>
+                <!-- CapMeter alert (new) -->
+                <div style="display:flex;gap:10px">
+                  <div style="width:34px;height:34px;border-radius:7px;background:linear-gradient(150deg,#f4a07a,#d97757);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px">⚡</div>
+                  <div style="flex:1;min-width:0">
+                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+                      <span style="font-weight:700;color:white;font-size:13px">CapMeter</span>
+                      <span style="font-size:9px;background:rgba(255,255,255,0.14);color:rgba(255,255,255,0.7);padding:1px 5px;border-radius:3px;font-weight:600;letter-spacing:0.02em">APP</span>
+                      <span style="font-size:11px;color:rgba(255,255,255,0.35)">2:09&#8239;AM</span>
+                    </div>
+                    <div style="border-left:3px solid #F5A623;padding-left:11px">
+                      <div style="font-size:13px;color:rgba(255,255,255,0.92);font-weight:600;margin-bottom:5px">⚡ CapMeter — 80% threshold reached</div>
+                      <div style="font-size:12px;font-family:'SF Mono',Menlo,monospace;letter-spacing:1px;display:flex;align-items:center;gap:8px"><span style="background:rgb(27,29,33);border:1px solid rgba(255,255,255,0.13);border-radius:5px;padding:2px 7px;color:rgb(232,145,44)">▰▰▰▰▰▰▰▰▱▱</span><span style="color:rgba(255,255,255,0.6)">80%</span></div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.42);margin-top:5px">👤 you@example.com&nbsp; · &nbsp;⭐ Claude Pro&nbsp; · &nbsp;🔄 05:20</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- macOS notification toast (matches the real notification the app sends) -->
+        <div style="position:absolute;top:16px;right:22px;width:min(326px,72vw);background:rgba(43,43,48,0.9);backdrop-filter:blur(45px) saturate(150%);-webkit-backdrop-filter:blur(45px) saturate(150%);border-radius:19px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 16px 44px rgba(0,0,0,0.5);padding:14px 16px;display:flex;align-items:center;gap:18px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif">
+          <img src="icon.png" alt="" style="width:36px;height:36px;border-radius:9px;flex-shrink:0;display:block;box-shadow:0 1px 3px rgba(0,0,0,0.3)">
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-bottom:2px">
+              <span style="font-size:13px;font-weight:700;color:#fff;letter-spacing:-0.01em">Claude — 80% used</span>
+              <span style="font-size:11px;color:rgba(255,255,255,0.5);white-space:nowrap;flex-shrink:0">now</span>
+            </div>
+            <div style="font-size:12.5px;color:rgba(255,255,255,0.9);line-height:1.36">Current session is running low. Resets at 05:20&#8239;AM.</div>
           </div>
         </div>
       </div>
@@ -560,20 +648,19 @@
 
     <!-- Bottom overlay -->
     <div style="position:absolute;bottom:0;left:0;right:0;z-index:20;padding:20px 24px 26px;background:linear-gradient(to top,rgba(4,14,30,0.88) 0%,transparent 100%);text-align:center;pointer-events:none">
-      <div id="idemo-title" style="font-size:clamp(15px,1.8vw,20px);font-weight:700;color:white;letter-spacing:-0.02em;margin-bottom:5px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">Always in your menu bar</div>
-      <div id="idemo-sub" style="font-size:clamp(12px,1.2vw,14px);color:rgba(255,255,255,0.48);margin-bottom:14px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">A live usage ring shows your session at a glance</div>
-      <div style="display:flex;justify-content:center;gap:7px">
-        <div class="idemo-dot" style="width:6px;height:6px;border-radius:50%;background:white;transform:scale(1.4)"></div>
-        <div class="idemo-dot" style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.28)"></div>
-        <div class="idemo-dot" style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.28)"></div>
-        <div class="idemo-dot" style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.28)"></div>
-        <div class="idemo-dot" style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.28)"></div>
+      <div id="idemo-title" style="font-size:clamp(15px,1.8vw,20px);font-weight:700;color:white;letter-spacing:-0.02em;margin-bottom:5px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">Full breakdown in one click</div>
+      <div id="idemo-sub" style="font-size:clamp(12px,1.2vw,14px);color:rgba(255,255,255,0.48);margin-bottom:14px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">Session %, burn rate, and exact time until reset</div>
+      <div style="display:flex;justify-content:center;gap:9px;pointer-events:auto">
+        <button class="idemo-dot" aria-label="Step 1" style="width:8px;height:8px;padding:0;border:none;border-radius:50%;background:white;transform:scale(1.4);cursor:pointer"></button>
+        <button class="idemo-dot" aria-label="Step 2" style="width:8px;height:8px;padding:0;border:none;border-radius:50%;background:rgba(255,255,255,0.28);cursor:pointer"></button>
+        <button class="idemo-dot" aria-label="Step 3" style="width:8px;height:8px;padding:0;border:none;border-radius:50%;background:rgba(255,255,255,0.28);cursor:pointer"></button>
+        <button class="idemo-dot" aria-label="Step 4" style="width:8px;height:8px;padding:0;border:none;border-radius:50%;background:rgba(255,255,255,0.28);cursor:pointer"></button>
       </div>
     </div>
 
-    <div id="idemo-hint" style="position:absolute;bottom:78px;left:50%;transform:translateX(-50%);z-index:20;font-size:11.5px;color:rgba(255,255,255,0.28);display:flex;align-items:center;gap:5px;pointer-events:none;transition:opacity 0.4s;white-space:nowrap;font-family:-apple-system,sans-serif">
-      Scroll to explore <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 4l3.5 3.5L9 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
+    <!-- Prev/next arrows -->
+    <button class="idemo-arrow idemo-prev" aria-label="Previous step"><svg width="9" height="15" viewBox="0 0 9 15" fill="none"><path d="M7 2L2 7.5 7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="idemo-arrow idemo-next" aria-label="Next step"><svg width="9" height="15" viewBox="0 0 9 15" fill="none"><path d="M2 2l5 5.5L2 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 
   </div>
 </div>
@@ -609,7 +696,7 @@
   <div class="features-grid">
     <div class="feature-card glass"><div class="feature-icon"><i data-lucide="trending-up"></i></div><h3>Limit prediction</h3><p>CapMeter learns your burn rate and forecasts the exact time you'll run out — "limit in ~1h 18m" — so you pace yourself instead of getting cut off mid-thought.</p></div>
     <div class="feature-card glass"><div class="feature-icon"><i data-lucide="bell"></i></div><h3>Alerts that reach you</h3><p>Get warned at your own thresholds — as a macOS notification or pushed straight to Slack &amp; Discord. Set quiet hours so you're never pinged while you sleep.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="move"></i></div><h3>Floating widget</h3><p>A draggable mini-widget that floats above every window and Space — your remaining session always in view while you're deep in a coding session.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="move"></i></div><h3>Floating widget</h3><p>A draggable mini-widget that floats above every window and Space — your remaining session always in view. When pay-as-you-go credits are on, it adds a second line tracking your spend rate and balance.</p></div>
     <div class="feature-card glass"><div class="feature-icon"><i data-lucide="calendar-range"></i></div><h3>All your usage windows</h3><p>Current session (5-hour) and 7-day windows in one view, each with its own live countdown — pulled from your Claude account in real time.</p></div>
     <div class="feature-card glass"><div class="feature-icon"><i data-lucide="bar-chart-2"></i></div><h3>History &amp; export</h3><p>7, 14, 30 and 90-day bar charts, weekly comparison and streaks. Export everything as CSV or JSON whenever you want.</p></div>
     <div class="feature-card glass"><div class="feature-icon"><i data-lucide="gauge"></i></div><h3>Live menu-bar ring</h3><p>The baseline, done right: a color-coded ring shifts green → orange → red as you approach the limit. Always visible, zero clicks.</p></div>
@@ -678,87 +765,115 @@
 lucide.createIcons();
 
 /* Interactive Demo scroll driver */
+/* Kullanıcı kontrollü demo — scroll-jack YOK. Adımlar otomatik ilerler (bölüm görünürken)
+   ve noktalara tıklanarak seçilir. Scroll'u ele geçirmez, sayfayı uzatmaz. */
 (function() {
   var section = document.getElementById('idemo');
   if (!section) return;
 
-  var steps  = [document.getElementById('idemo-s1'), document.getElementById('idemo-s2'),
-                document.getElementById('idemo-s3'), document.getElementById('idemo-s4'),
-                document.getElementById('idemo-s5')];
-  var dots   = document.querySelectorAll('.idemo-dot');
+  var steps  = [document.getElementById('idemo-s2'), document.getElementById('idemo-s3'),
+                document.getElementById('idemo-s4'), document.getElementById('idemo-s5')];
+  var dots   = [].slice.call(document.querySelectorAll('.idemo-dot'));
   var title  = document.getElementById('idemo-title');
   var sub    = document.getElementById('idemo-sub');
-  var hint   = document.getElementById('idemo-hint');
   var mbcap  = document.getElementById('idemo-mbcap');
-  var s1ring = document.getElementById('idemo-s1-ring');
-  var pageNav = document.querySelector('nav');
 
   var COPY = [
-    { t:'Always in your menu bar',       s:'A live usage ring shows your session at a glance' },
     { t:'Full breakdown in one click',   s:'Session %, burn rate, and exact time until reset' },
     { t:'Your usage history',            s:'14-day bar chart, averages, peak usage and streaks' },
     { t:'Float it above any window',     s:'The widget stays visible on top of any app' },
-    { t:'Smart alerts before limits hit', s:"Get notified before you're cut off mid-task" }
+    { t:'Smart alerts before limits hit', s:'A macOS notification — or pushed straight to Slack & Discord' }
   ];
 
-  var lastStep = -1;
+  var AUTO_MS = 4200;
+  var cur = -1, timer = null, reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function update() {
-    var rect  = section.getBoundingClientRect();
-    var total = section.offsetHeight - window.innerHeight;
-    if (total <= 0) return;
-    var prog  = Math.max(0, Math.min(1, -rect.top / total));
-    var stepF = prog * 5;
-    var stepI = Math.min(4, Math.floor(stepF));
-    var stepP = stepF - stepI;
-
-    steps.forEach(function(s, i) {
+  function setStep(i) {
+    if (i === cur) return;
+    cur = i;
+    steps.forEach(function(s, idx) {
       if (!s) return;
-      var op, ty;
-      if (i < stepI) {
-        op = 0; ty = -14;
-      } else if (i === stepI) {
-        if (stepP > 0.78) { var t = (stepP - 0.78) / 0.22; op = 1 - t; ty = -14 * t; }
-        else { op = 1; ty = 0; }
-      } else if (i === stepI + 1) {
-        if (stepP > 0.78) { var t = (stepP - 0.78) / 0.22; op = t; ty = 14 * (1 - t); }
-        else { op = 0; ty = 14; }
-      } else {
-        op = 0; ty = 14;
-      }
-      s.style.opacity = op;
-      s.style.transform = 'translateY(' + ty + 'px)';
-      /* Invisible (opacity:0) steps still stack on top and would otherwise swallow clicks/drags meant for the active step */
-      s.style.pointerEvents = op > 0.05 ? 'auto' : 'none';
+      var active = idx === i;
+      s.style.opacity = active ? '1' : '0';
+      s.style.transform = active ? 'translateY(0)' : 'translateY(10px)';
+      /* Görünmez adımlar üstte yığılıp aktif adımın tıklama/sürüklemesini yutmasın */
+      s.style.pointerEvents = active ? 'auto' : 'none';
     });
+    if (title) title.textContent = COPY[i].t;
+    if (sub)   sub.textContent   = COPY[i].s;
+    dots.forEach(function(d, idx) {
+      d.style.background = idx === i ? 'white' : 'rgba(255,255,255,0.28)';
+      d.style.transform  = idx === i ? 'scale(1.4)' : 'scale(1)';
+    });
+    /* Full breakdown (adım 0) ve history (adım 1) menü çubuğu ring'inden açılır — item'ı
+       hafif vurgulayarak popup'ın kaynağını göster; widget/alert adımlarında vurgu yok. */
+    if (mbcap) mbcap.style.background = i <= 1 ? 'rgba(52,199,89,0.14)' : 'transparent';
+  }
 
-    if (stepI !== lastStep) {
-      lastStep = stepI;
-      if (title) title.textContent = COPY[stepI].t;
-      if (sub)   sub.textContent   = COPY[stepI].s;
-      dots.forEach(function(d, i) {
-        d.style.background = i === stepI ? 'white' : 'rgba(255,255,255,0.25)';
-        d.style.transform  = i === stepI ? 'scale(1.3)' : 'scale(1)';
-      });
-      if (mbcap) mbcap.style.background = stepI === 0 ? 'rgba(52,199,89,0.14)' : 'transparent';
-      if (s1ring) s1ring.style.animationPlayState = stepI === 0 ? 'running' : 'paused';
+  function next() { setStep((cur + 1) % steps.length); }
+  /* Otomatik ilerleme yalnızca: demo ekranda + fare üzerinde DEĞİL + reduced-motion kapalı.
+     Fare demo üzerindeyken durur — kullanıcı bir adımı incelerken (ör. widget'ı sürüklerken)
+     otomatik geçiş onu kesmesin. Fare ayrılınca devam eder. */
+  var isVisible = false, isHovered = false;
+  function canAuto() { return isVisible && !isHovered && !reduced; }
+  function stopAuto() { if (timer) { clearInterval(timer); timer = null; } }
+  function syncAuto() { if (canAuto()) { if (!timer) timer = setInterval(next, AUTO_MS); } else stopAuto(); }
+  function restartAuto() { stopAuto(); if (canAuto()) timer = setInterval(next, AUTO_MS); } // manuel geçişte sayaç sıfırlanır
+
+  dots.forEach(function(d, i) {
+    d.addEventListener('click', function() { setStep(i); restartAuto(); });
+  });
+
+  function go(delta) { setStep((cur + delta + steps.length) % steps.length); restartAuto(); }
+  var prevBtn = document.querySelector('.idemo-prev');
+  var nextBtn = document.querySelector('.idemo-next');
+  if (prevBtn) prevBtn.addEventListener('click', function() { go(-1); });
+  if (nextBtn) nextBtn.addEventListener('click', function() { go(1); });
+
+  /* Fare demo üzerindeyken otomatik ilerlemeyi duraklat, ayrılınca devam et */
+  section.addEventListener('mouseenter', function() { isHovered = true; syncAuto(); });
+  section.addEventListener('mouseleave', function() { isHovered = false; syncAuto(); });
+
+  setStep(0);
+
+  /* Bölüm ekrandayken: otomatik ilerlet (>=%35) + tam ekranken navı sölür (>=%60)
+     ki 100vh demo gerçekten immersive olsun, üstte nav/hero içeriği görünmesin. */
+  var pageNav = document.querySelector('nav');
+  var keyVisible = false;
+  function applyVisibility(ratio) {
+    isVisible = ratio >= 0.35;   // otomatik ilerleme görünürlüğü
+    keyVisible = ratio >= 0.5;   // klavye okları
+    syncAuto();
+    if (pageNav) {
+      var hide = ratio >= 0.6;
+      pageNav.style.opacity = hide ? '0' : '';
+      pageNav.style.pointerEvents = hide ? 'none' : '';
     }
-
-    if (hint) hint.style.opacity = prog > 0.04 ? '0' : '1';
-    if (pageNav) { pageNav.style.opacity = prog > 0 && prog < 1 ? '0' : ''; pageNav.style.pointerEvents = prog > 0 && prog < 1 ? 'none' : ''; }
+  }
+  /* Klavye okları — yalnızca demo ekrandayken (başka yerde scroll'a karışmasın) */
+  document.addEventListener('keydown', function(e) {
+    if (!keyVisible) return;
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+  });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { applyVisibility(e.intersectionRatio); });
+    }, { threshold: [0, 0.35, 0.6, 1] });
+    io.observe(section);
+  } else {
+    isVisible = true; keyVisible = true; syncAuto(); // eski tarayıcı: görünür varsay
   }
 
-  /* Coalesce scroll/resize into one update per animation frame — avoids running the
-     layout-reading update() synchronously on every scroll event (measured: 2 gBR/event). */
-  var ticking = false;
-  function onScroll() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(function () { update(); ticking = false; });
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
-  update();
+  /* Nav "Demo" + hero "See it in action" → demoyu tam üste hizala (nav zaten sölünür),
+     scroll-padding'in bıraktığı üst boşluğu atlayıp gerçek tam ekran ver. */
+  document.querySelectorAll('a[href="#idemo"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.scrollTo({ top: section.offsetTop, behavior: 'smooth' });
+      history.replaceState(null, '', '#idemo');
+    });
+  });
 })();
 
 /* Menu bar clock */
@@ -769,32 +884,17 @@ lucide.createIcons();
   if (timeEl) timeEl.textContent = '1:30 AM';
 })();
 
-/* Position pulse ring, arrow and popup under CapMeter item */
+/* Popup + History pencerelerini menü çubuğundaki CapMeter item'ının altına hizala */
 (function() {
   function positionS1() {
     var cap   = document.getElementById('idemo-mbcap');
-    var ring  = document.getElementById('idemo-s1-ring');
-    var arrow = document.getElementById('idemo-s1-arrow');
     var s2in  = document.getElementById('idemo-s2-inner');
     var s3in  = document.getElementById('idemo-s3-inner');
-    if (!cap || !ring || !arrow) return;
+    if (!cap) return;
 
     var r = cap.getBoundingClientRect();
     var W = window.innerWidth;
-
-    /* Distance from viewport right edge to CapMeter right edge */
-    var fromRight = W - r.right;
-
-    /* Pulse ring: surround CapMeter with 4px padding each side */
-    ring.style.right      = (fromRight - 4) + 'px';
-    ring.style.width      = (r.width + 8) + 'px';
-    ring.style.visibility = 'visible';
-
-    /* Arrow: center on CapMeter horizontally */
     var capCenterFromRight = W - (r.left + r.width / 2);
-    var aw = arrow.offsetWidth || 120;
-    arrow.style.right      = (capCenterFromRight - aw / 2) + 'px';
-    arrow.style.visibility = 'visible';
 
     /* Popup + History: center under CapMeter (both 300px wide) */
     var rightPos = Math.max(4, capCenterFromRight - 150) + 'px';
@@ -846,8 +946,9 @@ lucide.createIcons();
   function hm(min) { const h = Math.floor(min/60); return h ? h+'h '+(min%60)+'m' : min+'m'; }
   /* Title — time until the 5-hour session window resets */
   function timeLeft(p) { return hm(Math.round((1-p/100)*300)) + ' left'; }
-  /* Secondary — matches real widget priority (src/widget.html:143-157): burn rate (%/hr) until a
-     limit prediction kicks in, then "limit in" colored by time (<1h red, else orange) */
+  /* Secondary (session line) — matches real widget priority (src/widget.html render()): burn rate
+     (%/hr) until a limit prediction kicks in, then "limit in" colored by time (<1h red, else orange).
+     The extra-usage footer below is static — spend accrues too slowly to animate meaningfully. */
   function sub(p) {
     if (p < 30) return { t:'~17%/hr', c:'rgba(255,255,255,0.32)' };
     const min = Math.max(1, Math.round((100-p)/100*170));
@@ -955,27 +1056,6 @@ lucide.createIcons();
   }
 
   makeDraggable(document.getElementById('idemo-s4'), document.getElementById('d4Widget'));
-})();
-
-/* Nav "Demo" link → scroll a bit PAST the demo's top so the sticky section pins
-   full-screen and the nav fades (its own scroll behavior), instead of stopping at the
-   very top where the real nav sits over the demo's fake menu bar. Computed from live
-   heights so it stays correct on any viewport. */
-(function () {
-  var idemo = document.getElementById('idemo');
-  if (!idemo) return;
-  // Nav "Demo" linki + hero "See it live" butonu — ikisi de aynı immersive pin davranışını alır
-  var links = document.querySelectorAll('a[href="#idemo"]');
-  links.forEach(function (link) {
-    link.addEventListener('click', function (e) {
-      e.preventDefault();
-      var total = idemo.offsetHeight - window.innerHeight;
-      /* ~4% in → nav hides (prog > 0) and demo is pinned, still on step 1 (steps break at 20%) */
-      var y = idemo.offsetTop + Math.round(total * 0.04);
-      window.scrollTo({ top: y, behavior: 'smooth' });
-      history.replaceState(null, '', '#idemo');
-    });
-  });
 })();
 
 /* Sayfa açıldıktan ~1s sonra "See it in action" butonunu bir kez ışıldat (hover shimmer'ının
