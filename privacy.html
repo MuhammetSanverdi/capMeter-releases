@@ -15,7 +15,7 @@
 </head>
 <body>
 <h1>Privacy Policy</h1>
-<p class="meta">Last updated: July 1, 2026</p>
+<p class="meta">Last updated: July 27, 2026</p>
 
 <p>CapMeter ("the app") is a macOS menu bar utility that displays your personal Claude.ai usage statistics. This policy explains how the app handles your data.</p>
 
@@ -33,7 +33,7 @@
 <h2>Data Stored Locally</h2>
 <p>The app stores the following data <strong>only on your device</strong>:</p>
 <ul>
-  <li><strong>Account information</strong> — For each Claude account you add, the app stores its session token (cookie), account name, and email address locally, so you can switch between accounts. Session tokens are kept in an isolated, sandboxed session.</li>
+  <li><strong>Account information</strong> — For each Claude account you add, the app stores its session token (cookie), account name, and email address locally, so you can switch between accounts. Session tokens are <strong>encrypted using the macOS Keychain</strong> before being written to disk, and the app's settings file is readable only by your user account. Browser sessions are kept isolated in the app's own sandboxed session.</li>
   <li><strong>Usage history</strong> — A local log of your past usage (percentages, plan, and the associated account email), stored in the app's sandboxed container. Used to display the history chart in the app.</li>
   <li><strong>App preferences</strong> — Notification settings, refresh interval, display options, and any webhook URL you configure. Stored locally via Electron's app data storage.</li>
 </ul>
@@ -41,13 +41,18 @@
 <h2>Network Requests</h2>
 <p>The app communicates with <strong>claude.ai</strong> on your behalf, using your own authenticated session, to retrieve your usage data. Requests are made to:</p>
 <ul>
+  <li><code>claude.ai/api/organizations</code> — to identify which organization your account belongs to</li>
   <li><code>claude.ai/api/organizations/…/usage</code> — to retrieve your usage limits</li>
   <li><code>claude.ai/api/account</code> — to retrieve your account name and plan</li>
 </ul>
+<p>The app never reads, stores, or transmits your Claude conversations.</p>
 <p>The app does not send your data to the developer or any analytics service. The only other network destination is <strong>optional and entirely under your control</strong>: if you configure a webhook (e.g. a Slack or custom HTTP URL) in the app's settings, the app sends a usage alert to that URL when you cross a threshold. That alert contains your usage percentage, your Claude account email address, your plan name, and your reset time. This feature is disabled by default, is sent only to the URL you provide, and is only active if you set it up. You can remove the webhook at any time in settings to stop it.</p>
 
+<h2>Purchases</h2>
+<p>CapMeter offers a single one-time in-app purchase. Payments are processed entirely by Apple; the developer never receives or stores your payment details. The app only records locally whether the purchase has been made.</p>
+
 <h2>Your Control</h2>
-<p>You can remove all locally stored data at any time by deleting the app and its associated data from your <em>~/Library/Application Support</em> folder (the app's container). Signing out or removing an account inside the app deletes its stored session token.</p>
+<p>You can remove all locally stored data at any time by deleting the app together with its data folder at <em>~/Library/Containers/com.gulizarsanverdi.capmeter/</em>. Signing out or removing an account inside the app deletes its stored session token.</p>
 
 <h2>Contact</h2>
 <p>Questions? Contact: <a href="mailto:muhammetsanverdi97@gmail.com">muhammetsanverdi97@gmail.com</a></p>
