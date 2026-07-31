@@ -5,9 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CapMeter — Claude Usage Monitor for macOS</title>
 <meta name="description" content="Track your Claude.ai usage limits in real time from the macOS menu bar. See your session, weekly, and per-model limits at a glance — never hit a limit by surprise.">
+<link rel="canonical" href="https://capmeter.app/">
+<link rel="icon" href="icon.png" type="image/png">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="theme-color" content="#09080e">
+
+<!-- Link previews: X ve Reddit og:image olmadan çıplak kart gösteriyor. Görsel mutlak URL olmalı. -->
 <meta property="og:title" content="CapMeter — Claude Usage Monitor for macOS">
-<meta property="og:description" content="Track your Claude.ai usage limits in real time from the macOS menu bar.">
+<meta property="og:description" content="See your Claude usage in the macOS menu bar — and know when you'll hit the limit before you do. Works for claude.ai and Claude Code.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://capmeter.app/">
+<meta property="og:site_name" content="CapMeter">
+<meta property="og:image" content="https://capmeter.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CapMeter's popup on a Mac desktop showing 38% session usage and 'limit in ~1h 18m'">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CapMeter — Claude Usage Monitor for macOS">
+<meta name="twitter:description" content="See your Claude usage in the macOS menu bar — and know when you'll hit the limit before you do. Works for claude.ai and Claude Code.">
+<meta name="twitter:image" content="https://capmeter.app/og-image.jpg">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -261,6 +277,69 @@
   .pricing-features li::before { content: '✓'; color: var(--accent2); font-weight: 700; flex-shrink: 0; }
   .pricing-trial { font-size: 12px; color: var(--faint); margin-top: 16px; }
 
+  /* ── FAQ ──
+     <details> kullanılıyor: JS yok, klavye ve ekran okuyucu desteği tarayıcıdan geliyor. */
+  /* Glass panel: cevap metni duvar kâğıdının parlak bandının üstüne denk gelince
+     kontrast düşüyordu; sayfanın diğer bölümleriyle de aynı dil. */
+  .faq { max-width: 760px; margin: 0 auto; padding: 10px 26px; border-radius: var(--radius); }
+  .faq details {
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+  }
+  .faq details:last-of-type { border-bottom: none; }
+  @media (max-width: 600px) { .faq { padding: 6px 18px; } }
+  .faq summary {
+    list-style: none; cursor: pointer;
+    padding: 18px 34px 18px 2px; position: relative;
+    font-size: 16px; font-weight: 600; color: var(--text);
+    transition: color 0.2s;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  /* Sağdaki +, açılınca × olur — ok yerine, çünkü ok scroll-cue ile karışıyor */
+  .faq summary::after {
+    content: '+'; position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+    font-size: 20px; font-weight: 400; color: var(--faint);
+    /* süre içerik animasyonuyla aynı — ikon içerikten önce yerine oturmasın */
+    transition: transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1), color 0.2s;
+  }
+  @media (prefers-reduced-motion: reduce) { .faq summary::after { transition: none; } }
+  .faq details[open] summary::after { content: '+'; transform: translateY(-50%) rotate(45deg); color: var(--accent2); }
+  .faq summary:hover { color: var(--accent2); }
+  /* Aç/kapa animasyonu — JS yok.
+     <details> normalde animate edilemez; ::details-content + interpolate-size ile
+     auto yüksekliğe geçiş yapılabiliyor. Desteklemeyen tarayıcıda hiçbir şey bozulmaz,
+     yalnızca eskisi gibi anında açılır (progressive enhancement).
+     content-visibility'nin allow-discrete ile geçmesi şart, yoksa içerik anında yok olur. */
+  @supports (interpolate-size: allow-keywords) {
+    .faq { interpolate-size: allow-keywords; }
+    .faq details::details-content {
+      block-size: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition:
+        block-size 0.34s cubic-bezier(0.22, 0.61, 0.36, 1),
+        opacity 0.26s ease,
+        content-visibility 0.34s allow-discrete;
+    }
+    .faq details[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .faq details::details-content { transition: none; opacity: 1; }
+    }
+  }
+
+  .faq details > p {
+    font-size: 14.5px; line-height: 1.65; color: var(--muted);
+    padding: 0 34px 20px 2px; margin: -2px 0 0;
+  }
+  .faq details > p + p { padding-top: 10px; }
+  .faq code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px; background: rgba(255,255,255,0.07);
+    padding: 1px 5px; border-radius: 5px;
+  }
+
   /* ── Requirements ── */
   .req { text-align: center; padding: 36px 24px; }
   .req p { font-size: 13px; color: var(--faint); }
@@ -370,7 +449,6 @@
     #idemo-mb-date { display: none; }
   }
 </style>
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body>
 
@@ -408,30 +486,34 @@
     <a href="#idemo">Demo</a>
     <a href="#how">How it works</a>
     <a href="#features">Features</a>
+    <a href="#faq">FAQ</a>
     <a href="#pricing">Pricing</a>
   </div>
+  <!-- APPSTORE-CTA — yayında href'i App Store linkiyle değiştir (kanal takibi için ?ct=… ekle) -->
   <a class="nav-cta" href="#pricing"><span class="nav-cta-full">Get on the App Store</span><span class="nav-cta-short">App Store</span></a>
 </nav>
 
 <!-- Hero -->
 <section class="hero">
-  <div class="hero-badge">For Claude.ai · Pro &amp; Max</div>
+  <div class="hero-badge">For Claude.ai · Pro, Max &amp; Team</div>
   <h1>Know you're about to hit<br>the limit — <span>before you do</span></h1>
-  <p>Free menu-bar counters show you a number. CapMeter watches your burn rate, predicts when you'll run out, and warns you — in the menu bar, as a floating widget, or straight to Slack &amp; Discord — so a limit never interrupts you mid-task.</p>
+  <p>CapMeter lives in your Mac's menu bar and watches how fast you're burning through your Claude session — browser and Claude&nbsp;Code alike. It estimates when you'll run out and warns you there, on a floating widget, or straight to Slack &amp; Discord — so the limit stops catching you mid-task.</p>
   <div class="hero-actions">
+    <!-- APPSTORE-CTA -->
     <a class="btn-cta" href="#pricing">
       <span style="font-size:20px;line-height:1">&#xF8FF;</span> Get on the App Store
     </a>
     <a class="btn-demo" href="#idemo">See it in action</a>
   </div>
   <p class="hero-note">Free 14-day trial · <a href="#pricing">$14.99 once</a> · <a href="privacy.html">Privacy Policy</a></p>
+  <p class="hero-note" style="margin-top:-10px;font-size:13px;opacity:0.75">Opens in demo mode without an account — look around before you sign in anywhere.</p>
 </section>
 
 <!-- Trust strip -->
 <div class="trust-strip">
   <div class="trust-item"><span class="trust-icon">⚡</span><strong>Predicts &amp; warns</strong> — not just a live number</div>
   <div class="trust-item"><span class="trust-icon">🔒</span><strong>Fully local</strong> — token encrypted in your Keychain, no servers of ours</div>
-  <div class="trust-item"><span class="trust-icon">🍎</span><strong>Native menu-bar app</strong> — macOS 12+, Apple Silicon</div>
+  <div class="trust-item"><span class="trust-icon">🍎</span><strong>Lives in your menu bar</strong> — macOS 12+, Apple Silicon</div>
   <div class="trust-item"><span class="trust-icon">💳</span><strong>$14.99 once</strong> — buy it, keep it</div>
 </div>
 
@@ -441,7 +523,8 @@
 <div style="text-align:center;padding:64px 24px 6px;max-width:760px;margin:0 auto">
   <div class="section-label">Live demo</div>
   <h2 class="section-title" style="margin-bottom:6px">Watch it work — right on your desktop</h2>
-  <a href="#idemo" class="scroll-cue" aria-label="Scroll to the demo"><i data-lucide="chevron-down"></i></a>
+  <p style="font-size:13px;color:var(--faint);margin:0 0 4px">An interactive recreation of the app — scroll to step through it.</p>
+  <a href="#idemo" class="scroll-cue" aria-label="Scroll to the demo"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></a>
 </div>
 
 <!-- ═══ Interactive Demo (scroll-driven) ═══
@@ -662,7 +745,7 @@
                     <div style="border-left:3px solid #F5A623;padding-left:11px">
                       <div style="font-size:13px;color:rgba(255,255,255,0.92);font-weight:600;margin-bottom:5px">⚡ CapMeter — 80% threshold reached</div>
                       <div style="font-size:12px;font-family:'SF Mono',Menlo,monospace;letter-spacing:1px;display:flex;align-items:center;gap:8px"><span style="background:rgb(27,29,33);border:1px solid rgba(255,255,255,0.13);border-radius:5px;padding:2px 7px;color:rgb(232,145,44)">▰▰▰▰▰▰▰▰▱▱</span><span style="color:rgba(255,255,255,0.6)">80%</span></div>
-                      <div style="font-size:11px;color:rgba(255,255,255,0.42);margin-top:5px">👤 you@example.com&nbsp; · &nbsp;⭐ Claude Pro&nbsp; · &nbsp;🔄 05:20</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.42);margin-top:5px">👤 you@example.com&nbsp; · &nbsp;⭐ Claude Pro&nbsp; · &nbsp;🔄 Resets at 05:20</div>
                     </div>
                   </div>
                 </div>
@@ -708,7 +791,7 @@
 <!-- How it works -->
 <div class="steps-wrap" id="how">
   <div class="section-label" style="text-align:center">How it works</div>
-  <h2 class="section-title" style="margin-bottom:0">Up and running in 60 seconds</h2>
+  <h2 class="section-title" style="margin-bottom:0">Install, open, done</h2>
   <div class="steps" style="margin-top:52px">
     <div class="step">
       <div class="step-num">1</div>
@@ -718,7 +801,7 @@
     <div class="step">
       <div class="step-num">2</div>
       <h3>It reads your own session — locally</h3>
-      <p>No API key, no setup. Your session stays on your Mac, encrypted in the macOS Keychain — it never touches a server of ours and never reads your chats.</p>
+      <p>No API key. You sign in to Claude once, in a normal browser window, and CapMeter keeps that session encrypted in the macOS Keychain — on your Mac. It never touches a server of ours and never reads your chats.</p>
     </div>
     <div class="step">
       <div class="step-num">3</div>
@@ -731,15 +814,15 @@
 <!-- Features -->
 <section class="section" id="features" style="padding-top:0">
   <div class="section-label">Features</div>
-  <h2 class="section-title">The part the free ones skip</h2>
-  <p class="section-sub">Anyone can show a percentage. CapMeter is built around the layer that actually saves your session — seeing the limit coming and telling you in time.</p>
+  <h2 class="section-title">More than a live percentage</h2>
+  <p class="section-sub">The number itself is the easy part. CapMeter is built around what comes after it — seeing the limit coming, and telling you somewhere you'll actually notice.</p>
   <div class="features-grid">
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="trending-up"></i></div><h3>Limit prediction</h3><p>CapMeter learns your burn rate and forecasts the exact time you'll run out — "limit in ~1h 18m" — so you pace yourself instead of getting cut off mid-thought.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="bell"></i></div><h3>Alerts that reach you</h3><p>Get warned at your own thresholds — as a macOS notification or pushed straight to Slack &amp; Discord. Set quiet hours so you're never pinged while you sleep.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="move"></i></div><h3>Floating widget</h3><p>A draggable mini-widget that floats above every window and Space — your remaining session always in view. When pay-as-you-go credits are on, it adds a second line tracking your spend rate and balance.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="calendar-range"></i></div><h3>All your usage windows</h3><p>Current session (5-hour) and 7-day windows in one view, each with its own live countdown — pulled from your Claude account in real time.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="bar-chart-2"></i></div><h3>History &amp; export</h3><p>7, 14, 30 and 90-day bar charts, weekly comparison and streaks. Export everything as CSV or JSON whenever you want.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><i data-lucide="gauge"></i></div><h3>Live menu-bar ring</h3><p>The baseline, done right: a color-coded ring shifts green → orange → red as you approach the limit. Always visible, zero clicks.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg></div><h3>Limit prediction</h3><p>CapMeter measures your burn rate and turns it into a time — "limit in ~1h 18m" — so you pace yourself instead of getting cut off mid-thought. It's an estimate from your recent pace, updated as you go.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></div><h3>Alerts that reach you</h3><p>Get warned at your own thresholds — as a macOS notification or pushed straight to Slack &amp; Discord. Set quiet hours so you're never pinged while you sleep.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"/><path d="m15 19-3 3-3-3"/><path d="m19 9 3 3-3 3"/><path d="M2 12h20"/><path d="m5 9-3 3 3 3"/><path d="m9 5 3-3 3 3"/></svg></div><h3>Floating widget</h3><p>A draggable mini-widget that floats above every window and Space — your remaining session always in view. When pay-as-you-go credits are on, it adds a second line tracking your spend rate and balance.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M17 14h-6"/><path d="M13 18H7"/><path d="M7 14h.01"/><path d="M17 18h.01"/></svg></div><h3>All your usage windows</h3><p>Your current session (5-hour), your weekly window, and any per-model weekly limits your account reports — each as its own row with its own countdown. Model names come straight from Claude, so new ones appear on their own. Browser and Claude Code draw from the same limits, and both land in one counter.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg></div><h3>History &amp; export</h3><p>7, 14, 30 and 90-day bar charts, weekly comparison and streaks. Export everything as CSV or JSON whenever you want.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg></div><h3>Live menu-bar ring</h3><p>The baseline, done right: a color-coded ring shifts green → orange → red as you approach the limit. Always visible, zero clicks.</p></div>
   </div>
 </section>
 
@@ -749,18 +832,72 @@
   <h2 class="section-title">Right where you work</h2>
   <p class="section-sub">A rich popup one click away in the menu bar.</p>
   <div class="showcase-pops">
-    <div class="pop-card"><img src="pop-history.png" alt="Usage history and charts"><p><strong>History &amp; trends</strong><br>7, 14, 30, 90-day charts, streaks &amp; export</p></div>
-    <div class="pop-card"><img src="pop-notifs.png" alt="Notification settings"><p><strong>Alerts your way</strong><br>Thresholds, quiet hours, Slack</p></div>
-    <div class="pop-card"><img src="pop-accounts.png" alt="Multiple Claude accounts"><p><strong>Multiple accounts</strong><br>Switch in one click</p></div>
+    <div class="pop-card"><img src="pop-history.png" alt="Usage history and charts" loading="lazy" decoding="async"><p><strong>History &amp; trends</strong><br>7, 14, 30, 90-day charts, streaks &amp; export</p></div>
+    <div class="pop-card"><img src="pop-notifs.png" alt="Notification settings" loading="lazy" decoding="async"><p><strong>Alerts your way</strong><br>Thresholds, quiet hours, Slack &amp; Discord</p></div>
+    <div class="pop-card"><img src="pop-accounts.png" alt="Multiple Claude accounts" loading="lazy" decoding="async"><p><strong>Multiple accounts</strong><br>Switch in one click</p></div>
   </div>
 </section>
 
 <!-- Privacy -->
 <section class="section" style="padding-top:0">
   <div class="privacy-strip glass">
-    <div class="lock"><i data-lucide="shield-check"></i></div>
+    <div class="lock"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
     <h3>Your data stays on your Mac</h3>
     <p>CapMeter reads usage from your own Claude.ai session and keeps everything on-device. Your session token is encrypted in the macOS Keychain, and the app talks only to claude.ai — plus any Slack, Discord or HTTP webhook you set up yourself. No servers of ours, no analytics, no tracking, no backend. It never accesses your conversations.</p>
+    <p style="margin-top:12px">You don't have to take that on trust: the app is sandboxed by the Mac App Store, and a network monitor like Little Snitch will show you the only host it ever contacts.</p>
+  </div>
+</section>
+
+<!-- FAQ — cevapların kaynağı docs/launch-copy.md §7. Sayfa ile o dosya birlikte güncellenmeli. -->
+<section class="section" id="faq" style="padding-top:0">
+  <div class="section-label">Questions</div>
+  <h2 class="section-title">The things you're probably wondering</h2>
+  <div class="faq glass">
+
+    <details>
+      <summary>Does my Claude Code usage count towards this?</summary>
+      <p>Yes. Anthropic's own docs put it plainly: <em>"Both Pro and Max plans offer usage limits that are shared across Claude and Claude Code, meaning all activity in both tools counts against the same usage limits."</em> CapMeter reads your account-level usage, so terminal work and browser chats land in the same number.</p>
+      <p>It doesn't break the total down by which client burned it — it shows the total your account reports.</p>
+    </details>
+
+    <details>
+      <summary>What happens when the 14 days are up?</summary>
+      <p>Your menu-bar session counter keeps working — you don't lose the thing you installed it for. What locks is the layer on top: limit prediction, notifications and quiet hours, the floating widget, webhooks, history and export, multiple accounts. The menu-bar display falls back to the ring on its own, and refreshes drop to every 30 minutes.</p>
+      <p>Buy the unlock and everything picks up where it left off. Nothing is deleted in the meantime.</p>
+    </details>
+
+    <details>
+      <summary>Why $14.99 when there are free ones?</summary>
+      <p>The free counters show you a live percentage and they do it well. What you're paying for is the layer above it: the burn-rate estimate, alerts that reach you in Slack or Discord, quiet hours, history you can export, and a widget that stays above every window.</p>
+      <p>You get all of it free for 14 days first. If that layer doesn't earn its place in your day, you never pay — and it's one payment, not a subscription.</p>
+    </details>
+
+    <details>
+      <summary>What if Anthropic changes how usage is reported?</summary>
+      <p>Then CapMeter can't read your usage until I ship an update through the App Store. There's no remote config or fallback that would fix it silently. It's the sharpest dependency in the design and I'd rather you hear it from me than discover it.</p>
+    </details>
+
+    <details>
+      <summary>What if you stop working on it?</summary>
+      <p>The app keeps running. There's no server of mine behind it — there never was — and no subscription that expires, so nothing switches off when I do. Your history lives on your Mac and exports to CSV or JSON whenever you want it.</p>
+      <p>The honest risk isn't billing, it's the one above: if the usage endpoint changes and no update ships, the counter stops. This is a one-person project.</p>
+    </details>
+
+    <details>
+      <summary>Can I get a refund?</summary>
+      <p>Purchases go through the App Store, so refunds are Apple's call, not mine — you'd request one at reportaproblem.apple.com. That's why the real safeguard is the trial: 14 days with every feature unlocked, before any money changes hands.</p>
+    </details>
+
+    <details>
+      <summary>Does it work on a Team plan?</summary>
+      <p>It's built for Pro, Max and Team, but I don't have a Team account to test with. If your plan pools limits at the organisation level, the numbers may describe the org rather than just you. The 14-day trial means you'll see that before you pay — and I'd genuinely like to hear what you see.</p>
+    </details>
+
+    <details>
+      <summary>Does it run on an Intel Mac?</summary>
+      <p>No — Apple Silicon only, macOS 12 or later. Mac App Store builds aren't thinned, so shipping a universal binary would make every M-series user download an Intel slice they'd never run. The App Store will simply tell you it's not compatible rather than letting you buy something that won't install.</p>
+    </details>
+
   </div>
 </section>
 
@@ -778,10 +915,12 @@
       <li>Burn-rate limit prediction</li>
       <li>Alerts to Slack, Discord & webhooks + quiet hours</li>
       <li>Floating widget on top of any app</li>
-      <li>Session & 7-day windows + live ring</li>
       <li>History & export (CSV / JSON)</li>
       <li>Multiple Claude accounts</li>
+      <li>Refresh as often as every 30 seconds</li>
     </ul>
+    <p style="font-size:12px;color:var(--faint);margin:-16px 0 22px;line-height:1.55">The menu-bar ring, your session and 7-day windows and the frosted glass theme keep working without the unlock — the list above is what the purchase adds.</p>
+    <!-- APPSTORE-CTA — yayında hem href hem etiket değişecek ("Get on the App Store") -->
     <a class="btn-cta" href="#pricing" style="width:100%">Coming soon on the Mac App Store</a>
     <p class="pricing-trial">Requires an active Claude.ai account · macOS 12+</p>
   </div>
@@ -794,15 +933,18 @@
 
 <!-- Footer -->
 <footer class="glass">
-  <p>© 2026 Muhammet Can Şanverdi · Not affiliated with Anthropic</p>
+  <p>Made by <a href="https://github.com/MuhammetSanverdi" style="color:var(--muted);text-decoration:underline;text-underline-offset:2px">Muhammet Can Şanverdi</a> — a one-person project, not affiliated with Anthropic.</p>
   <div class="footer-links">
+    <a href="#faq">FAQ</a>
     <a href="privacy.html">Privacy Policy</a>
-    <a href="https://github.com/MuhammetSanverdi/capMeter-releases/issues">Support</a>
+    <!-- Destek adresi: alias açılırsa yalnız burası ve privacy.html değişir -->
+    <a href="mailto:muhammetsanverdi97@gmail.com?subject=CapMeter%20support">Email support</a>
+    <a href="https://github.com/MuhammetSanverdi/capMeter-releases/issues">Report an issue</a>
   </div>
+  <p style="margin-top:10px">© 2026 Muhammet Can Şanverdi</p>
 </footer>
 
 <script>
-lucide.createIcons();
 
 /* Interactive Demo — scroll-driven (scrollytelling) */
 /* Adımlar SCROLL ile değişir: #idemo uzun bir track, içteki görsel sticky pinli.
