@@ -178,6 +178,14 @@
     transition: transform 0.2s;
   }
   .btn-cta:hover { transform: translateY(-1px); }
+
+  /* Apple'ın resmî "Download on the App Store" rozeti. Apple, üçüncü tarafların kendi
+     çizdiği Apple logosunu pazarlamada kullanmasına izin vermiyor; App Store'a link
+     vermenin onaylı yolu bu rozet. Değiştirilmemeli (renk/oran/metin) — yalnız
+     ölçeklenebilir ve etrafında yüksekliğin 1/10'u kadar boşluk bırakılmalı. */
+  .btn-badge { display: inline-flex; align-items: center; padding: 0 5px; transition: transform 0.2s; }
+  .btn-badge:hover { transform: translateY(-1px); }
+  .btn-badge img { height: 52px; width: auto; display: block; }
   /* İkincil hero CTA — interaktif demoya kaydırır. Cam efekt, canlı yeşil "live" noktası
      ile dikkat çeker ama turuncu primary butondan ayrışır. */
   .btn-demo {
@@ -507,13 +515,8 @@
   <p>CapMeter lives in your Mac's menu bar and watches how fast you're burning through your Claude session — browser and Claude&nbsp;Code alike. It estimates when you'll run out and warns you there, on a floating widget, or straight to Slack &amp; Discord — so the limit stops catching you mid-task.</p>
   <div class="hero-actions">
     <!-- APPSTORE-CTA -->
-    <a class="btn-cta" href="#pricing">
-      <!-- Apple logosu (U+F8FF) kaldırıldı: Unicode özel kullanım alanında olduğu için
-           yalnız Apple cihazlarında çiziliyor, Android/Windows/Linux'ta tofu kutusu
-           görünüyordu. Buton metni zaten "App Store" diyor. Logo istenirse Apple'ın
-           resmî App Store rozeti kullanılmalı — kendi çizdiğin logo marka kurallarına
-           aykırı. -->
-      Get on the App Store
+    <a class="btn-badge" href="#pricing" aria-label="Download CapMeter on the Mac App Store">
+      <img src="appstore-badge.svg" alt="Download on the App Store" width="156" height="52">
     </a>
     <a class="btn-demo" href="#idemo">See it in action</a>
   </div>
