@@ -15,7 +15,7 @@
 </head>
 <body>
 <h1>Privacy Policy</h1>
-<p class="meta">Last updated: July 28, 2026</p>
+<p class="meta">Last updated: August 1, 2026</p>
 
 <p>CapMeter ("the app") is a macOS menu bar utility that displays your personal Claude.ai usage statistics. This policy explains how the app handles your data.</p>
 
@@ -25,12 +25,13 @@
   <li>No analytics or tracking</li>
   <li>No crash reporting sent externally</li>
   <li>No advertising identifiers</li>
-  <li>No data sent to the developer's servers (the developer has no servers)</li>
+  <li>No data about you sent to the developer — there is no backend that receives it</li>
   <li>No account credentials stored outside your device</li>
 </ul>
-<p>The app itself sends nothing about you anywhere. Two things are worth naming explicitly:</p>
+<p>The app itself sends nothing about you anywhere. Three things are worth naming explicitly:</p>
 <ul>
   <li>If you set up a <strong>webhook</strong> yourself, the app sends usage alerts to the address you provide — described under "Network Requests" below.</li>
+  <li>Alerts posted to <strong>Slack or Discord</strong> carry the app's icon, which is hosted on capmeter.app — a static marketing site with no database and no account system. When those services render the message, their servers fetch that image; nothing about you is sent with it, and the app never contacts capmeter.app itself.</li>
   <li>When you <strong>add an account</strong>, the app opens Claude.ai's own sign-in page in a window inside the app. That page is served by Anthropic and may contact the services it normally uses — for example Google Sign-In, hCaptcha or Cloudflare — exactly as it would in your browser. Any cookies they set are stored in the app's isolated session on your Mac. "No analytics or tracking" above means the app contains no such code of its own; it does not change how Claude.ai's own sign-in page behaves.</li>
 </ul>
 
@@ -38,7 +39,7 @@
 <p>The app stores the following data <strong>only on your device</strong>:</p>
 <ul>
   <li><strong>Account information</strong> — For each Claude account you add, the app stores its session token (cookie), account name, and email address locally, so you can switch between accounts. Session tokens are <strong>encrypted with the macOS Keychain</strong> before being written to disk, whenever Keychain encryption is available on your Mac, and the app's settings file is readable only by your user account. Browser sessions are kept isolated in the app's own sandboxed session.</li>
-  <li><strong>Usage history</strong> — A local log of your past usage, stored in the app's sandboxed container and used to draw the history charts. Each entry holds the date and time, your session and weekly usage percentages, your plan name, the associated account email, and — if you use Claude's extra usage credits — the amount spent, which is what the spend-rate figure is calculated from.</li>
+  <li><strong>Usage history</strong> — A local log of your past usage, stored in the app's sandboxed container and used to draw the history charts. Each entry holds the date and time, the time your session resets, your session and weekly usage percentages, your plan name, the associated account email, and — if you use Claude's extra usage credits — the amount spent, which is what the spend-rate figure is calculated from.</li>
   <li><strong>App preferences</strong> — Notification settings, refresh interval, display options, and any webhook addresses you configure. Stored locally via Electron's app data storage.</li>
   <li><strong>Licence state</strong> — The date your trial started and whether the one-time purchase has been made, kept in two small local files. These contain no personal information.</li>
 </ul>
@@ -59,6 +60,9 @@
 
 <h2>Your Control</h2>
 <p>You can remove all locally stored data at any time by deleting the app together with its data folder at <em>~/Library/Containers/com.gulizarsanverdi.capmeter/</em>. Removing an account inside the app deletes it from your settings and clears the active session cookie; deleting that folder is what clears any remaining Claude.ai cookies. One item lives outside that folder: the key used to encrypt your session tokens is held in your macOS Keychain and can be removed there — it is a key, not data about you.</p>
+
+<h2>Changes to This Policy</h2>
+<p>If the app's behaviour changes in a way that affects this policy, the policy is updated here and the date at the top changes with it. Because the app stores everything on your Mac and sends nothing to the developer, changes will normally be clarifications rather than new data practices.</p>
 
 <h2>Contact</h2>
 <p>Questions? Contact: <a href="mailto:muhammetsanverdi97@gmail.com">muhammetsanverdi97@gmail.com</a></p>
