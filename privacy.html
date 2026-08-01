@@ -20,15 +20,15 @@
 <p>CapMeter ("the app") is a macOS menu bar utility that displays your personal Claude.ai usage statistics. This policy explains how the app handles your data.</p>
 
 <h2>Data We Do Not Collect</h2>
-<p>The app does <strong>not</strong> collect your personal data, and does not send any of your data to the developer or to any analytics, advertising, or tracking service. Specifically:</p>
+<p>The app does <strong>not</strong> collect your personal data, and does not send any of your data to us or to any analytics, advertising, or tracking service. Specifically:</p>
 <ul>
   <li>No analytics or tracking</li>
   <li>No crash reporting sent externally</li>
   <li>No advertising identifiers</li>
-  <li>No data about you sent to the developer — there is no backend that receives it</li>
+  <li>No data about you sent to us — there is no backend that receives it</li>
   <li>No account credentials stored outside your device</li>
 </ul>
-<p>The app itself sends nothing about you anywhere. Three things are worth naming explicitly:</p>
+<p>The app sends nothing about you to us or to any analytics service. Three network behaviours are worth naming explicitly, because each one is either your own doing or Claude's:</p>
 <ul>
   <li>If you set up a <strong>webhook</strong> yourself, the app sends usage alerts to the address you provide — described under "Network Requests" below.</li>
   <li>Alerts posted to <strong>Slack or Discord</strong> carry the app's icon, which is hosted on capmeter.app — a static marketing site with no database and no account system. When those services render the message, their servers fetch that image; nothing about you is sent with it, and the app never contacts capmeter.app itself.</li>
@@ -53,16 +53,16 @@
 </ul>
 <p>If you add more than one account, the accounts you are not currently viewing are refreshed in the background roughly every four hours, using each one's own session, so their history stays complete. The same three endpoints above are used.</p>
 <p>The app never reads, stores, or transmits your Claude conversations.</p>
-<p>The app does not send your data to the developer or any analytics service. The only other network destination is <strong>optional and entirely under your control</strong>: if you configure one or more webhook addresses (Slack, Discord, or any HTTP endpoint) in the app's settings, the app sends an alert to each of them when you cross a usage threshold, when your session renews, and when you press the test button. Slack and Discord alerts contain your usage percentage, your Claude account email address, your plan name, and your reset time; alerts to a plain HTTP endpoint omit the email address. This feature is disabled by default, is sent only to the addresses you provide, and is only active if you set it up. You can remove them at any time in settings to stop it.</p>
+<p>The app does not send your data to us or any analytics service. The only other network destination is <strong>optional and entirely under your control</strong>: if you configure one or more webhook addresses (Slack, Discord, or any HTTP endpoint) in the app's settings, the app sends an alert to each of them when you cross a usage threshold, when your session renews, and when you press the test button. Slack and Discord alerts contain your usage percentage, your Claude account email address, your plan name, and your reset time; alerts to a plain HTTP endpoint omit the email address. This feature is disabled by default, is sent only to the addresses you provide, and is only active if you set it up. You can remove them at any time in settings to stop it.</p>
 
 <h2>Purchases</h2>
-<p>CapMeter offers a single one-time in-app purchase. Payments are processed entirely by Apple; the developer never receives or stores your payment details. The app only records locally whether the purchase has been made.</p>
+<p>CapMeter offers a single one-time in-app purchase. Payments are processed entirely by Apple; we never receive or store your payment details. The app only records locally whether the purchase has been made.</p>
 
 <h2>Your Control</h2>
 <p>You can remove all locally stored data at any time by deleting the app together with its data folder at <em>~/Library/Containers/com.gulizarsanverdi.capmeter/</em>. Removing an account inside the app deletes it from your settings and clears the active session cookie; deleting that folder is what clears any remaining Claude.ai cookies. One item lives outside that folder: the key used to encrypt your session tokens is held in your macOS Keychain and can be removed there — it is a key, not data about you.</p>
 
 <h2>Changes to This Policy</h2>
-<p>If the app's behaviour changes in a way that affects this policy, the policy is updated here and the date at the top changes with it. Because the app stores everything on your Mac and sends nothing to the developer, changes will normally be clarifications rather than new data practices.</p>
+<p>If the app's behaviour changes in a way that affects this policy, the policy is updated here and the date at the top changes with it. Because the app stores everything on your Mac and sends nothing to us, changes will normally be clarifications rather than new data practices.</p>
 
 <h2>Who Is Responsible</h2>
 <p>CapMeter is published on the Mac App Store by Gülizar Şanverdi. Development and support are handled by Muhammet Can Şanverdi, who you will reach at the address below. Because the app keeps everything on your device and sends nothing to us, neither of us holds a copy of your data.</p>
