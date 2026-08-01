@@ -202,7 +202,12 @@
   .btn-demo.shimmer::before { animation: btn-shimmer 0.75s ease; }
   @keyframes btn-shimmer { to { left: 150%; } }
   @media (prefers-reduced-motion: reduce) { .btn-demo:hover::before, .btn-demo.shimmer::before { animation: none; } }
-  .hero-note { margin-top: 20px; font-size: 12.5px; color: var(--faint); }
+  /* .hero p'nin özgüllüğü (0,1,1) .hero-note'u (0,1,0) eziyordu: satır 12,5px yerine
+     20px çiziliyor ve margin-top hiç uygulanmıyordu — fiyat satırı butonlara yapışıktı.
+     Seçici .hero p.hero-note ile eşitlendi. 12,5px'e dönülmedi; fiyat fold'daki en
+     güçlü sinyal, okunur kalması gerekiyor. Hiyerarşi boyutla değil boşlukla kuruluyor. */
+  .hero p.hero-note { margin: 22px auto 0; font-size: 14px; line-height: 1.5; color: var(--faint); }
+  .hero p.hero-note + .hero-note { margin-top: 10px; }
   .hero-note a { color: var(--faint); text-decoration: underline; }
 
   /* ── Showcase ── */
@@ -521,7 +526,7 @@
     <a class="btn-demo" href="#idemo">See it in action</a>
   </div>
   <p class="hero-note">Free 14-day trial · <a href="#pricing">$14.99 once</a> · <a href="privacy.html">Privacy Policy</a></p>
-  <p class="hero-note" style="margin-top:-10px;font-size:13px;opacity:0.75">Opens in demo mode without an account — look around before you sign in anywhere.</p>
+  <p class="hero-note" style="font-size:13px;opacity:0.75">Opens in demo mode without an account — look around before you sign in anywhere.</p>
 </section>
 
 <!-- Trust strip -->
