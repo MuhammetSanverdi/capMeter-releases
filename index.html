@@ -562,12 +562,21 @@
 </div>
 
 <!-- ═══ Interactive Demo (scroll-driven) ═══
-     #idemo uzun bir scroll track'i (height:360vh); içteki 100vh görsel sticky pinlenir,
-     scroll ilerledikçe adım değişir (scrollytelling — scroll-jack YOK, sayfa normal kayar). -->
-<div id="idemo" style="position:relative;isolation:isolate;margin-top:20px;height:360vh">
-  <div style="position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden">
+     #idemo uzun bir scroll track'i (height:360vh); içteki sticky görsel pinlenir,
+     scroll ilerledikçe adım değişir (scrollytelling — scroll-jack YOK, sayfa normal kayar).
 
-    <!-- macOS Tahoe wallpaper -->
+     Sticky yüksekliği lvh — URL çubuğu GİZLİYKEN oluşan en büyük alan.
+     Neden dvh değil: dvh teoride canlı güncellenir ama iOS Safari onu çubuk animasyonu
+     bitince güncelliyor; mobilde scroll sürerken demo kısa kalıp scroll bitince yerine
+     oturuyordu — bildirilen hata buydu.
+     Neden svh değil: svh hiç değişmez ama çubuk gizlenince altta bir şerit açılır ve
+     caption'ın 0.88'lik scrim kenarı tam oraya denk gelip sert bir çizgi bırakır.
+     lvh her iki durumda da alanı tamamen dolduruyor; taşan kısmı overflow:hidden kırpıyor,
+     alta düşen caption ise aşağıda çubuk kadar yukarı alınıyor. -->
+<div id="idemo" style="position:relative;isolation:isolate;margin-top:20px;height:360vh">
+  <div style="position:sticky;top:0;height:100vh;height:100lvh;overflow:hidden">
+
+    <!-- macOS Tahoe wallpaper — sticky lvh olduğu için inset:0 her durumda tüm alanı dolduruyor -->
     <div style="position:absolute;inset:0;background:url('icons/tahoe-dark.jpg') center/cover no-repeat"></div>
 
     <!-- macOS menu bar — full width -->
@@ -813,8 +822,14 @@
 
     </div><!-- /desktop -->
 
-    <!-- Bottom overlay -->
-    <div style="position:absolute;bottom:0;left:0;right:0;z-index:20;padding:20px 24px 26px;background:linear-gradient(to top,rgba(4,14,30,0.88) 0%,transparent 100%);text-align:center;pointer-events:none">
+    <!-- Bottom overlay — scrim ve metin AYRI.
+         Scrim bottom:0'da kalıyor, yani sticky lvh olduğu için her iki durumda da gerçek alt
+         kenara iniyor; tek parça olsaydı metinle birlikte yukarı kalkar ve 0.88'lik koyu kenarı
+         ekranın ortasında sert bir çizgi olarak görünürdü. -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:150px;z-index:19;background:linear-gradient(to top,rgba(4,14,30,0.88) 0%,transparent 100%);pointer-events:none"></div>
+    <!-- Metin, URL çubuğu görünürken onun üstünde kalsın diye çubuk yüksekliği kadar yukarıda.
+         (100lvh - 100svh) sabit bir değer — iki birim de statik, scroll'da değişmiyor. -->
+    <div style="position:absolute;bottom:0;bottom:calc(100lvh - 100svh);left:0;right:0;z-index:20;padding:20px 24px 26px;text-align:center;pointer-events:none">
       <div id="idemo-title" style="font-size:clamp(15px,1.8vw,20px);font-weight:700;color:white;letter-spacing:-0.02em;margin-bottom:5px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">Full breakdown in one click</div>
       <div id="idemo-sub" style="font-size:clamp(12px,1.2vw,14px);color:rgba(255,255,255,0.48);margin-bottom:14px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">Session %, burn rate, and exact time until reset</div>
       <div style="display:flex;justify-content:center;gap:9px;pointer-events:auto">
