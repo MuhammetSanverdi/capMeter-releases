@@ -217,6 +217,12 @@
     border-color: rgba(255,255,255,0.24) !important;
   }
   #d4Widget:active { cursor: grabbing; }
+  /* İpucu göze çarpsın diye kısa bir zıplama — sonsuz değil, üç tur sonra durur ki
+     sürüklemeyen ziyaretçiyi rahatsız etmesin. Adıma her dönüşte sınıf yeniden
+     eklendiği için animasyon baştan başlar. */
+  @keyframes d4HintBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  #d4DragHint.bob { animation: d4HintBob 1.5s ease-in-out 3; }
+  @media (prefers-reduced-motion: reduce) { #d4DragHint.bob { animation: none; } }
   .showcase-pops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; max-width: 900px; margin: 0 auto; }
   .pop-card { text-align: center; }
   .pop-card img {
@@ -716,6 +722,16 @@
             <span style="font-size:11px;font-weight:700;color:#FFC400;letter-spacing:-0.2px;white-space:nowrap;font-variant-numeric:tabular-nums">$17.00 left</span>
           </div>
         </div>
+
+        <!-- Sürükleme ipucu. Widget'ın KARDEŞİ, çocuğu değil: widget'ta overflow:hidden var,
+             içine konan etiket kırpılırdı. İlk sürüklemede kalıcı olarak gizleniyor, o yüzden
+             widget'ı takip etmesi gerekmiyor. Demodaki tek keşif yolu cursor:grab idi; o da
+             zaten üzerine gelmiş olmayı gerektiriyor ve dokunmatikte hiç yok. -->
+        <div id="d4DragHint" aria-hidden="true"
+             style="position:absolute;bottom:calc(20% + 92px);right:2.5%;display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:9999px;background:rgba(20,20,26,0.78);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.16);font-size:11px;font-weight:600;color:rgba(255,255,255,0.85);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.35s">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m15 19-3 3-3-3"/><path d="m19 9 3 3-3 3"/><path d="M2 12h20"/><path d="m5 9-3 3 3 3"/><path d="m9 5 3-3 3 3"/></svg>
+          <span>Drag me</span>
+        </div>
       </div>
 
       <!-- STEP 5: Slack window with CapMeter alert + macOS notification toast -->
@@ -984,11 +1000,12 @@
   var title  = document.getElementById('idemo-title');
   var sub    = document.getElementById('idemo-sub');
   var mbcap  = document.getElementById('idemo-mbcap');
+  var dragHint = document.getElementById('d4DragHint');
 
   var COPY = [
     { t:'Full breakdown in one click',   s:'Session %, burn rate, and exact time until reset' },
     { t:'Your usage history',            s:'14-day bar chart, averages, peak usage and streaks' },
-    { t:'Float it above any window',     s:'The widget stays visible on top of any app' },
+    { t:'Float it above any window',     s:'Drag it anywhere — it stays on top of every app' },
     { t:'Smart alerts before limits hit', s:'A macOS notification — or pushed straight to Slack & Discord' }
   ];
 
@@ -1014,6 +1031,12 @@
     /* Full breakdown (adım 0) ve history (adım 1) menü çubuğu ring'inden açılır — item'ı
        hafif vurgulayarak popup'ın kaynağını göster; widget/alert adımlarında vurgu yok. */
     if (mbcap) mbcap.style.background = i <= 1 ? 'rgba(52,199,89,0.14)' : 'transparent';
+    /* Sürükleme ipucu yalnız widget adımında, o da kullanıcı bir kez sürükleyene kadar. */
+    if (dragHint && dragHint.dataset.done !== '1') {
+      var onWidgetStep = i === 2;
+      dragHint.style.opacity = onWidgetStep ? '1' : '0';
+      dragHint.classList.toggle('bob', onWidgetStep);
+    }
   }
 
   /* Track'in kaydırılabilir mesafesi (yükseklik − viewport). Adıma kaydırma bunu kullanır. */
@@ -1291,6 +1314,10 @@
 
     function onPointerDown(e) {
       dragging = true;
+      /* İpucunu ilk temasta ve kalıcı olarak kaldır: mesaj alındı, ayrıca widget yerinden
+         oynayınca ipucu eski konumunda kalıp yanlış yeri işaret ederdi. */
+      const hint = document.getElementById('d4DragHint');
+      if (hint) { hint.dataset.done = '1'; hint.style.opacity = '0'; hint.classList.remove('bob'); }
       sRect = stage.getBoundingClientRect();
       const wRect = widget.getBoundingClientRect();
       wW = wRect.width; wH = wRect.height;
