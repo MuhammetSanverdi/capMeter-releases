@@ -221,10 +221,11 @@
      affordance nesnenin kendisine bakınca anlaşılmalı, yanındaki yazıdan değil.
      Sayfa başına bir kez ve yalnız kullanıcı henüz sürüklemediyse oynar.
      transform kullanıyor — sürükleme kodu left/top yazıyor, çakışmasınlar. */
+  /* Dikey yön AŞAĞI: ipucu widget'ın 10px üstünde duruyor, yukarı hareket onu eziyordu. */
   @keyframes d4Nudge {
     0%   { transform: translate(0, 0); }
-    28%  { transform: translate(-30px, -16px); }
-    62%  { transform: translate(-30px, -16px); }
+    28%  { transform: translate(-30px, 14px); }
+    62%  { transform: translate(-30px, 14px); }
     100% { transform: translate(0, 0); }
   }
   #d4Widget.nudge { animation: d4Nudge 2s cubic-bezier(0.32, 0, 0.24, 1) 0.45s 1; }
