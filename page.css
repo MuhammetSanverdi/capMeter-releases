@@ -28,8 +28,14 @@ body {
 }
 
 /* ── Arka plan ── */
+/* Yükseklik lvh — URL çubuğu gizliyken oluşan en büyük viewport. inset:0 tek başına
+   sabit elemanı küçük viewport'a göre boyutluyor; mobilde çubuk gizlenince altta
+   örtülmemiş siyah şerit kalıyordu. dvh değil: dvh scroll boyunca yeniden boyutlanıp
+   cover arka planı titretirdi. index.html'deki .bg ile aynı tutulmalı. */
 .bg {
-  position: fixed; inset: 0; z-index: -2; overflow: hidden;
+  position: fixed; top: 0; left: 0; right: 0; z-index: -2; overflow: hidden;
+  height: 100vh;   /* lvh desteklemeyen eski tarayıcılar için */
+  height: 100lvh;
   background: url('icons/tahoe-dark.jpg') center/cover no-repeat;
 }
 .bg::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.46); }
