@@ -444,18 +444,12 @@
   .idemo-step { transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1); will-change: opacity,transform; }
   @media (prefers-reduced-motion: reduce) { .idemo-step { transition: none; } }
   .idemo-dot  { transition: background 0.3s, transform 0.3s; }
-  /* Sol/sağ ok butonları — carousel standardı; kenarda durur, widget/popup ile çakışmaz */
-  .idemo-arrow {
-    position: absolute; top: 50%; transform: translateY(-50%); z-index: 40;
-    width: 42px; height: 42px; border-radius: 50%; cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.18); color: #fff;
-    background: rgba(18,18,26,0.5); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0.55; transition: opacity 0.2s, background 0.2s, border-color 0.2s;
-  }
-  .idemo-arrow:hover { opacity: 1; background: rgba(18,18,26,0.78); border-color: rgba(255,255,255,0.30); }
-  .idemo-prev { left: 18px; }
-  .idemo-next { right: 18px; }
+  /* Prev/next okları kaldırıldı: bu bölüm carousel değil, adım scroll konumundan
+     hesaplanıyor. Oklar adımı değiştirmiyordu, window.scrollTo çağırıyordu — yani
+     scrollbar'ın uzaktan kumandasıydılar ve "sayfa yerinde kalacak" sözü verip tüm
+     sayfayı kaydırıyorlardı. Üstelik ikisi de demo görselinin üzerinde duruyordu
+     (mobilde 390px'in 84px'i). Adım göstergesi/atlama işini noktalar yapıyor. */
+
   /* ── Interactive demo on phones ──
      The demo mockups are desktop-sized (full menu bar, app windows with a fixed sidebar).
      On a narrow screen the menu titles push the CapMeter ring off-screen and the app
@@ -469,9 +463,6 @@
     .demo-convo { padding: 16px !important; }
   }
   @media (max-width: 380px) {
-    .idemo-arrow { width: 36px; height: 36px; }
-    .idemo-prev { left: 8px; }
-    .idemo-next { right: 8px; }
     /* Drop the menu-bar date so the clock + CapMeter ring aren't clipped on the smallest phones */
     #idemo-mb-date { display: none; }
   }
@@ -827,10 +818,6 @@
       </div>
     </div>
 
-    <!-- Prev/next arrows -->
-    <button class="idemo-arrow idemo-prev" aria-label="Previous step"><svg width="9" height="15" viewBox="0 0 9 15" fill="none"><path d="M7 2L2 7.5 7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <button class="idemo-arrow idemo-next" aria-label="Next step"><svg width="9" height="15" viewBox="0 0 9 15" fill="none"><path d="M2 2l5 5.5L2 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-
   </div>
 </div>
 
@@ -1063,10 +1050,6 @@
   }
   /* Dots / oklar → ilgili adımın scroll konumuna kaydır (adımı scroll sürücüsü ayarlar) */
   dots.forEach(function(d, i) { d.addEventListener('click', function() { scrollToStep(i); }); });
-  var prevBtn = document.querySelector('.idemo-prev');
-  var nextBtn = document.querySelector('.idemo-next');
-  if (prevBtn) prevBtn.addEventListener('click', function() { scrollToStep(Math.max(0, cur - 1)); });
-  if (nextBtn) nextBtn.addEventListener('click', function() { scrollToStep(Math.min(steps.length - 1, cur + 1)); });
 
   setStep(0);
 
