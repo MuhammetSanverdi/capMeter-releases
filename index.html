@@ -217,12 +217,18 @@
     border-color: rgba(255,255,255,0.24) !important;
   }
   #d4Widget:active { cursor: grabbing; }
-  /* İpucu göze çarpsın diye kısa bir zıplama — sonsuz değil, üç tur sonra durur ki
-     sürüklemeyen ziyaretçiyi rahatsız etmesin. Adıma her dönüşte sınıf yeniden
-     eklendiği için animasyon baştan başlar. */
-  @keyframes d4HintBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-  #d4DragHint.bob { animation: d4HintBob 1.5s ease-in-out 3; }
-  @media (prefers-reduced-motion: reduce) { #d4DragHint.bob { animation: none; } }
+  /* Widget'ın kendisi bir kez kayıp geri oturur. Hareket ETİKETTE değil NESNEDE:
+     affordance nesnenin kendisine bakınca anlaşılmalı, yanındaki yazıdan değil.
+     Sayfa başına bir kez ve yalnız kullanıcı henüz sürüklemediyse oynar.
+     transform kullanıyor — sürükleme kodu left/top yazıyor, çakışmasınlar. */
+  @keyframes d4Nudge {
+    0%   { transform: translate(0, 0); }
+    28%  { transform: translate(-30px, -16px); }
+    62%  { transform: translate(-30px, -16px); }
+    100% { transform: translate(0, 0); }
+  }
+  #d4Widget.nudge { animation: d4Nudge 2s cubic-bezier(0.32, 0, 0.24, 1) 0.45s 1; }
+  @media (prefers-reduced-motion: reduce) { #d4Widget.nudge { animation: none; } }
   .showcase-pops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; max-width: 900px; margin: 0 auto; }
   .pop-card { text-align: center; }
   .pop-card img {
@@ -1001,6 +1007,8 @@
   var sub    = document.getElementById('idemo-sub');
   var mbcap  = document.getElementById('idemo-mbcap');
   var dragHint = document.getElementById('d4DragHint');
+  var d4w = document.getElementById('d4Widget');
+  var nudged = false;
 
   var COPY = [
     { t:'Full breakdown in one click',   s:'Session %, burn rate, and exact time until reset' },
@@ -1032,10 +1040,17 @@
        hafif vurgulayarak popup'ın kaynağını göster; widget/alert adımlarında vurgu yok. */
     if (mbcap) mbcap.style.background = i <= 1 ? 'rgba(52,199,89,0.14)' : 'transparent';
     /* Sürükleme ipucu yalnız widget adımında, o da kullanıcı bir kez sürükleyene kadar. */
-    if (dragHint && dragHint.dataset.done !== '1') {
-      var onWidgetStep = i === 2;
-      dragHint.style.opacity = onWidgetStep ? '1' : '0';
-      dragHint.classList.toggle('bob', onWidgetStep);
+    var onWidgetStep = i === 2;
+    if (dragHint && dragHint.dataset.done !== '1') dragHint.style.opacity = onWidgetStep ? '1' : '0';
+    /* Widget'ın tek seferlik kendini gösterme hareketi. Sayfa başına bir kez: adımlar
+       scroll'la sürüldüğü için küçük bir sallanmada tekrar tetiklenip rahatsız etmesin. */
+    if (onWidgetStep && d4w && !nudged && d4w.dataset.dragged !== '1') {
+      nudged = true;
+      d4w.classList.add('nudge');
+      d4w.addEventListener('animationend', function onEnd() {
+        d4w.classList.remove('nudge');
+        d4w.removeEventListener('animationend', onEnd);
+      });
     }
   }
 
@@ -1317,9 +1332,15 @@
       /* İpucunu ilk temasta ve kalıcı olarak kaldır: mesaj alındı, ayrıca widget yerinden
          oynayınca ipucu eski konumunda kalıp yanlış yeri işaret ederdi. */
       const hint = document.getElementById('d4DragHint');
-      if (hint) { hint.dataset.done = '1'; hint.style.opacity = '0'; hint.classList.remove('bob'); }
+      if (hint) { hint.dataset.done = '1'; hint.style.opacity = '0'; }
+      widget.dataset.dragged = '1';
       sRect = stage.getBoundingClientRect();
+      /* Rect'i tanıtım hareketi İPTAL EDİLMEDEN okuyoruz. getBoundingClientRect
+         transform'u içerdiği için bu, kullanıcının gerçekten tuttuğu görsel konum.
+         Önce sınıfı kaldırıp sonra ölçseydik dinlenme konumunu ölçerdik ve widget
+         tutulduğu anda parmağın altından 30px kayardı. Sıra önemli. */
       const wRect = widget.getBoundingClientRect();
+      widget.classList.remove('nudge');
       wW = wRect.width; wH = wRect.height;
       offX = e.clientX - wRect.left;
       offY = e.clientY - wRect.top;
