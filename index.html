@@ -389,7 +389,9 @@
 
   @media (max-width: 600px) {
     .hero { padding-top: 130px; }
-    footer { flex-direction: column; align-items: center; text-align: center; }
+    /* Dar ekranda yan boşluk 48 → 32px. 48'de içerik kutusu 286px kalıyor ve telif
+       satırı sarıyordu; alt sayfalar (page.css) zaten 32px kullanıyor, üçü eşitlendi. */
+    footer { flex-direction: column; align-items: center; text-align: center; width: calc(100% - 32px); }
     .preview-top { flex-direction: column; text-align: center; }
     .preview-hero-txt { text-align: center; }
     /* Trust pills are nowrap by default → a single badge is wider than a phone and
@@ -990,8 +992,12 @@
 <footer class="glass">
   <!-- Telif bu paragrafın içinde: ayrı <p> olarak durunca footer flex'inde üçüncü öğe
        oluyor ve satır sarıyordu. Marka adına yazılı ki App Store Connect'teki hak
-       sahibiyle (Gülizar Şanverdi) çelişmesin; "Made by" yapan kişiyi ayrıca söylüyor. -->
-  <p>Made by <a href="https://github.com/MuhammetSanverdi" style="color:var(--muted);text-decoration:underline;text-underline-offset:2px">Muhammet Can Şanverdi</a> — a one-person project, not affiliated with Anthropic. &copy; 2026 CapMeter</p>
+       sahibiyle çelişmesin. Kişi adı ve GitHub profili KASITLI olarak yok: uygulama
+       Gülizar Şanverdi adına yayınlanıyor, sitenin başka bir kişiyi işaret etmesi
+       satıcıyla uyuşmazlık izlenimi verirdi. Cümle üç sayfada da birebir aynı; uzun
+       hali ("An independent project, …") mobilde footer'ı iki satıra düşürüyordu ve
+       "not affiliated" zaten aynı işi görüyor. -->
+  <p>Not affiliated with Anthropic. &copy; 2026 CapMeter</p>
   <div class="footer-links">
     <a href="#faq">FAQ</a>
     <a href="/privacy">Privacy</a>
