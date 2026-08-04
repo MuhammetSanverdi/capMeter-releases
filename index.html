@@ -371,6 +371,10 @@
     padding: 0 34px 20px 2px; margin: -2px 0 0;
   }
   .faq details > p + p { padding-top: 10px; }
+  /* FAQ, sayfada link stili tanımlanmamış tek içerik bloğuydu; buraya konan bir link
+     tarayıcının varsayılan #0000EE mavisine düşüyor ve koyu zeminde okunmuyordu. */
+  .faq a { color: var(--accent2); text-decoration: underline; text-underline-offset: 2px; }
+  .faq a:hover { color: var(--text); }
   .faq code {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 13px; background: rgba(255,255,255,0.07);
@@ -970,7 +974,7 @@
     <details>
       <summary>Can I get a refund?</summary>
       <p>The safeguard that actually protects you is the trial: 14 days with every feature unlocked, before any money changes hands.</p>
-      <p>If you still want one after buying, purchases go through the App Store, so it's Apple's call rather than mine — you'd request it at <a href="https://reportaproblem.apple.com">reportaproblem.apple.com</a>.</p>
+      <p>If you still want one after buying, purchases go through the App Store, so it's Apple's call rather than mine — you'd request it at reportaproblem.apple.com.</p>
     </details>
 
     <details>
