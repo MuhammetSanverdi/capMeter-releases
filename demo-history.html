@@ -208,7 +208,7 @@ html, body {
         <div class="h-stat-lbl">14D Avg.</div>
       </div>
       <div class="h-stat">
-        <div class="h-stat-val" style="color:var(--text)">100%</div>
+        <div class="h-stat-val" style="color:var(--text)">79%</div>
         <div class="h-stat-lbl">Highest</div>
       </div>
       <div class="h-stat">
@@ -216,15 +216,15 @@ html, body {
         <div class="h-stat-lbl">Today</div>
       </div>
       <div class="h-stat">
-        <div class="h-stat-val" style="color:#FF9500">🔥7d</div>
+        <div class="h-stat-val" style="color:#FF9500">🔥17d</div>
         <div class="h-stat-lbl">Streak</div>
       </div>
     </div>
 
     <div class="h-weekly-row">
       <span style="font-size:10px;color:var(--muted);font-weight:500">This week</span>
-      <span style="font-size:11px;font-weight:700;color:var(--text)">62%
-        <span style="font-size:10px;font-weight:600;color:#34C759">↑ +38%</span>
+      <span style="font-size:11px;font-weight:700;color:var(--text)">63%
+        <span style="font-size:10px;font-weight:600;color:#34C759">↑4%</span>
         <span style="font-size:9px;font-weight:400;color:var(--muted)"> vs last week</span>
       </span>
     </div>
@@ -243,7 +243,7 @@ html, body {
       <svg id="historyChart" height="60" viewBox="0 0 272 60" style="width:100%"></svg>
     </div>
     <div class="h-chart-dates">
-      <span class="h-chart-date">Jul 4</span>
+      <span class="h-chart-date" id="chartStart">—</span>
       <span class="h-chart-date">Today</span>
     </div>
 
@@ -271,23 +271,21 @@ html, body {
     return { fill: '#34C759', opacity: 1 };
   }
 
-  /* 14-day data — 10 active days, avg 65%, streak 7 (Jul 11–17), highest 100% */
-  var data = [
-    { label: 'Jul 4',  pct: 65 },
-    { label: 'Jul 5',  pct: 0  },
-    { label: 'Jul 6',  pct: 0  },
-    { label: 'Jul 7',  pct: 60 },
-    { label: 'Jul 8',  pct: 45 },
-    { label: 'Jul 9',  pct: 0  },
-    { label: 'Jul 10', pct: 0  },
-    { label: 'Jul 11', pct: 52 },
-    { label: 'Jul 12', pct: 65 },
-    { label: 'Jul 13', pct: 58 },
-    { label: 'Jul 14', pct: 100},
-    { label: 'Jul 15', pct: 48 },
-    { label: 'Jul 16', pct: 74 },
-    { label: 'Today',  pct: 38 }
-  ];
+  /* 14 günlük seri — src/main.js demoHistory() ile AYNI (ortalama 61, tepe 79,
+     bugün 38). Etiketler her açılışta hesaplanıyor: eski hâli sabit Temmuz
+     tarihleri yazıyordu ve sayfa haftalar içinde bayatlamıştı. */
+  var series = [61, 41, 69, 78, 67, 35, 65, 79, 68, 42, 61, 79, 72, 38];
+  function dayLabel(daysAgo) {
+    if (daysAgo === 0) return 'Today';
+    if (daysAgo === 1) return 'Yesterday';
+    var d = new Date(); d.setDate(d.getDate() - daysAgo);
+    return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+  }
+  var data = series.map(function (pct, i) {
+    return { label: dayLabel(series.length - 1 - i), pct: pct };
+  });
+  var cs = document.getElementById('chartStart');
+  if (cs) cs.textContent = dayLabel(series.length - 1);
 
   var W = 272, H = 56, n = data.length;
   var gap = 2;
