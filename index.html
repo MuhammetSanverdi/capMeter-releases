@@ -945,6 +945,17 @@
     </details>
 
     <details>
+      <summary>How is this different from <code>claude /usage</code>?</summary>
+      <p><code>/usage</code> is computed from local session history on that machine — Claude Code's own wording — so other devices and your claude.ai usage aren't in it. CapMeter reads the account-level number instead, the one your limit actually runs on.</p>
+      <p>And it's there without being asked. <code>/usage</code> answers when you ask it, but you only think to ask once you're already worried.</p>
+    </details>
+
+    <details>
+      <summary>Do I have to sign in to try it?</summary>
+      <p>No. It opens in demo mode with sample data, so you can click through the popup, the history charts and the settings before connecting anything. Sign in when you want your own numbers in there.</p>
+    </details>
+
+    <details>
       <summary>Do I have to give it my Anthropic password?</summary>
       <p>No. CapMeter opens Claude.ai's own sign-in page in a window and stays out of it: it puts no code into that page and reads nothing out of it, so what you type goes to Anthropic, not to the app. It never sees your password.</p>
       <p>What it keeps afterwards is the session cookie your browser would hold anyway — encrypted with the macOS Keychain and stored only on your Mac. It still can't read your conversations.</p>
