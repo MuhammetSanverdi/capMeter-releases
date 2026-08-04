@@ -48,5 +48,16 @@
     <a href="/privacy">Privacy</a>
   </div>
 </footer>
+
+<!-- Vercel Web Analytics — yalnız sayfa görüntüleme sayımı: kaç ziyaretçi geldi,
+     nereden geldi, hangi ülke/cihaz. Çerez ve kalıcı tanımlayıcı yok; ziyaretçi gelen
+     isteğin hash'inden sayılıyor ve o hash 24 saatte atılıyor.
+     Özel olay (buton tıklaması, dönüşüm) YOK — Vercel'de o özellik Pro planında.
+     Vercel panelindeki Analytics sekmesi verisini BU betikten alıyor; betik olmadan
+     pano boş kalır, sunucu tarafında ayrı bir sayım yapılmıyor. -->
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
