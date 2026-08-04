@@ -59,22 +59,37 @@ body {
 }
 
 /* ── Nav ──
-   index.html'deki nav SVG filtresi (#liquid-glass-1) kullanıyor; o filtre orada tanımlı.
-   Alt sayfalarda filtre yok, bu yüzden aynı görünümü düz blur + koyu scrim ile kuruyoruz. */
+   index.html ile BİREBİR aynı olmalı; ayrışırsa ana sayfadan alt sayfaya geçişte nav
+   gözle görülür şekilde değişiyor.
+   Liquid-glass SVG filtresi glass-filter.js ile belgeye ekleniyor (SVG filtreleri aynı
+   belgede tanımlı olmak zorunda). Betik çalışırsa <html>'e .has-glass-filter geliyor ve
+   aşağıdaki override devreye giriyor; çalışmazsa buradaki düz blur'da kalıyor — efekt
+   gider ama nav okunaksız olmaz. */
 nav {
   position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 100;
+  transition: opacity 0.3s;
   width: min(1040px, calc(100% - 32px));
   display: flex; align-items: center; justify-content: space-between;
   padding: 10px 12px 10px 18px; border-radius: 9999px;
   backdrop-filter: blur(30px) saturate(140%);
   -webkit-backdrop-filter: blur(30px) saturate(140%);
+  /* Beyaz cam parlamasının altındaki koyu scrim, filtreden sızan içeriği kısıyor ki
+     arkadaki metin nav yazılarını bastırmasın. */
   background:
     linear-gradient(170deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.07) 100%),
     rgba(18,18,28,0.34);
   border: 1px solid rgba(255,255,255,0.28);
   box-shadow:
     inset 0 1.5px 0 rgba(255,255,255,0.55),
-    0 8px 40px rgba(0,0,0,0.40);
+    inset 0 -1px 0 rgba(255,255,255,0.06),
+    inset 1px 0 0 rgba(255,255,255,0.08),
+    inset -1px 0 0 rgba(255,255,255,0.08),
+    0 8px 40px rgba(0,0,0,0.40),
+    0 1px 3px rgba(0,0,0,0.30);
+}
+.has-glass-filter nav {
+  backdrop-filter: url("#liquid-glass-1") saturate(1.4);
+  -webkit-backdrop-filter: url("#liquid-glass-1") saturate(1.4);
 }
 .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .nav-logo img { width: 30px; height: 30px; border-radius: 8px; }
