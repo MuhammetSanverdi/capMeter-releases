@@ -1240,8 +1240,14 @@
 (function() {
   var dateEl = document.getElementById('idemo-mb-date');
   var timeEl = document.getElementById('idemo-mb-time');
-  if (dateEl) dateEl.textContent = 'Fri Jul 17';
-  if (timeEl) timeEl.textContent = '1:30 AM';
+  /* Sabit yazılmıyor: eski hâli 'Fri Jul 17' / '1:30 AM' idi ve sayfa haftalar
+     içinde bayatlamıştı. demo-popup.html'deki "Live · …" saati de aynı andan
+     üretiliyor, ikisi tutarlı kalsın diye. */
+  var now = new Date();
+  if (dateEl) dateEl.textContent = now.toLocaleDateString('en-US',
+    { weekday: 'short', month: 'short', day: 'numeric' }).replace(',', '');
+  if (timeEl) timeEl.textContent = now.toLocaleTimeString('en-US',
+    { hour: 'numeric', minute: '2-digit' });
 })();
 
 /* Popup + History pencerelerini menü çubuğundaki CapMeter item'ının altına hizala */
