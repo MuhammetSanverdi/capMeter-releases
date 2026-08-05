@@ -235,7 +235,7 @@ html, body {
       <div class="hero-info">
         <div class="hero-label">Current session</div>
         <div class="hero-countdown">3h 49m left</div>
-        <div class="hero-reset">Resets at 05:20 AM</div>
+        <div class="hero-reset" id="resetLine">Resets at —</div>
         <div class="hero-predict" style="color:#FF9500;opacity:1">⚡ limit in ~1h 18m</div>
       </div>
     </div>
@@ -296,8 +296,17 @@ html, body {
 </div>
 <script>
 (function() {
+  /* Saatler hesaplanıyor, sabit yazılmıyor. Eski hâli "Resets at 05:20 AM" ve
+     "Live · 1:30 AM" idi; ikisi de "3h 49m left" süresiyle ancak gece 01:31'de
+     uyuşuyordu ve "Live" kelimesinin yanındaki sabit saat veriyi bayat gösteriyordu. */
+  var now = new Date();
   var el = document.getElementById('popup-time');
-  if (el) el.textContent = 'Live · 1:30 AM';
+  if (el) el.textContent = 'Live · ' + now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  var rl = document.getElementById('resetLine');
+  if (rl) {
+    var reset = new Date(now.getTime() + (3 * 60 + 49) * 60000);   // "3h 49m left" ile aynı
+    rl.textContent = 'Resets at ' + reset.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  }
 })();
 
 (function() {
