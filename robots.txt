@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://capmeter.app/sitemap.xml

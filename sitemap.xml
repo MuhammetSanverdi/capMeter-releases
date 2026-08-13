@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Yollar UZANTISIZ: vercel.json'da cleanUrls açık, /privacy.html → /privacy'ye
+     308 ile yönleniyor. Sitemap'e .html yazmak Google'a yönlendirme zinciri
+     gösterir; kanonik hâli doğrudan vermek daha temiz. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://capmeter.app/</loc>
+    <lastmod>2026-08-08</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/privacy</loc>
+    <lastmod>2026-08-08</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/support</loc>
+    <lastmod>2026-08-08</lastmod>
+    <priority>0.5</priority>
+  </url>
+</urlset>
