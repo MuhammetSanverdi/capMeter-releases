@@ -1721,7 +1721,14 @@
      provider token and a campaign token." `ct` tek başına KAYDEDİLMİYOR.
      ASC → Analytics → Acquisition → Campaigns'ten kampanya linki üretince çıkar.
      Boş bırakılırsa link yine çalışır ama kanal kırılımı App Analytics'e düşmez. */
-  var PROVIDER_TOKEN = '';                 // ← 18 Ağustos'tan ÖNCE doldurulmalı
+  /* ASC → Analytics → Acquisition → Campaigns → Generate a Campaign Link'ten alındı
+     (2026-08-14). Üretilen link `mt=8` de içeriyordu; o iOS medya tipi ve bu bir Mac
+     uygulaması (App Store tıklamayı kendiliğinden mt=12'ye çözüyor), Apple da yalnız
+     pt+ct'yi zorunlu tutuyor — bu yüzden mt gönderilmiyor.
+     ⚠️ Kampanya ASC raporunda yalnız EN AZ 5 ayrı Apple hesabı kurulum yaptıktan
+     sonra görünür. Düşük hacimli kanallar görünmeyecek; asıl kanal verisi aşağıdaki
+     `appstore_cta` olayı (Vercel Analytics), orada eşik yok. */
+  var PROVIDER_TOKEN = '129193240';
 
   // Kanal etiketi: yalnız harf/rakam/tire, en fazla 24 karakter.
   // Serbest metni doğrudan URL'e koymak istenmiyor.
