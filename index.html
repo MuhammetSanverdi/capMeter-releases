@@ -1452,8 +1452,12 @@
     });
   }
   document.querySelectorAll('a[href^="#"]').forEach(function(link) {
-    var href = link.getAttribute('href');
     link.addEventListener('click', function(e) {
+      // href'i BAĞLANMA anında değil TIKLAMA anında oku. Yayın anahtarı (sayfanın sonunda)
+      // CTA'ların href'ini App Store'a çeviriyor; bind anındaki '#pricing' değeri kullanılınca
+      // handler dış linki preventDefault ile iptal edip sayfa içinde kaydırıyordu.
+      var href = link.getAttribute('href');
+      if (!href || href.charAt(0) !== '#') return;  // artık iç bağlantı değil — tarayıcıya bırak
       e.preventDefault();
       if (href === '#') { smoothTo(null, 0); return; }
       var el = document.querySelector(href);
