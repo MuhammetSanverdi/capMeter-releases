@@ -25,11 +25,11 @@
 <h1>Keychain access</h1>
 <p class="meta">CapMeter for macOS</p>
 
-<p>If CapMeter is showing <em>"Keychain access denied — settings can't be saved securely"</em>, this page has the fix. It takes about a minute and nothing is lost.</p>
+<p>If CapMeter is showing <em>"Keychain unavailable — data is saved without encryption"</em>, this page has the fix. It takes about a minute and nothing is lost.</p>
 
 <h2>What happened</h2>
 <p>CapMeter stores your Claude session locally, encrypted with a key that lives in your macOS Keychain. Something made that key unreadable — usually a denied permission prompt, but it can also happen after a macOS upgrade or if the keychain item was removed.</p>
-<p>Your usage history and settings are not affected. The app simply can't read the encrypted part, which is why it may look like you have been signed out.</p>
+<p>The app keeps working. Two things change while this lasts: it may look like you have been signed out, because the previous session could no longer be decrypted; and anything it saves in the meantime is written without encryption. Your usage history, settings and purchase are not affected.</p>
 
 <h2>The fix</h2>
 <div class="box">
