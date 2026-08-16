@@ -714,6 +714,14 @@
       Get on the App Store
     </a>
     <a class="btn-demo" href="#idemo">See it in action</a>
+    <!-- Mobil ziyaretçi Mac uygulamasını kuramıyor ve lansman trafiğinin çoğu telefondan
+         gelecek. Kullanamayacakları bir App Store butonuyla baş başa bırakmak yerine linki
+         kendilerine yollamalarını sağlıyoruz (iOS'ta AirDrop ile doğrudan Mac'e).
+         Emsal: Sindre Sorhus'un MAS uygulamaları (ör. Dato) aynı şeyi yapıyor.
+         Görünürlük JS'te: navigator.share VAR *ve* cihaz Mac DEĞİL. macOS Safari'de de
+         navigator.share bulunduğu için özellik algılaması TEK BAŞINA YETMEZ — Mac
+         kullanıcısında bu buton kafa karıştırır, App Store linki zaten çalışıyor. -->
+    <button class="btn-demo" id="shareBtn" type="button" hidden>Send to my Mac</button>
   </div>
   <p class="hero-trial">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1737,7 +1745,12 @@
 
   // Mac mi? Ayrım viewport genişliğiyle değil PLATFORMLA yapılır — dar pencerede
   // çalışan bir Mac kullanıcısı uygulamayı kurabilir, geniş ekranlı iPad kuramaz.
-  var isMac = /Mac/.test(navigator.platform || '') || /Macintosh/.test(navigator.userAgent || '');
+  // ⚠️ iPadOS 13+ `navigator.platform`'da "MacIntel" bildiriyor — yalnız platforma bakmak
+  // iPad'i Mac sanır. Ayırt edici dokunmatik nokta sayısı: Mac'te 0, iPad'de >1.
+  // Önemi: iPad Mac uygulamasını KURAMAZ, yani hem paylaş butonunu görmeli hem de
+  // dönüşüm oranı hesabında "Mac" sayılmamalı.
+  var isMac = (/Mac/.test(navigator.platform || '') || /Macintosh/.test(navigator.userAgent || ''))
+              && (navigator.maxTouchPoints || 0) <= 1;
 
   /* ── Ölçüm ──────────────────────────────────────────────────────────────
      Hunideki 2. aşama: "landing → App Store tıklaması". Bu oran şu an tahmin
@@ -1755,6 +1768,25 @@
       });
     });
   });
+
+  /* ── "Send to my Mac" ────────────────────────────────────────────────────
+     LIVE'dan ÖNCE kuruluyor: yayın durumundan bağımsız çalışmalı, çünkü mobil
+     ziyaretçinin linki kendine yollaması her hâlükârda anlamlı. */
+  var shareBtn = document.getElementById('shareBtn');
+  if (shareBtn && typeof navigator.share === 'function' && !isMac) {
+    shareBtn.hidden = false;
+    shareBtn.addEventListener('click', function () {
+      navigator.share({
+        title: 'CapMeter',
+        text: 'See your Claude usage limit coming, right in the Mac menu bar.',
+        url: location.origin + '/?s=' + ct
+      }).then(function () {
+        if (typeof window.va === 'function') {
+          window.va('event', { name: 'share_to_mac', data: { channel: ct } });
+        }
+      }).catch(function () { /* kullanıcı paylaşım sayfasını kapattı — hata değil */ });
+    });
+  }
 
   if (!LIVE) return;
 
