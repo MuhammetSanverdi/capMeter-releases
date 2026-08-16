@@ -737,10 +737,13 @@
          navigator.share bulunduğu için özellik algılaması TEK BAŞINA YETMEZ — Mac
          kullanıcısında bu buton kafa karıştırır, App Store linki zaten çalışıyor. -->
     <button class="btn-share" id="shareBtn" type="button" hidden
-            aria-label="Send this page to your Mac" title="Send to my Mac">
-      <!-- iOS'un standart paylaş glifi: kutudan yukarı çıkan ok. Metin yerine ikon,
-           çünkü tam boy üçüncü bir buton ana CTA ile yarışıyor ve mobilde içeriği
-           aşağı itiyor. Emsal Dato/Mailway'de de rozetin yanında küçük bir ikon. -->
+            aria-label="Share CapMeter" title="Share">
+      <!-- Standart paylaş glifi: kutudan yukarı çıkan ok. Metin yerine ikon, çünkü tam boy
+           üçüncü bir buton ana CTA ile yarışıyor ve mobilde içeriği aşağı itiyor.
+           MAC'TE DE GÖSTERİLİYOR — başta gizlemeyi planlamıştık ("Send to my Mac"
+           Mac'te anlamsız), ama etiketi genel bırakınca iki işe birden yarıyor:
+           telefonda kullanıcı linki KENDİ Mac'ine yolluyor, Mac'te ise bir ARKADAŞINA.
+           İkincisi lansmanda ağızdan ağıza yayılım demek. Emsal (Mailway) da böyle. -->
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M12 16V4"/><path d="m8 8 4-4 4 4"/>
@@ -1794,11 +1797,13 @@
     });
   });
 
-  /* ── "Send to my Mac" ────────────────────────────────────────────────────
-     LIVE'dan ÖNCE kuruluyor: yayın durumundan bağımsız çalışmalı, çünkü mobil
-     ziyaretçinin linki kendine yollaması her hâlükârda anlamlı. */
+  /* ── Paylaş ────────────────────────────────────────────────────────────────
+     LIVE'dan ÖNCE kuruluyor: yayın durumundan bağımsız çalışmalı.
+     Platform kontrolü YOK — mobilde "kendi Mac'ime yolla", masaüstünde
+     "birine gönder" olarak iki işe birden yarıyor. Tek koşul API'nin varlığı;
+     desteklemeyen tarayıcıda (ör. masaüstü Firefox) buton hiç görünmüyor. */
   var shareBtn = document.getElementById('shareBtn');
-  if (shareBtn && typeof navigator.share === 'function' && !isMac) {
+  if (shareBtn && typeof navigator.share === 'function') {
     shareBtn.hidden = false;
     shareBtn.addEventListener('click', function () {
       navigator.share({
