@@ -254,15 +254,16 @@
   .btn-demo:hover { transform: translateY(-1px); background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.30); }
   /* Mobil ziyaretçi için paylaş ikonu. Yalnız ikon: tam boy üçüncü bir buton ana CTA
      ile yarışıyor ve mobilde içeriği aşağı itiyordu. */
+  /* Kutusuz, soluk bir glif — ikincil eylem. Cam/çerçeve verilince üçüncü bir buton
+     gibi görünüp ana CTA ile yarışıyordu. Dokunma hedefi yine 44px (Apple'ın alt sınırı)
+     ama görsel ağırlığı yalnız ikon kadar. */
   .btn-share {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 50px; height: 50px; flex-shrink: 0;
-    border-radius: 15px; cursor: pointer; color: var(--text);
-    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.16);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    width: 44px; height: 44px; flex-shrink: 0; padding: 0;
+    background: none; border: 0; cursor: pointer;
+    color: var(--faint); transition: color 0.2s;
   }
-  .btn-share:hover { transform: translateY(-1px); background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.30); }
+  .btn-share:hover { color: var(--text); }
   /* `display: inline-flex`, tarayıcının `[hidden] { display: none }` kuralını eziyor —
      ikisi de aynı özgüllükte ve sayfa CSS'i sonra geliyor. Bu satır olmadan `hidden`
      niteliği HİÇBİR İŞE YARAMIYOR: buton Mac'te de görünüyordu, canlıda yakalandı. */
@@ -717,6 +718,20 @@
      sağdaki görselde de görünüyor. -->
   <p>CapMeter watches how fast you're burning through your Claude session — browser and Claude&nbsp;Code alike — and tells you when you'll run out.</p>
   <div class="hero-actions">
+    <button class="btn-share" id="shareBtn" type="button" hidden
+            aria-label="Share CapMeter" title="Share">
+      <!-- Standart paylaş glifi: kutudan yukarı çıkan ok. Metin yerine ikon, çünkü tam boy
+           üçüncü bir buton ana CTA ile yarışıyor ve mobilde içeriği aşağı itiyor.
+           MAC'TE DE GÖSTERİLİYOR — başta gizlemeyi planlamıştık ("Send to my Mac"
+           Mac'te anlamsız), ama etiketi genel bırakınca iki işe birden yarıyor:
+           telefonda kullanıcı linki KENDİ Mac'ine yolluyor, Mac'te ise bir ARKADAŞINA.
+           İkincisi lansmanda ağızdan ağıza yayılım demek. Emsal (Mailway) da böyle. -->
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 16V4"/><path d="m8 8 4-4 4 4"/>
+        <path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
+      </svg>
+    </button>
     <!-- APPSTORE-CTA -->
     <a class="btn-cta" data-appstore href="#pricing">
       <!-- Apple logosu inline SVG: metin glifi (U+F8FF) özel kullanım alanında olduğu
@@ -736,20 +751,6 @@
          Görünürlük JS'te: navigator.share VAR *ve* cihaz Mac DEĞİL. macOS Safari'de de
          navigator.share bulunduğu için özellik algılaması TEK BAŞINA YETMEZ — Mac
          kullanıcısında bu buton kafa karıştırır, App Store linki zaten çalışıyor. -->
-    <button class="btn-share" id="shareBtn" type="button" hidden
-            aria-label="Share CapMeter" title="Share">
-      <!-- Standart paylaş glifi: kutudan yukarı çıkan ok. Metin yerine ikon, çünkü tam boy
-           üçüncü bir buton ana CTA ile yarışıyor ve mobilde içeriği aşağı itiyor.
-           MAC'TE DE GÖSTERİLİYOR — başta gizlemeyi planlamıştık ("Send to my Mac"
-           Mac'te anlamsız), ama etiketi genel bırakınca iki işe birden yarıyor:
-           telefonda kullanıcı linki KENDİ Mac'ine yolluyor, Mac'te ise bir ARKADAŞINA.
-           İkincisi lansmanda ağızdan ağıza yayılım demek. Emsal (Mailway) da böyle. -->
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 16V4"/><path d="m8 8 4-4 4 4"/>
-        <path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
-      </svg>
-    </button>
   </div>
   <p class="hero-trial">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
