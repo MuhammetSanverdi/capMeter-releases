@@ -262,6 +262,10 @@
     width: 44px; height: 44px; flex-shrink: 0; padding: 0;
     background: none; border: 0; cursor: pointer;
     color: var(--faint); transition: color 0.2s;
+    /* Kutu 44px (Apple'ın dokunma alt sınırı) ama glif 20px, yani sağında ~12px boş
+       kutu kalıyor; satırın 14px gap'iyle toplanınca ikon CTA'dan kopuk duruyordu.
+       Negatif kenar boşluğu görsel aralığı daraltır, dokunma hedefini küçültmez. */
+    margin-right: -10px;
   }
   .btn-share:hover { color: var(--text); }
   /* `display: inline-flex`, tarayıcının `[hidden] { display: none }` kuralını eziyor —
