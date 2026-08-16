@@ -252,6 +252,11 @@
     transition: transform 0.2s, border-color 0.2s;
   }
   .btn-demo:hover { transform: translateY(-1px); background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.30); }
+  /* .btn-demo'daki `display: inline-flex`, tarayıcının `[hidden] { display: none }`
+     kuralını eziyor — ikisi de aynı özgüllükte ve sayfa CSS'i sonra geliyor. Bu satır
+     olmadan `hidden` niteliği HİÇBİR İŞE YARAMIYOR: "Send to my Mac" butonu Mac'te de
+     görünüyordu, canlıda yakalandı. */
+  .btn-demo[hidden] { display: none; }
   /* Durağanken sade cam; hover'da tek seferlik ışık geçişi (shimmer) — sakin, premium. */
   .btn-demo::before {
     content: ''; position: absolute; top: 0; bottom: 0; left: -140%; width: 55%;
