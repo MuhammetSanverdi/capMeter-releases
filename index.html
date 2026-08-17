@@ -552,7 +552,13 @@
   .showcase-pops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; max-width: 900px; margin: 0 auto; }
   .pop-card { text-align: center; }
   .pop-card img {
-    width: 100%; display: block; border-radius: 16px;
+    /* height: auto ŞART. Görsellerdeki width/height nitelikleriyle birlikte tarayıcı
+       en-boy oranını daha yüklemeden biliyor ve yeri baştan ayırıyor. Onsuz görseller
+       `loading="lazy"` olduğu için yüklenene kadar SIFIR yükseklik kaplıyor, altındaki
+       #pricing yukarıda duruyor ve nav'daki "Pricing" bağlantısı hedefi yanlış
+       hesaplıyordu: ilk tıklamada eksik kaydırıyor, scroll sırasında görseller yüklenip
+       içeriği aşağı itiyor, ikinci tıklamada doğru çalışıyordu. */
+    width: 100%; height: auto; display: block; border-radius: 16px;
     border: 1px solid rgba(255,255,255,0.12);
     box-shadow: 0 22px 55px rgba(0,0,0,0.5);
   }
@@ -1292,9 +1298,9 @@
   <h2 class="section-title">Right where you work</h2>
   <p class="section-sub">A rich popup one click away in the menu bar.</p>
   <div class="showcase-pops">
-    <div class="pop-card"><img src="pop-history.png" alt="Usage history and charts" loading="lazy" decoding="async"><p><strong>History &amp; trends</strong><br>7, 14, 30, 90-day charts, streaks &amp; export</p></div>
-    <div class="pop-card"><img src="pop-notifs.png" alt="Notification settings" loading="lazy" decoding="async"><p><strong>Alerts your way</strong><br>Thresholds, quiet hours, Slack &amp; Discord</p></div>
-    <div class="pop-card"><img src="pop-accounts.png" alt="Multiple Claude accounts" loading="lazy" decoding="async"><p><strong>Multiple accounts</strong><br>Switch in one click</p></div>
+    <div class="pop-card"><img src="pop-history.png" width="643" height="906" alt="Usage history and charts" loading="lazy" decoding="async"><p><strong>History &amp; trends</strong><br>7, 14, 30, 90-day charts, streaks &amp; export</p></div>
+    <div class="pop-card"><img src="pop-notifs.png" width="643" height="906" alt="Notification settings" loading="lazy" decoding="async"><p><strong>Alerts your way</strong><br>Thresholds, quiet hours, Slack &amp; Discord</p></div>
+    <div class="pop-card"><img src="pop-accounts.png" width="643" height="906" alt="Multiple Claude accounts" loading="lazy" decoding="async"><p><strong>Multiple accounts</strong><br>Switch in one click</p></div>
   </div>
 </section>
 
