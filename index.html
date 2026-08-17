@@ -202,7 +202,11 @@
   .hero { padding: 120px 24px 20px; text-align: center; }
   .hero-badge {
     display: inline-flex; align-items: center; gap: 7px;
-    padding: 6px 14px; border-radius: 20px; margin-bottom: 18px;
+    /* Rozet artık paragrafın ALTINDA (bkz. HTML'deki not). Üstündeki boşluğu
+       `.hero p`'nin alt margin'i veriyor (20px, ait olduğu metne yakın dursun diye),
+       buradaki 36px ise buton satırına kadar nefes bırakıyor. Eskiden 18px'ti ve
+       H1'e olan mesafeyi ayarlıyordu. */
+    padding: 6px 14px; border-radius: 20px; margin-bottom: 36px;
     font-size: 12px; font-weight: 600; color: var(--accent2);
     letter-spacing: 0.04em; text-transform: uppercase;
     background: rgba(255,255,255,0.05);
@@ -226,7 +230,9 @@
   }
   .hero p {
     font-size: clamp(16px, 2vw, 20px); color: var(--muted);
-    max-width: 560px; margin: 0 auto 40px; line-height: 1.55;
+    /* 40px'ti; rozet araya girince 20'ye indi. Rozet paragrafı niteliyor, ona yakın
+       dursun; buton satırına kadarki nefesi rozetin alt margin'i veriyor. */
+    max-width: 560px; margin: 0 auto 20px; line-height: 1.55;
   }
   .hero-actions { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
 
@@ -262,12 +268,53 @@
     width: 44px; height: 44px; flex-shrink: 0; padding: 0;
     background: none; border: 0; cursor: pointer;
     color: var(--faint); transition: color 0.2s;
-    /* Kutu 44px (Apple'ın dokunma alt sınırı) ama glif 20px, yani sağında ~12px boş
-       kutu kalıyor; satırın 14px gap'iyle toplanınca ikon CTA'dan kopuk duruyordu.
-       Negatif kenar boşluğu görsel aralığı daraltır, dokunma hedefini küçültmez. */
-    margin-right: -10px;
+    /* HER GENİŞLİKTE ANA CTA'NIN SOLUNDA ve ona yakın (glif ile CTA arası 8px).
+       İkon tek başına bir forma sahip değil — kutusuz, etiketsiz bir glif. İki tam
+       biçimli pill butonun yanında hiçbir şeyle gruplaşamadığı için nereye konursa
+       "oraya ait değil" gibi duruyordu (aşağıdaki elenen yollar listesine bak).
+       Çözüm onu ana CTA ile TEK BİR ÖBEK yapmak; gruplaşmayı sağlayan şey dar boşluk.
+
+       VARSAYILAN (ortalanmış düzen, <980px): akışın DIŞINDA, CTA'ya asılı.
+       Akışta kalsaydı CTA'nın ortalama hesabına girer ve CTA, altındaki
+       "See it in action" ile eş merkezli olmaktan çıkardı — 390px'te 14px kaçıyordu
+       ve göz bunu yalpalama olarak okuyor. Asılınca CTA tam ortada kalıyor.
+       `right: 100%` kutuyu sarmalayıcının soluna koyar. Kutu 44px, glif 15px, yani
+       her iki yanda 14,5px boş pay var; -6,5px onu 8px'e indiriyor — alttaki tikin
+       metinden uzaklığıyla AYNI. Ondalık kasıtlı, 44 ve 15 tek sayı fark veriyor. */
+    position: absolute; right: 100%; margin-right: -6.5px;
   }
+  /* Sarmalayıcı: ikonun asılacağı referans. İkon akış dışında olduğu için
+     sarmalayıcının genişliği = CTA'nın genişliği; satır hesabı ikonu hiç görmüyor. */
+  .cta-group { position: relative; display: inline-flex; align-items: center; }
+  /* ASILI İKONA YER AÇ. İkon akış dışında olduğu için kapsayıcı onu hiç saymıyordu;
+     butonlar yan yanayken satır ekran kenarına dayanıyor ve asılı 44px'lik kutu
+     dışarı taşıyordu (480px'te sol kenar -5,4, 464'te glif neredeyse kenara değiyor).
+     İki yandan SİMETRİK padding: merkezleme bozulmuyor (tek yana verilseydi satır
+     kayardı), butonlar yalnızca biraz daha erken alt alta geçiyor ve ikonun asılacağı
+     23px her zaman garanti. Yalnız ikon gerçekten görünürken uygulanıyor. */
+  @media (max-width: 979px) { body.has-share .hero-actions { padding: 0 23px; } }
+  /* DENENDİ VE GERİ ALINDI — `@media (max-width:979px) { .cta-group { margin-left: 23px } }`
+     İkon akış dışında olduğu için satırın mürekkebi sola taşıyor: 390px'te solda 53,6px
+     boşluk kalırken sağda 76,6px oluyor. Yukarıdaki margin bu farkı kapatıyordu (ikonun
+     kapladığı 23px'i yerleşime geri bildirip görünen bloğu tam ortalıyordu) AMA bedeli
+     CTA'nın altındaki "See it in action" ile eş merkezli olmaktan çıkmasıydı — 11,5px
+     sağa kayıyordu. Üçü birden mümkün değil.
+     KARAR: butonların birbiriyle eş merkezli olması, bloğun ekrana göre simetrisinden
+     önemli. Ekranın solunda mürekkep var sağında yok, bu kabul edildi. */
   .btn-share:hover { color: var(--text); }
+  /* DENENİP ELENEN YOLLAR — tekrar deneme, hepsi ölçüldü:
+     · İkonu satırın SONUNA almak (order sonda): hizalama düzeliyordu ama ikon
+       "See it in action"a 14px kalıyor ve ona bağlı bir düğme gibi okunuyordu.
+     · Boşluğu açıp sonda bırakmak (34px): gruplaşma bitiyordu ama ikon boşlukta
+       asılı kalıyordu, hiçbir şeye ait değildi.
+     · Dar ekranda `::after` ile kendi satırına indirmek: her şey merkeze oturuyordu
+       ama ikon tek başına, bağlamsız duruyordu.
+     · Akıştan çıkarıp sol boşluğa asmak (Sindre Sorhus'un tekniği, absolute +
+       negatif left): onun hero'su ORTALANMIŞ, hizalanacak rayı yok. Bizde sayfa
+       980-1188 arasında sütun kenarını 24px'e indiriyor (max-width ~1140), asılı
+       44px'lik kutu ekranın dışına taşıyor.
+     Kalan çözüm ikonu ana CTA ile tek öbek yapmak; yukarıdaki iki negatif margin
+     bunun için. */
   /* `display: inline-flex`, tarayıcının `[hidden] { display: none }` kuralını eziyor —
      ikisi de aynı özgüllükte ve sayfa CSS'i sonra geliyor. Bu satır olmadan `hidden`
      niteliği HİÇBİR İŞE YARAMIYOR: buton Mac'te de görünüyordu, canlıda yakalandı. */
@@ -295,13 +342,73 @@
   .hero .hero-trial {
     margin: 20px auto 0; font-size: 15px; line-height: 1.5;
     color: rgba(255,255,255,0.82); font-weight: 500;
-    display: inline-flex; align-items: center; gap: 8px;
+    /* ✓ ARTIK FLEX ÖĞESİ DEĞİL, metnin kendi akışının içinde bir satır içi öğe.
+       Önceden `inline-flex` + `gap: 8px` ile duruyordu: kutu boşluğu hep 8px'ti ama
+       ✓ metnin dışında kaldığı için GÖRÜNEN boşluk kutunun nasıl ortalandığına göre
+       kayıyordu — metin iki satıra sarıp ilk satır kutudan dar kalınca ortalanıyor
+       ve ✓ ile "F" arası 30px'e çıkıyordu. Akışın içine alınınca boşluğu ✓'nün kendi
+       padding'i belirliyor, yani sarmadan ve ortalamadan BAĞIMSIZ, yapısal olarak sabit.
+
+       `inline-block`: kutu içeriğe göre daralsın ki üst öğenin `text-align: center`'ı
+       onu ortalayabilsin. İçeride ise metin hep sola yaslı — bu da boşluğun sabit
+       kalmasının ikinci şartı.
+
+       Asılı girinti (padding-left 23 + text-indent -23): ilk satır ✓ ile kutunun sol
+       kenarından başlıyor, sonraki satırlar 23px içeriden, yani METNİN altından.
+       23 = 15px ✓ + 8px boşluk. Bu, flex düzenindeki görünümün aynısı; onsuz ikinci
+       satır ✓'nün altına kayardı. */
+    display: inline-block; text-align: left;
+    padding-left: 23px; text-indent: -23px;
   }
-  /* Tik İLK satıra hizalanır: dar ekranda metin iki satıra sarınca `center`
-     onu satırların arasında bırakıyor ve kopuk duruyordu. Tek satırlık masaüstü
-     durumunda fark gözle ayırt edilmiyor (22,5px satır kutusunda 15px ikon). */
-  .hero .hero-trial svg { flex-shrink: 0; color: #34C759; align-self: flex-start; margin-top: 3px; }
+  /* padding-right BOŞLUĞU VEREN ŞEY — `gap` yerine bu. Değiştirirsen yukarıdaki
+     23px'lik asılı girintiyi de güncelle (15 + boşluk).
+     vertical-align: metin taban çizgisine göre; ✓ 15px ve satır kutusu 22,5px,
+     -2px onu büyük harflerin optik ortasına getiriyor. */
+  .hero .hero-trial svg {
+    color: #34C759; padding-right: 8px; vertical-align: -2px;
+    /* box-sizing ŞART. Sayfada genel `border-box` kuralı var; onunla 8px'lik padding
+       15px'lik genişliğin İÇİNE çekiliyor, glif 7px'e sıkışıyor ve arada hiç boşluk
+       kalmıyordu (ölçüldü: kutu 15px, metin tam glifin bitişiğinde). `content-box`
+       padding'i dışarı ekliyor: 15px glif + 8px boşluk = 23px. */
+    box-sizing: content-box;
+  }
   .hero .hero-trial a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+  /* ORTALANMIŞ DÜZENDE ✓ ile paylaş glifi aynı dikeyde dursun diye kutu daraltılıyor.
+     Sorun: satır tam genişlikteyken metin ortalanıyor ama ✓ kutunun en soluna
+     çakılıyor; CTA öbeği ise kendi genişliğine göre ortalandığı için ikisi tutmuyordu
+     (320px'te tik 10'da, glif 18,6'da).
+     283px rastgele değil, türetildi: CTA ORTALANMIŞ durumda (yani .cta-group'a denge
+     margin'i YOKKEN) ✓'nün glifin altına düşmesi için kutunun sol kenarı, CTA'nın sol
+     kenarından tam bir "işaret + boşluk" kadar (15 + 8 = 23px) solda olmalı. İki
+     yandan 23px → kutu = CTA genişliği (236,8) + 46 ≈ 283.
+     Ekran genişliğinden BAĞIMSIZ, çünkü CTA'nın genişliği sabit. Metnin başı da
+     böylece CTA'nın sol kenarıyla aynı dikeye geliyor — masaüstündeki iki sütunlu
+     ray mobilde de kuruluyor.
+     260 DENEME — o değer yalnız .cta-group'a 23px denge margin'i eklendiğinde doğru.
+     O margin geri alındı (bkz. .cta-group notu), 283 ile birlikte gitmeli.
+     `.has-share` ŞART: bu sınıfı JS yalnız ikon gerçekten görünürken ekliyor.
+     Yoksa masaüstünde (ikon yok) fiyat satırı sebepsiz yere daralır, hizalayacağı
+     bir şey olmadan iki satıra kırılırdı.
+     444'ün altına sınırlı ve eşit derecede önemlisi: DAHA YUKARIDA UYGULAMA.
+     Kural bir bedel taşıyor — 283px, metni 397px'lik doğal genişliğinin altına
+     indirdiği için satırı ikiye kırıyor. Bu bedel yalnız metin ZATEN tek satıra
+     sığamıyorken kabul edilebilir; orada hizalama bedavaya geliyor. Sığabildiği
+     yerde uygulanırsa sebepsiz bir satır kırılması üretiyor.
+     Eşik ölçüldü: satır doğal halinde ~397px istiyor, kapsayıcı `viewport - 48`.
+     Ölçümde 447 tek satır, 445 iki satır — sınır 446 civarında ve alt piksel
+     yuvarlamasına takılıyor. 444 bilerek GÜVENLİ tarafta seçildi: kural asla
+     metnin sığabileceği bir genişlikte devreye girmiyor. 445-446 arasındaki
+     iki pikselde satır zaten kırılıyor ama hizalama uygulanmıyor; önemsiz.
+     Bir ara 529, sonra 463, sonra 509 yazılmıştı; hepsi butonların yığılma noktasına
+     bakıyordu, oysa belirleyici olan METNİN sığıp sığmaması.
+
+     ⚠️ KÖK SEBEP: ✓ butonlarla AYNI kapsayıcıda değil (ayrı bir <p>), o yüzden
+     hizalama gerçek bir ızgarayla değil genişliğe bağlı bu kuralla taklit ediliyor.
+     Buton metni ya da padding değişirse bu sayı da değişir. Kalıcı çözüm ikisini
+     tek bir iki sütunlu grid'e almak; lansman sonrası. */
+  @media (max-width: 444px) {
+    body.has-share .hero .hero-trial { max-width: 283px; }
+  }
 
   /* ── Hero: iki sütun ──
      Ürünü fold'un üstüne çıkarır. Önceki ortalanmış düzende 1440×900'de de
@@ -377,6 +484,22 @@
     .hero h1 { font-size: clamp(40px, 4.6vw, 68px); margin-left: 0; margin-right: 0; }
     .hero p { margin-left: 0; margin-right: 0; }
     .hero-actions { justify-content: flex-start; }
+    /* Sola yaslı düzende ikon AKIŞA GERİ DÖNÜYOR. Sebep: burada bir sol ray var
+       (h1, paragraf ve ✓ hepsi 150'de) ve asılı kalırsa öbek rayın soluna taşar.
+       Sayfanın max-width'i ~1140, yani 980-1188 arasında sütun kenarı 24px'e iniyor;
+       asılı 44px'lik kutu orada ekranın DIŞINA çıkardı. Akışta ise iki negatif margin
+       hem hizayı hem dar boşluğu veriyor (ikisi de kutunun boş payını yer, 44×44
+       dokunma hedefini DEĞİL):
+       Kutu 44px, glif 15px → her iki yanda 14,5px boş pay:
+       · -14,5px sol → glifi tam rayın üstüne, alttaki ✓ ile aynı x'e oturtuyor.
+       · -6,5px sağ → boş payı 8px'e indiriyor; bu, ✓ ile "Free..." metni arasındaki
+         boşluğun AYNISI (.hero-trial'da gap: 8px). Sonuç: CTA'nın sol kenarı ile
+         metnin başı aynı dikeyde.
+         DİKKAT: ikon `.cta-group`'un içinde, `.hero-actions`'ın 14px'lik gap'i burada
+         GEÇERLİ DEĞİL. Bir ara -18px yazılmıştı (gap'i de sayarak) ve glif 980px'te
+         CTA'nın 6px üstüne biniyordu.
+       Ölçülerek bulundu; buton padding'i ya da glif boyutu değişirse yeniden ölç. */
+    .btn-share { position: static; margin-left: -14.5px; margin-right: -6.5px; }
     .hero p.hero-note { margin-left: 0; margin-right: 0; }
     .hero .hero-trial { margin-left: 0; margin-right: 0; }
     .hero-visual { align-items: flex-end; }
@@ -711,7 +834,6 @@
 <section class="hero">
  <div class="hero-grid">
   <div class="hero-copy">
-  <div class="hero-badge">For Claude.ai · Pro, Max &amp; Team</div>
 <!-- <br>'dan ÖNCE boşluk şart: mobilde br gizlendiğinde metin düğümleri birleşiyor
        ve "hitthe" oluyordu. Masaüstünde satır sonundaki boşluk görünmüyor. -->
   <h1>Know you're about to hit <br>the limit — <span>before you do</span></h1>
@@ -721,17 +843,27 @@
      ve menü çubuğu detayı aşağıdaki bölümlerde zaten yazılı; menü çubuğu artık
      sağdaki görselde de görünüyor. -->
   <p>CapMeter watches how fast you're burning through your Claude session — browser and Claude&nbsp;Code alike — and tells you when you'll run out.</p>
+  <!-- Rozet BAŞLIKTAN ÖNCE değil, açıklamadan SONRA. Kapsam bilgisi ("hangi ürün,
+       hangi planlar") vaadi okuduktan sonra anlam kazanıyor; başta dururken H1'in
+       önüne geçen bir ön bilgi oluyordu. Yeri değişince H1 de fold'da yukarı çıktı. -->
+  <div class="hero-badge">For Claude.ai · Pro, Max &amp; Team</div>
   <div class="hero-actions">
+    <!-- Paylaş ikonu + ana CTA tek bir öbek. Sarmalayıcı şart: mobilde ikon akıştan
+         çıkarılıp (absolute) CTA'ya asılıyor, böylece CTA ortalama hesabına ikon
+         girmiyor ve altındaki "See it in action" ile eş merkezli kalıyor. -->
+    <span class="cta-group">
     <button class="btn-share" id="shareBtn" type="button" hidden
             aria-label="Share CapMeter" title="Share">
       <!-- Standart paylaş glifi: kutudan yukarı çıkan ok. Metin yerine ikon, çünkü tam boy
            üçüncü bir buton ana CTA ile yarışıyor ve mobilde içeriği aşağı itiyor.
-           MAC'TE DE GÖSTERİLİYOR — başta gizlemeyi planlamıştık ("Send to my Mac"
-           Mac'te anlamsız), ama etiketi genel bırakınca iki işe birden yarıyor:
-           telefonda kullanıcı linki KENDİ Mac'ine yolluyor, Mac'te ise bir ARKADAŞINA.
-           İkincisi lansmanda ağızdan ağıza yayılım demek. Emsal (Mailway) da böyle. -->
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+           BOYUT ALTTAKİ TİKLE AYNI: 15px. Rastgele değil — .hero-trial'daki ✓ de 15px
+           ve metinden 8px uzakta. Aynı ölçüyü kullanınca hero'da iki sütunlu bir ray
+           doğuyor: solda küçük işaretler (glif + tik), sağda içerik (CTA'nın sol
+           kenarı + "Free..." metninin başı), ikisi de aynı dikeyde.
+           stroke-width 2 değil 2,5: 24'lük viewBox 15px'e inince çizgi 1,25px'e
+           düşüyordu ve tikin (stroke 3 → 1,88px) yanında cılız kalıyordu. -->
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M12 16V4"/><path d="m8 8 4-4 4 4"/>
         <path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
       </svg>
@@ -747,21 +879,27 @@
       </svg>
       Get on the App Store
     </a>
-    <a class="btn-demo" href="#idemo">See it in action</a>
+    </span>
     <!-- Mobil ziyaretçi Mac uygulamasını kuramıyor ve lansman trafiğinin çoğu telefondan
          gelecek. Kullanamayacakları bir App Store butonuyla baş başa bırakmak yerine linki
          kendilerine yollamalarını sağlıyoruz (iOS'ta AirDrop ile doğrudan Mac'e).
-         Emsal: Sindre Sorhus'un MAS uygulamaları (ör. Dato) aynı şeyi yapıyor.
-         Görünürlük JS'te: navigator.share VAR *ve* cihaz Mac DEĞİL. macOS Safari'de de
-         navigator.share bulunduğu için özellik algılaması TEK BAŞINA YETMEZ — Mac
-         kullanıcısında bu buton kafa karıştırır, App Store linki zaten çalışıyor. -->
+
+         MAC'TE DE GÖSTERİLİYOR. Başta gizlemeyi planlamıştık ("Send to my Mac" Mac'te
+         anlamsız), ama etiket genelleşince iki işe birden yarıyor: telefonda kullanıcı
+         linki KENDİ Mac'ine, masaüstünde bir ARKADAŞINA yolluyor. Görünürlük koşulu
+         yalnızca `navigator.share` varlığı, platform kontrolü YOK.
+
+         Yerleşim gerekçeleri .btn-share / .cta-group kurallarının yanında. -->
+    <a class="btn-demo" href="#idemo">See it in action</a>
   </div>
-  <p class="hero-trial">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-    <!-- Kapanış etiketi ile virgül arasında satır sonu BIRAKMA: HTML boşluğa çevirir
-         ve "$14.99 once , no subscription" diye çizilir. -->
-    <span>Free 14-day trial — then <a href="#pricing">$14.99 once</a>, no subscription</span>
-  </p>
+  <!-- ✓ ile metin AYNI SATIR AKIŞINDA, aralarında hiç boşluk karakteri yok.
+       </svg> ile "Free" ARASINA SATIR SONU KOYMA: HTML onu boşluğa çevirir ve ✓'nün
+       kendi 8px'lik padding'ine ~4px daha eklenir, boşluk sabit olmaktan çıkar.
+       Aynı sebeple </a> ile virgül arasına da satır sonu koyma — "$14.99 once ,"
+       diye çizilir.
+       "$14.99" ile "once" arasındaki SERT boşluk kasıtlı: dar ekranda satır tam
+       oradan kırılıyor ve fiyat ikiye bölünüyordu. -->
+  <p class="hero-trial"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Free 14-day trial — then <a href="#pricing">$14.99&nbsp;once</a>, no subscription</p>
   <p class="hero-note">Opens in demo mode without an account — look around before signing in. · <a href="/privacy">Privacy Policy</a></p>
 
 <!-- SOSYAL KANIT YUVASI — lansmandan sonra doldur, şimdi DEĞİL.
@@ -1804,12 +1942,26 @@
 
   /* ── Paylaş ────────────────────────────────────────────────────────────────
      LIVE'dan ÖNCE kuruluyor: yayın durumundan bağımsız çalışmalı.
-     Platform kontrolü YOK — mobilde "kendi Mac'ime yolla", masaüstünde
-     "birine gönder" olarak iki işe birden yarıyor. Tek koşul API'nin varlığı;
-     desteklemeyen tarayıcıda (ör. masaüstü Firefox) buton hiç görünmüyor. */
+
+     YALNIZ DOKUNMATİK CİHAZDA. Bir ara masaüstünde de gösteriliyordu ("linki bir
+     arkadaşına yolla" gerekçesiyle); o karar geri alındı. Asıl iş telefonda:
+     App Store linki bir Mac uygulamasına gidiyor ve telefon onu kuramıyor, yani
+     paylaşmak o ziyaretçinin yapabileceği TEK eylem. Masaüstünde ise App Store
+     linki zaten çalışıyor, ikon fazladan gürültü.
+
+     Ölçüt ekran genişliği DEĞİL `pointer: coarse` — dar pencerede çalışan bir Mac
+     kullanıcısı uygulamayı kurabiliyor, geniş ekranlı bir iPad kuramıyor. Genişlikle
+     ayırmak ikisini de yanlış tarafa atardı. Bu ölçüt UA okumadan iPad'i de doğru
+     yakalıyor (iPadOS `navigator.platform`'da "MacIntel" diyor, oraya güvenme).
+
+     Gövdeye `has-share` sınıfı ekleniyor: fiyat satırının genişliği ✓'yü ikonun
+     altına hizalamak için daraltılıyor ve bu yalnız ikon GERÇEKTEN görünürken
+     anlamlı — bkz. .hero-trial kuralı. */
   var shareBtn = document.getElementById('shareBtn');
-  if (shareBtn && typeof navigator.share === 'function') {
+  var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  if (shareBtn && coarse && typeof navigator.share === 'function') {
     shareBtn.hidden = false;
+    document.body.classList.add('has-share');
     shareBtn.addEventListener('click', function () {
       navigator.share({
         title: 'CapMeter',
