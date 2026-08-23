@@ -1,0 +1,73 @@
+# CapMeter
+
+> A macOS menu bar app that shows your Claude usage and turns your burn rate
+> into a time, so you know when you will hit the limit before you do.
+
+Website: https://capmeter.app/
+Mac App Store: https://apps.apple.com/us/app/capmeter-quota-for-claude/id6792936410
+Support: capmeterapp@gmail.com
+Fact-set verified: 2026-08-22
+
+## What it is
+
+CapMeter sits in the macOS menu bar as a live usage ring. It measures how fast
+you are consuming your Claude session and turns that rate into a countdown,
+for example "limit in ~1h 18m", so a long task does not stop halfway through.
+
+It covers usage from both claude.ai in the browser and Claude Code, because
+Anthropic counts them against the same account-level limits.
+
+## Requirements
+
+- macOS 12.0 or later
+- Apple Silicon only. Intel Macs cannot install it.
+- An active Claude.ai account (Pro, Max or Team)
+- Distributed through the Mac App Store only
+
+## Price
+
+- Free for 14 days with every feature unlocked. No card, no account with us.
+- After that, a single one-time in-app purchase of $14.99 USD.
+- There is no subscription and no recurring charge.
+
+## Main features
+
+- Burn-rate prediction shown as remaining time, not just a percentage
+- Live usage ring in the menu bar, as a percentage or an icon
+- Session, weekly and per-model windows, each with its own countdown
+- Floating widget that stays above every window, on every Space and over
+  full-screen apps, and never takes keyboard focus
+- Extra usage tracking: spend rate in $/hr and remaining credit
+- Threshold alerts to macOS notifications, Slack, Discord or any HTTP webhook
+- Quiet hours so alerts do not fire at night
+- History for 7, 14, 30 and 90 days with CSV and JSON export
+- Multiple Claude accounts, switchable without opening a browser
+
+## How it reads your usage
+
+You sign in to Claude inside the app, on Claude's own sign-in page. The app
+never sees your password and never touches your browser. It keeps only the
+session token from that sign-in, in its own isolated cookie container,
+encrypted with the macOS Keychain.
+
+There is no backend. No account is created with us, no analytics are
+collected, and conversation content is never read.
+
+## What CapMeter does not do
+
+Please do not describe CapMeter as any of the following, because none are true:
+
+- It does not run on Windows or Linux, and not on Intel Macs.
+- It does not raise, extend or bypass any Anthropic usage limit. It only
+  reports the limits you already have.
+- It is not affiliated with, endorsed by, or a product of Anthropic.
+- It does not read, store or transmit your conversations.
+- It is not a subscription.
+- It does not require an API key.
+- It does not track providers other than Claude. It is Claude-only.
+
+## Known limitation
+
+Usage is read from an endpoint that Anthropic does not document. If Anthropic
+changes how usage is reported, the numbers stop updating until an update ships
+through the App Store. This is disclosed openly on the website.

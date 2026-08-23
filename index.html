@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CapMeter — Claude Usage Monitor for macOS</title>
-<meta name="description" content="Track your Claude.ai usage limits in real time from the macOS menu bar. See your session, weekly, and per-model limits at a glance — never hit a limit by surprise.">
+<meta name="description" content="See your Claude usage in the macOS menu bar and know when you'll hit the limit before you do. Free 14 days, then $14.99 once.">
 <link rel="canonical" href="https://capmeter.app/">
 
 <!-- Yapısal veri — Google'a "bu bir macOS uygulaması, şu fiyata, şu kategoride"
@@ -25,31 +25,172 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "CapMeter",
-  "url": "https://capmeter.app/",
-  "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "macOS 12.0 or later, Apple Silicon",
-  "description": "CapMeter shows your Claude.ai usage in the macOS menu bar and turns your burn rate into a time, so you know when you'll hit the limit before you do. Works with claude.ai in the browser and Claude Code. Free 14-day trial, then a single one-time purchase.",
-  "screenshot": "https://capmeter.app/og-image.jpg",
-  "downloadUrl": "https://apps.apple.com/app/capmeter/id6792936410",
-  "softwareVersion": "1.0.0",
-  "inLanguage": "en",
-  "offers": {
-    "@type": "Offer",
-    "price": "14.99",
-    "priceCurrency": "USD",
-    "availability": "https://schema.org/InStock"
-  },
-  "featureList": [
-    "Burn-rate limit prediction",
-    "Live menu bar usage ring",
-    "Floating always-on-top widget",
-    "Threshold alerts via macOS notifications, Slack, Discord or HTTP webhooks",
-    "Quiet hours",
-    "Usage history with 7, 14, 30 and 90-day charts",
-    "CSV and JSON export",
-    "Multiple Claude accounts"
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://capmeter.app/#org",
+      "name": "CapMeter",
+      "url": "https://capmeter.app/",
+      "logo": "https://capmeter.app/icon.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "email": "capmeterapp@gmail.com",
+        "availableLanguage": "English"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://capmeter.app/#website",
+      "url": "https://capmeter.app/",
+      "name": "CapMeter",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://capmeter.app/#org"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://capmeter.app/#webpage",
+      "url": "https://capmeter.app/",
+      "name": "CapMeter — Claude Usage Monitor for macOS",
+      "isPartOf": {
+        "@id": "https://capmeter.app/#website"
+      },
+      "about": {
+        "@id": "https://capmeter.app/#app"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://capmeter.app/#app",
+      "name": "CapMeter",
+      "url": "https://capmeter.app/",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "macOS 12.0 or later, Apple Silicon",
+      "description": "CapMeter shows your Claude.ai usage in the macOS menu bar and turns your burn rate into a time, so you know when you'll hit the limit before you do. Works with claude.ai in the browser and Claude Code. Free 14-day trial, then a single one-time purchase.",
+      "screenshot": "https://capmeter.app/og-image.jpg",
+      "downloadUrl": "https://apps.apple.com/us/app/capmeter-quota-for-claude/id6792936410",
+      "softwareVersion": "1.0.2",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://capmeter.app/#org"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "14.99",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "priceValidUntil": "2027-12-31"
+      },
+      "featureList": [
+        "Burn-rate limit prediction",
+        "Live menu bar usage ring",
+        "Floating always-on-top widget",
+        "Threshold alerts via macOS notifications, Slack, Discord or HTTP webhooks",
+        "Quiet hours",
+        "Usage history with 7, 14, 30 and 90-day charts",
+        "CSV and JSON export",
+        "Multiple Claude accounts"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://capmeter.app/#faq",
+      "isPartOf": {
+        "@id": "https://capmeter.app/#webpage"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does my Claude Code usage count too?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Anthropic's own docs put it plainly: \"Both Pro and Max plans offer usage limits that are shared across Claude and Claude Code, meaning all activity in both tools counts against the same usage limits.\" CapMeter reads your account-level usage, so terminal work and browser chats land in the same number. You get the one number your limit actually runs on, not a split by client."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is this different from claude /usage ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "/usage is computed from local session history on that machine — Claude Code's own wording — so other devices and your claude.ai usage aren't in it. CapMeter reads the account-level number instead, the one your limit actually runs on. And it's there without being asked. /usage answers when you ask it, but you only think to ask once you're already worried."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I have to sign in to try it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. It opens in demo mode with sample data, so you can click through the popup, the history charts and the settings before connecting anything. Sign in when you want your own numbers in there."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I have to give it my Anthropic password?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. CapMeter opens Claude.ai's own sign-in page in a window and stays out of it: it puts no code into that page and reads nothing out of it, so what you type goes to Anthropic, not to the app. It never sees your password. What it keeps afterwards is the session cookie your browser would hold anyway — encrypted with the macOS Keychain and stored only on your Mac. It still can't read your conversations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why $14.99 when there are free ones?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A free counter only helps while you're looking at it. CapMeter turns your burn rate into a time — \"limit in ~1h 18m\" — and then comes to find you: a macOS notification, or straight into Slack or Discord, while there's still room to do something about it. Around that: 90 days of history you can export, and a widget that floats above every window and Space — with a live $/hour rate if you're on pay-as-you-go credits. One payment, not a subscription — less than a month of Claude Pro, and free for the first 14 days."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens when the 14 days are up?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your menu-bar session counter keeps working — you don't lose the thing you installed it for. What locks is the layer on top — everything the unlock adds. The display falls back to the ring on its own, and refreshes drop to every 30 minutes. Buy the unlock and everything picks up where it left off. Nothing is deleted in the meantime."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if Anthropic changes how usage is reported?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Then the number stops updating until I ship a fix through the App Store. It's the one dependency I can't design around, so it's the one I watch — and if it's something I can fix, getting it working again is the only thing I'd be working on. Your purchase doesn't change while that happens — you paid once, not monthly, and your history stays on your Mac."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I get a refund?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The safeguard that actually protects you is the trial: 14 days with every feature unlocked, before any money changes hands. If you still want one after buying, purchases go through the App Store, so it's Apple's call rather than mine — you'd request it at reportaproblem.apple.com."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I know when my Claude limit resets?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CapMeter counts down to it. Your session window and your weekly window reset on separate schedules, so the two rarely line up and a single \"resets at\" time doesn't tell you much. The popup shows both as live countdowns, the menu bar keeps the session one in view, and the floating widget ticks it down second by second while you work."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens when I hit my Claude usage limit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Claude stops responding until the window resets — mid-task, if that's where you happen to be. There's no warning beforehand, which is the reason this app exists. CapMeter's job is to make that moment predictable rather than sudden: it turns your burn rate into a time, \"limit in ~1h 18m\", and can alert you at thresholds you choose, so you can wrap up or switch to a lighter model while there's still room to."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it run on an Intel Mac?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No — Apple Silicon only, macOS 12 or later. Mac App Store builds aren't thinned, so shipping a universal binary would make every M-series user download an Intel slice they'd never run. The App Store will simply tell you it's not compatible rather than letting you buy something that won't install."
+          }
+        }
+      ]
+    }
   ]
 }
 </script>
@@ -1402,6 +1543,17 @@
     </details>
 
 
+
+    <details>
+      <summary>How do I know when my Claude limit resets?</summary>
+      <p>CapMeter counts down to it. Your session window and your weekly window reset on separate schedules, so the two rarely line up and a single "resets at" time doesn't tell you much. The popup shows both as live countdowns, the menu bar keeps the session one in view, and the floating widget ticks it down second by second while you work.</p>
+    </details>
+
+    <details>
+      <summary>What happens when I hit my Claude usage limit?</summary>
+      <p>Claude stops responding until the window resets — mid-task, if that's where you happen to be. There's no warning beforehand, which is the reason this app exists.</p>
+      <p>CapMeter's job is to make that moment predictable rather than sudden: it turns your burn rate into a time, "limit in ~1h 18m", and can alert you at thresholds you choose, so you can wrap up or switch to a lighter model while there's still room to.</p>
+    </details>
 
     <details>
       <summary>Does it run on an Intel Mac?</summary>

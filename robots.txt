@@ -1,4 +1,38 @@
 User-agent: *
 Allow: /
 
+# Cevap motorlarına açık: bu kategoride kullanıcılar doğrudan asistanlara
+# "Mac için Claude kullanım takip uygulaması öner" diye soruyor. Ürün
+# bilgisinin doğru aktarılması için llms.txt aşağıda referanslı.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
 Sitemap: https://capmeter.app/sitemap.xml
+LLM-Content: https://capmeter.app/llms.txt
