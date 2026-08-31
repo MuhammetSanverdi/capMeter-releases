@@ -3,8 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CapMeter — Claude Usage Monitor for macOS</title>
-<meta name="description" content="See your Claude usage in the macOS menu bar and know when you'll hit the limit before you do. Free 14 days, then $14.99 once.">
+<!-- "Tracker" 2026-08-27'de eklendi: sayfa metninde o kelime HİÇ geçmiyordu
+     (ölçüldü: 0 kez), oysa kategorinin en yaygın arama kalıbı "claude usage
+     tracker". "Monitor" title'dan çıkmadı, description'a taşındı — ikisi de
+     kapsansın ama aynı etikette yığılmasın. 52 karakter, Google ~60'ta kesiyor. -->
+<title>CapMeter — Claude Usage Tracker for the Mac Menu Bar</title>
+<meta name="description" content="Monitor your Claude usage and quota from the macOS menu bar, and know when you'll hit the limit before you do. Free 14 days, then $14.99 once.">
 <link rel="canonical" href="https://capmeter.app/">
 
 <!-- Yapısal veri — Google'a "bu bir macOS uygulaması, şu fiyata, şu kategoride"
@@ -111,7 +115,7 @@
         },
         {
           "@type": "Question",
-          "name": "How is this different from claude /usage ?",
+          "name": "How is this different from claude /usage?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "/usage is computed from local session history on that machine — Claude Code's own wording — so other devices and your claude.ai usage aren't in it. CapMeter reads the account-level number instead, the one your limit actually runs on. And it's there without being asked. /usage answers when you ask it, but you only think to ask once you're already worried."
@@ -163,6 +167,22 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "The safeguard that actually protects you is the trial: 14 days with every feature unlocked, before any money changes hands. If you still want one after buying, purchases go through the App Store, so it's Apple's call rather than mine — you'd request it at reportaproblem.apple.com."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a Claude usage tracker for Mac?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Several, and most of them are free. They read the same usage figures Anthropic reports and show you the percentage you have used. CapMeter is the paid one, and the reason to pick it is what it does with that number rather than the number itself: it measures how fast you are consuming the session and turns that into a time, keeps a daily record so you can compare weeks, sends alerts to Slack, Discord or any webhook, and puts a countdown in a floating window that follows you across Spaces. If a live percentage is all you need, a free tracker will do."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I check my Claude quota?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Claude shows it under Usage in the web app, which works but means remembering to look, and by the time you think to look you are usually already worried. CapMeter keeps your session and weekly quota in the macOS menu bar so it is in view while you work, and warns you at thresholds you set before you run out rather than after."
           }
         },
         {
@@ -1543,6 +1563,20 @@
     </details>
 
 
+
+    <!-- Bu iki soru arama sorgularının BİREBİR kendisi. Cevaplar JSON-LD'deki
+         metinle aynı olmalı — ayrışırsa Google yapısal veriyi yok sayıyor. -->
+    <details>
+      <summary>Is there a Claude usage tracker for Mac?</summary>
+      <p>Several, and most of them are free. They read the same usage figures Anthropic reports and show you the percentage you have used.</p>
+      <p>CapMeter is the paid one, and the reason to pick it is what it does with that number rather than the number itself: it measures how fast you are consuming the session and turns that into a time, keeps a daily record so you can compare weeks, sends alerts to Slack, Discord or any webhook, and puts a countdown in a floating window that follows you across Spaces. If a live percentage is all you need, a free tracker will do.</p>
+    </details>
+
+    <details>
+      <summary>How do I check my Claude quota?</summary>
+      <p>Claude shows it under Usage in the web app, which works but means remembering to look — and by the time you think to look you are usually already worried.</p>
+      <p>CapMeter keeps your session and weekly quota in the macOS menu bar so it is in view while you work, and warns you at thresholds you set before you run out rather than after.</p>
+    </details>
 
     <details>
       <summary>How do I know when my Claude limit resets?</summary>
