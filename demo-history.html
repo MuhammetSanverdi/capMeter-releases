@@ -77,7 +77,7 @@ html, body {
 .h-metric-seg {
   flex: 1; background: none; border: none; border-radius: 7px; padding: 6px 4px;
   font-family: inherit; font-size: 11px; font-weight: 600; color: var(--muted);
-  cursor: default;
+  cursor: pointer; transition: background 0.15s, color 0.15s;
 }
 .h-metric-seg.active { background: rgba(255,255,255,0.12); color: var(--text); }
 
@@ -220,39 +220,39 @@ html, body {
   <div class="page-body">
 
     <div class="h-metric-row">
-      <button class="h-metric-seg active">Usage %</button>
-      <button class="h-metric-seg">Extra Usage</button>
+      <button class="h-metric-seg active" id="metricSegPct">Usage %</button>
+      <button class="h-metric-seg" id="metricSegEu">Extra Usage</button>
     </div>
 
     <div class="h-stats-row">
       <div class="h-stat">
-        <div class="h-stat-val" style="color:var(--text)">61%</div>
+        <div class="h-stat-val" style="color:var(--text)" id="statAvg">61%</div>
         <div class="h-stat-lbl">14D Avg.</div>
       </div>
       <div class="h-stat">
-        <div class="h-stat-val" style="color:var(--text)">79%</div>
+        <div class="h-stat-val" style="color:var(--text)" id="statHigh">79%</div>
         <div class="h-stat-lbl">Highest</div>
       </div>
       <div class="h-stat">
-        <div class="h-stat-val" style="color:var(--text)">38%</div>
+        <div class="h-stat-val" style="color:var(--text)" id="statToday">38%</div>
         <div class="h-stat-lbl">Today</div>
       </div>
       <div class="h-stat">
-        <div class="h-stat-val" style="color:#FF9500">🔥17d</div>
+        <div class="h-stat-val" style="color:#FF9500" id="statStreak">🔥17d</div>
         <div class="h-stat-lbl">Streak</div>
       </div>
     </div>
 
     <div class="h-weekly-row">
       <span style="font-size:10px;color:var(--muted);font-weight:500">This week</span>
-      <span style="font-size:11px;font-weight:700;color:var(--text)">63%
-        <span style="font-size:10px;font-weight:600;color:#34C759">↑4%</span>
+      <span style="font-size:11px;font-weight:700;color:var(--text)" id="weeklyThis">63%
+        <span style="font-size:10px;font-weight:600;color:#34C759" id="weeklyDelta">↑4%</span>
         <span style="font-size:9px;font-weight:400;color:var(--muted)"> vs last week</span>
       </span>
     </div>
 
     <div class="h-top-row">
-      <span class="h-top-title">Chart</span>
+      <span class="h-top-title" id="chartLabel">Chart</span>
       <div class="h-period-row">
         <button class="h-period-btn">7D</button>
         <button class="h-period-btn active">14D</button>
@@ -270,7 +270,7 @@ html, body {
     </div>
 
     <div class="h-divider"></div>
-    <div class="h-sub-label">Last 14 Days · Daily Peak</div>
+    <div class="h-sub-label" id="listSubLabel">Last 14 Days · Daily Peak</div>
 
     <div class="h-list-wrap" id="historyList"></div>
 
@@ -292,66 +292,130 @@ html, body {
     if (pct < 80) return { fill: '#34C759', opacity: 0.80 };
     return { fill: '#34C759', opacity: 1 };
   }
+  /* euBarColor — exact copy from popup.html: sabit amber, opaklık büyüklüğe göre. */
+  function euBarColor(val, maxVal) {
+    if (!val) return { fill: 'rgba(255,255,255,0.06)', opacity: 1 };
+    var ratio = maxVal > 0 ? Math.min(1, val / maxVal) : 0;
+    return { fill: '#FFC400', opacity: 0.35 + ratio * 0.65 };
+  }
 
   /* 14 günlük seri — src/main.js demoHistory() ile AYNI (ortalama 61, tepe 79,
      bugün 38). Etiketler her açılışta hesaplanıyor: eski hâli sabit Temmuz
      tarihleri yazıyordu ve sayfa haftalar içinde bayatlamıştı. */
-  var series = [61, 41, 69, 78, 67, 35, 65, 79, 68, 42, 61, 79, 72, 38];
+  var pctSeries = [61, 41, 69, 78, 67, 35, 65, 79, 68, 42, 61, 79, 72, 38];
+  /* Extra Usage — karışık: bazı günler $0 (o gün pay-as-you-go hiç kullanılmamış),
+     son 3 gün art arda harcama var (streak 3d) — src/main.js'teki gerçek demo
+     üreticisiyle aynı ruh (bkz. demoEuForDay), burada sabit ve okunabilir. */
+  var euSeries = [0, 1.20, 0, 3.10, 0, 4.80, 2.35, 0, 0, 6.35, 1.05, 2.90, 0.75, 3.40];
+
   function dayLabel(daysAgo) {
     if (daysAgo === 0) return 'Today';
     if (daysAgo === 1) return 'Yesterday';
     var d = new Date(); d.setDate(d.getDate() - daysAgo);
     return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
   }
-  var data = series.map(function (pct, i) {
-    return { label: dayLabel(series.length - 1 - i), pct: pct };
-  });
-  var cs = document.getElementById('chartStart');
-  if (cs) cs.textContent = dayLabel(series.length - 1);
 
-  var W = 272, H = 56, n = data.length;
-  var gap = 2;
-  var barW = Math.max(1, Math.floor((W - gap * (n - 1)) / n));
-  var step = barW + gap;
-
-  var active = data.filter(function(d){ return d.pct > 0; });
-  var avgPct = Math.round(active.reduce(function(s,d){ return s + d.pct; }, 0) / active.length);
-  var avgY = H - 2 - Math.round((avgPct / 100) * (H - 4));
-
-  /* Chart */
+  var W = 272, H = 56;
   var svg = document.getElementById('historyChart');
-  var html = '<line x1="0" y1="' + avgY + '" x2="' + W + '" y2="' + avgY + '" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="3,2"/>';
-
-  data.forEach(function(d, i) {
-    var x = i * step;
-    if (d.pct > 0) {
-      var h = Math.max(3, Math.round((d.pct / 100) * (H - 4)));
-      var barTop = H - 2 - h;
-      var bc = barColor(d.pct);
-      var bOp = i === n - 1 ? 1 : bc.opacity * 0.85;
-      html += '<rect x="' + x + '" y="' + barTop + '" width="' + barW + '" height="' + h + '" fill="' + bc.fill + '" fill-opacity="' + bOp + '" rx="1.5"/>';
-    } else {
-      html += '<rect x="' + x + '" y="' + (H - 3) + '" width="' + barW + '" height="3" fill="rgba(255,255,255,0.06)" rx="1"/>';
-    }
-  });
-  svg.innerHTML = html;
-
-  /* List — reversed, same logic as popup.html */
-  var listData = data.slice().reverse().filter(function(d){ return d.pct > 0; }).slice(0, 7);
   var list = document.getElementById('historyList');
-  var listHtml = '';
-  listData.forEach(function(d, i) {
-    var isToday = i === 0;
-    var bc = barColor(d.pct);
-    var barPct = Math.max(d.pct, 6);
-    listHtml +=
-      '<div class="h-entry">' +
-        '<span class="h-entry-date" style="color:' + (isToday ? 'var(--text)' : 'var(--muted)') + ';font-weight:' + (isToday ? 700 : 400) + '">' + d.label + '</span>' +
-        '<div class="h-bar-track"><div class="h-bar-fill" style="width:' + barPct + '%;background:' + bc.fill + ';opacity:' + bc.opacity + '"></div></div>' +
-        '<span class="h-pct" style="color:' + bc.fill + ';opacity:' + bc.opacity + '">' + d.pct + '%</span>' +
-      '</div>';
+  var cs = document.getElementById('chartStart');
+
+  function fmt(mode, v) { return mode === 'eu' ? ('$' + v.toFixed(2)) : (Math.round(v) + '%'); }
+
+  function render(mode) {
+    var series = mode === 'eu' ? euSeries : pctSeries;
+    var data = series.map(function (val, i) {
+      return { label: dayLabel(series.length - 1 - i), val: val };
+    });
+    if (cs) cs.textContent = dayLabel(series.length - 1);
+
+    var n = data.length, gap = 2;
+    var barW = Math.max(1, Math.floor((W - gap * (n - 1)) / n));
+    var step = barW + gap;
+
+    var active = data.filter(function (d) { return d.val > 0; });
+    var avgVal = active.length ? (active.reduce(function (s, d) { return s + d.val; }, 0) / active.length) : 0;
+    var maxVal = mode === 'eu'
+      ? Math.max(5, Math.ceil(Math.max.apply(null, active.map(function (d) { return d.val; })) / 5) * 5) // roundUpTo5, popup.html ile aynı
+      : 100;
+    var avgY = H - 2 - Math.round((avgVal / maxVal) * (H - 4));
+
+    /* Chart */
+    var html = '<line x1="0" y1="' + avgY + '" x2="' + W + '" y2="' + avgY + '" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="3,2"/>';
+    data.forEach(function (d, i) {
+      var x = i * step;
+      if (d.val > 0) {
+        var h = Math.max(3, Math.round((d.val / maxVal) * (H - 4)));
+        var barTop = H - 2 - h;
+        var bc = mode === 'eu' ? euBarColor(d.val, maxVal) : barColor(d.val);
+        var bOp = i === n - 1 ? 1 : bc.opacity * 0.85;
+        html += '<rect x="' + x + '" y="' + barTop + '" width="' + barW + '" height="' + h + '" fill="' + bc.fill + '" fill-opacity="' + bOp + '" rx="1.5"/>';
+      } else {
+        html += '<rect x="' + x + '" y="' + (H - 3) + '" width="' + barW + '" height="3" fill="rgba(255,255,255,0.06)" rx="1"/>';
+      }
+    });
+    svg.innerHTML = html;
+
+    /* List — reversed, same logic as popup.html */
+    var listData = data.slice().reverse().filter(function (d) { return d.val > 0; }).slice(0, 7);
+    var listMax = mode === 'eu' ? Math.max(5, Math.max.apply(null, listData.map(function (d) { return d.val; }))) : 100;
+    var listHtml = '';
+    listData.forEach(function (d, i) {
+      var isToday = i === 0;
+      var bc = mode === 'eu' ? euBarColor(d.val, listMax) : barColor(d.val);
+      var barPct = mode === 'eu' ? Math.max((d.val / listMax) * 100, 6) : Math.max(d.val, 6);
+      listHtml +=
+        '<div class="h-entry">' +
+          '<span class="h-entry-date" style="color:' + (isToday ? 'var(--text)' : 'var(--muted)') + ';font-weight:' + (isToday ? 700 : 400) + '">' + d.label + '</span>' +
+          '<div class="h-bar-track"><div class="h-bar-fill" style="width:' + barPct + '%;background:' + bc.fill + ';opacity:' + bc.opacity + '"></div></div>' +
+          '<span class="h-pct" style="color:' + bc.fill + ';opacity:' + bc.opacity + '">' + fmt(mode, d.val) + '</span>' +
+        '</div>';
+    });
+    list.innerHTML = listHtml;
+
+    /* Stats row + weekly + sub-label — pct'te önceden kalibre edilmiş sabit
+       pazarlama sayıları korunuyor (63%/↑4%/🔥17d), eu için diziden hesaplanıyor. */
+    document.getElementById('statAvg').textContent = fmt(mode, avgVal);
+    document.getElementById('statHigh').textContent = fmt(mode, Math.max.apply(null, active.map(function (d) { return d.val; })));
+    document.getElementById('statToday').textContent = fmt(mode, data[n - 1].val);
+    document.getElementById('listSubLabel').textContent = mode === 'eu' ? 'Last 14 Days · Extra Usage' : 'Last 14 Days · Daily Peak';
+
+    if (mode === 'eu') {
+      var last7 = series.slice(7), prev7 = series.slice(0, 7);
+      var thisWeek = last7.reduce(function (s, v) { return s + v; }, 0);
+      var lastWeek = prev7.reduce(function (s, v) { return s + v; }, 0);
+      var delta = Math.round((thisWeek - lastWeek) * 100) / 100;
+      var streak = 0;
+      for (var i = series.length - 1; i >= 0; i--) { if (series[i] > 0) streak++; else break; }
+      document.getElementById('statStreak').textContent = streak + 'd';
+      document.getElementById('statStreak').style.color = streak >= 2 ? '#FF9500' : 'var(--text)';
+      document.getElementById('weeklyThis').firstChild.textContent = fmt('eu', thisWeek) + ' ';
+      var dEl = document.getElementById('weeklyDelta');
+      // Extra usage'ta artış hiçbir zaman iyi haber değil (ek fatura) — renk pct'nin tersi.
+      dEl.textContent = (delta > 0 ? '↑' : '↓') + fmt('eu', Math.abs(delta));
+      dEl.style.color = delta > 0 ? '#FF3B30' : '#34C759';
+    } else {
+      document.getElementById('statStreak').textContent = '🔥17d';
+      document.getElementById('statStreak').style.color = '#FF9500';
+      document.getElementById('weeklyThis').firstChild.textContent = '63% ';
+      var dEl2 = document.getElementById('weeklyDelta');
+      dEl2.textContent = '↑4%';
+      dEl2.style.color = '#34C759';
+    }
+  }
+
+  render('pct');
+
+  document.getElementById('metricSegPct').addEventListener('click', function () {
+    this.classList.add('active');
+    document.getElementById('metricSegEu').classList.remove('active');
+    render('pct');
   });
-  list.innerHTML = listHtml;
+  document.getElementById('metricSegEu').addEventListener('click', function () {
+    this.classList.add('active');
+    document.getElementById('metricSegPct').classList.remove('active');
+    render('eu');
+  });
 })();
 </script>
 </body>
