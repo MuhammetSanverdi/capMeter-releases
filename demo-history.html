@@ -387,7 +387,7 @@ html, body {
       var delta = Math.round((thisWeek - lastWeek) * 100) / 100;
       var streak = 0;
       for (var i = series.length - 1; i >= 0; i--) { if (series[i] > 0) streak++; else break; }
-      document.getElementById('statStreak').textContent = streak + 'd';
+      document.getElementById('statStreak').textContent = (streak >= 2 ? '🔥' : '') + streak + 'd';
       document.getElementById('statStreak').style.color = streak >= 2 ? '#FF9500' : 'var(--text)';
       document.getElementById('weeklyThis').firstChild.textContent = fmt('eu', thisWeek) + ' ';
       var dEl = document.getElementById('weeklyDelta');
