@@ -18,7 +18,7 @@
 }
 
 html, body {
-  width: 300px; height: 440px;
+  width: 300px; height: 509px;
   background: transparent;
   border-radius: var(--r);
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
@@ -178,6 +178,20 @@ html, body {
 .ud-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.07); border-radius: 99px; }
 .ud-bar-fill  { height: 100%; border-radius: 99px; background: var(--c); }
 
+/* "This week by product" — src/popup.html'deki .breakdown-* ile birebir aynı,
+   yeni özellik landing'de eski görüntü kalmasın diye eklendi. */
+.breakdown-wrap { flex-shrink: 0; }
+.breakdown-bar {
+  display: flex; width: 100%; height: 8px; border-radius: 99px;
+  overflow: hidden; background: rgba(255,255,255,0.06); margin-top: 7px;
+}
+.breakdown-seg { height: 100%; }
+.breakdown-seg:not(:last-child) { margin-right: 1.5px; }
+.breakdown-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; }
+.breakdown-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+.breakdown-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.breakdown-legend-pct { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+
 .mini-chart-wrap { width: 100%; display: flex; flex-direction: column; gap: 5px; flex: 1; min-height: 36px; }
 .mini-chart-header { display: flex; justify-content: space-between; align-items: center; }
 .mini-chart-label {
@@ -310,6 +324,18 @@ html, body {
           <span class="ud-val" style="color:rgba(255,196,0,0.85)">25%</span>
           <div class="ud-bar-track"><div class="ud-bar-fill" style="width:25%;background:rgba(255,196,0,0.75)"></div></div>
         </div>
+      </div>
+    </div>
+
+    <div class="breakdown-wrap">
+      <span class="mini-chart-label">This week by product</span>
+      <div class="breakdown-bar">
+        <div class="breakdown-seg" style="width:78%;background:#5E9EFF"></div>
+        <div class="breakdown-seg" style="width:22%;background:#9B7BFF"></div>
+      </div>
+      <div class="breakdown-legend">
+        <div class="breakdown-legend-item"><span class="breakdown-dot" style="background:#5E9EFF"></span><span>Claude Code</span><span class="breakdown-legend-pct">78%</span></div>
+        <div class="breakdown-legend-item"><span class="breakdown-dot" style="background:#9B7BFF"></span><span>Chats</span><span class="breakdown-legend-pct">22%</span></div>
       </div>
     </div>
 

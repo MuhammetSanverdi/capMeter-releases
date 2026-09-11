@@ -18,7 +18,7 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
-  width: 300px; height: 440px;
+  width: 300px; height: 509px;
   background: transparent;
   border-radius: var(--r);
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
@@ -66,6 +66,20 @@ html, body {
 }
 .page-body::-webkit-scrollbar { width: 3px; }
 .page-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 99px; }
+
+/* Usage % / Extra Usage segmented control — src/popup.html'deki .h-metric-*
+   ile birebir aynı, yeni özellik landing'de eski görüntü kalmasın diye eklendi. */
+.h-metric-row {
+  display: flex; margin-bottom: 10px; flex-shrink: 0;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  border-radius: 9px; padding: 2px; gap: 2px;
+}
+.h-metric-seg {
+  flex: 1; background: none; border: none; border-radius: 7px; padding: 6px 4px;
+  font-family: inherit; font-size: 11px; font-weight: 600; color: var(--muted);
+  cursor: default;
+}
+.h-metric-seg.active { background: rgba(255,255,255,0.12); color: var(--text); }
 
 /* Stats row */
 .h-stats-row {
@@ -204,6 +218,11 @@ html, body {
   </div>
 
   <div class="page-body">
+
+    <div class="h-metric-row">
+      <button class="h-metric-seg active">Usage %</button>
+      <button class="h-metric-seg">Extra Usage</button>
+    </div>
 
     <div class="h-stats-row">
       <div class="h-stat">
