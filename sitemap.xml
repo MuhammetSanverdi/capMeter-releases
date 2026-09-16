@@ -20,6 +20,11 @@
   </url>
   <url><loc>https://capmeter.app/keychain</loc></url>
   <url>
+    <loc>https://capmeter.app/guides</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://capmeter.app/guides/best-claude-usage-trackers</loc>
     <lastmod>2026-09-02</lastmod>
     <priority>0.6</priority>
@@ -27,6 +32,56 @@
   <url>
     <loc>https://capmeter.app/guides/how-to-check-claude-usage</loc>
     <lastmod>2026-09-02</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/guides/how-to-check-codex-usage</loc>
+    <lastmod>2026-09-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/guides/codex-rate-limits-explained</loc>
+    <lastmod>2026-09-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/guides/capmeter-vs-sessionwatcher</loc>
+    <lastmod>2026-09-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/guides/capmeter-vs-usage-for-claude</loc>
+    <lastmod>2026-09-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/guides/capmeter-vs-free-claude-trackers</loc>
+    <lastmod>2026-09-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/guides/does-claude-weekly-limit-reset-every-7-days</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/guides/can-you-reset-claude-usage-limit-early</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/guides/can-you-reset-codex-usage-limit-early</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/guides/claude-pro-vs-max-vs-team-usage-limits</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/guides/claude-extra-usage-billing-explained</loc>
+    <lastmod>2026-09-16</lastmod>
     <priority>0.6</priority>
   </url>
   <url>

@@ -103,6 +103,17 @@ nav {
   transition: transform 0.2s;
 }
 .nav-cta:hover { transform: translateY(-1px); }
+.nav-cta-short { display: none; }
+/* index.html'den BİREBİR taşındı — orada var, alt sayfalarda hiç yoktu: telefon
+   genişliğinde (≤420px) "Get on the App Store" tek satıra sığmayıp taşıyordu, bu da
+   nav'ı ve onun altındaki .page içeriğini sağdan kırpıyordu (guides index sayfası
+   eklenirken fark edildi, ama tüm alt sayfalarda — privacy/support/keychain/guides/*
+   — zaten var olan bir hataydı). */
+@media (max-width: 420px) {
+  .nav-cta { padding: 8px 14px; }
+  .nav-cta-full { display: none; }
+  .nav-cta-short { display: inline; }
+}
 
 /* ── İçerik ── */
 .page {
@@ -129,12 +140,34 @@ nav {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13.5px;
   background: rgba(255,255,255,0.07); padding: 2px 6px; border-radius: 5px; color: var(--text);
 }
-/* Vurgulu kutu — destek sayfasındaki iletişim kanalları */
+/* Vurgulu kutu — destek sayfasındaki iletişim kanalları, guides index'teki kart linkleri */
 .box {
   margin-top: 12px; padding: 16px 20px; border-radius: 14px;
   background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10);
 }
 .box p { margin: 0; font-size: 15px; }
+/* a.box — guides index'teki kartlar <a>: varsayılan satır-içi görüntüyü ve alt çizgiyi
+   iptal edip hover'da hafif bir vurgu veriyor. .box'ın kendisi <div> kaldığı yerlerde
+   (destek sayfası) bu kural hiç eşleşmiyor.
+   .box'ın standart kenarlık/arkaplan değerleri (opaklık 0.05/0.10) TEK bir vurgulu kutu
+   için tasarlanmıştı; üst üste dizilince koyu glass zemine neredeyse karışıp düz akan
+   metin gibi görünüyordu, tıklanabilir kart hissi vermiyordu — bu yüzden burada kendi
+   daha belirgin değerleriyle override ediyor. Sağdaki ok (::after) da aynı nedenle:
+   tıklanabilirliği metinden bağımsız, göze çarpan bir işaretle gösteriyor. */
+a.box {
+  display: block; position: relative; text-decoration: none;
+  padding-right: 40px;
+  background: rgba(255,255,255,0.055); border-color: rgba(255,255,255,0.16);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+a.box:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.26); transform: translateY(-1px); }
+a.box p strong { color: var(--text); }
+a.box::after {
+  content: '›'; position: absolute; top: 16px; right: 18px;
+  font-size: 20px; font-weight: 600; color: var(--faint); line-height: 1;
+}
+a.box:hover::after { color: var(--accent2); }
 
 /* ── Footer ── */
 footer {

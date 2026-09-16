@@ -8,7 +8,7 @@
      tracker". "Monitor" title'dan çıkmadı, description'a taşındı — ikisi de
      kapsansın ama aynı etikette yığılmasın. 52 karakter, Google ~60'ta kesiyor. -->
 <title>CapMeter — Claude Usage Tracker for the Mac Menu Bar</title>
-<meta name="description" content="Monitor your Claude usage and quota from the macOS menu bar, and know when you'll hit the limit before you do. Free 14 days, then $14.99 once.">
+<meta name="description" content="Monitor your Claude and Codex (ChatGPT) usage and quota from the macOS menu bar, and know when you'll hit the limit before you do. Free 14 days, then $9.99 once.">
 <link rel="canonical" href="https://capmeter.app/">
 
 <!-- Yapısal veri — Google'a "bu bir macOS uygulaması, şu fiyata, şu kategoride"
@@ -23,9 +23,19 @@
        privacy policy'de geçiyor (politikadan kimin sorumlu olduğu için).
      (downloadUrl 2026-08-13'te yayın açılınca eklendi.)
 
-     price: 14.99 → App Store'da uygulama ücretsiz inip kilidi IAP açıyor, ama
+     price: 9.99 → App Store'da uygulama ücretsiz inip kilidi IAP açıyor, ama
      aramada arayanın bilmek istediği rakam tam kullanım bedeli. Deneme süresi
-     description'da açıkça yazıyor, yani yanıltıcı değil. -->
+     description'da açıkça yazıyor, yani yanıltıcı değil.
+     ⚠️ GEÇİCİ LANSMAN FİYATI: App Store Connect'te 9.99'a düşürüldü, "Price Ending
+     on Oct 13, 2026" ile bitiyor (2026-09-15'te ayarlandı). O tarihte bu dosyadaki
+     TÜM $9.99 → $14.99 geri alınmalı (grep "9.99" site/ ile bulunur: index.html,
+     llms.txt, ai.txt) — priceValidUntil de dahil, aşağıdaki offer'da. Pricing
+     bölümündeki "🔥 Launch offer" rozeti, üstü çizili "$14.99", "Save 33%" chip'i
+     ve #saleCountdown satırı (+ altındaki script bloğu, "Launch-offer countdown"
+     yorumuyla başlıyor) o gün kaldırılmalı — script zaten süre dolunca bunları
+     otomatik gizliyor (bkz. #pricing, .pricing-was), ama kod da temizlenmeli.
+     FAQ'daki "$9.99 is a launch price through October 13, 2026..." cümlesi de
+     (HEM JSON-LD HEM görünür HTML'de, ikisi birebir aynı kalmalı) silinmeli. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -57,7 +67,7 @@
       "@type": "WebPage",
       "@id": "https://capmeter.app/#webpage",
       "url": "https://capmeter.app/",
-      "name": "CapMeter — Claude Usage Monitor for macOS",
+      "name": "CapMeter — Claude & Codex Usage Monitor for macOS",
       "isPartOf": {
         "@id": "https://capmeter.app/#website"
       },
@@ -72,30 +82,31 @@
       "url": "https://capmeter.app/",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "macOS 12.0 or later, Apple Silicon",
-      "description": "CapMeter shows your Claude.ai usage in the macOS menu bar and turns your burn rate into a time, so you know when you'll hit the limit before you do. Works with claude.ai in the browser and Claude Code. Free 14-day trial, then a single one-time purchase.",
+      "description": "CapMeter shows your Claude.ai and Codex (ChatGPT) usage in the macOS menu bar and turns your burn rate into a time, so you know when you'll hit the limit before you do. Works with claude.ai and Claude Code, or Codex and ChatGPT — each account tracked independently. Free 14-day trial, then a single one-time purchase.",
       "screenshot": "https://capmeter.app/og-image.jpg",
       "downloadUrl": "https://apps.apple.com/us/app/capmeter-quota-for-claude/id6792936410",
-      "softwareVersion": "1.0.2",
+      "softwareVersion": "2.0.0",
       "inLanguage": "en",
       "publisher": {
         "@id": "https://capmeter.app/#org"
       },
       "offers": {
         "@type": "Offer",
-        "price": "14.99",
+        "price": "9.99",
         "priceCurrency": "USD",
         "availability": "https://schema.org/InStock",
-        "priceValidUntil": "2027-12-31"
+        "priceValidUntil": "2026-10-13"
       },
       "featureList": [
+        "Works with Claude and Codex (ChatGPT) accounts",
         "Burn-rate limit prediction",
         "Live menu bar usage ring",
         "Floating always-on-top widget",
         "Threshold alerts via macOS notifications, Slack, Discord or HTTP webhooks",
         "Quiet hours",
-        "Usage history with 7, 14, 30 and 90-day charts",
+        "Usage history with 7, 14, 30 and 90-day charts, including extra usage/credits",
         "CSV and JSON export",
-        "Multiple Claude accounts"
+        "Multiple Claude and Codex accounts, switchable without a browser"
       ]
     },
     {
@@ -131,18 +142,26 @@
         },
         {
           "@type": "Question",
-          "name": "Do I have to give it my Anthropic password?",
+          "name": "Do I have to give it my Anthropic or OpenAI password?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. CapMeter opens Claude.ai's own sign-in page in a window and stays out of it: it puts no code into that page and reads nothing out of it, so what you type goes to Anthropic, not to the app. It never sees your password. What it keeps afterwards is the session cookie your browser would hold anyway — encrypted with the macOS Keychain and stored only on your Mac. It still can't read your conversations."
+            "text": "No. CapMeter opens Claude.ai's or OpenAI's own sign-in page in a window and stays out of it: it puts no code into that page and reads nothing out of it, so what you type goes to Anthropic or OpenAI, not to the app. It never sees your password. What it keeps afterwards is the session credentials your browser would hold anyway — encrypted with the macOS Keychain and stored only on your Mac. It still can't read your conversations."
           }
         },
         {
           "@type": "Question",
-          "name": "Why $14.99 when there are free ones?",
+          "name": "Does it work with Codex or ChatGPT too?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "A free counter only helps while you're looking at it. CapMeter turns your burn rate into a time — \"limit in ~1h 18m\" — and then comes to find you: a macOS notification, or straight into Slack or Discord, while there's still room to do something about it. Around that: 90 days of history you can export, and a widget that floats above every window and Space — with a live $/hour rate if you're on pay-as-you-go credits. One payment, not a subscription — less than a month of Claude Pro, and free for the first 14 days."
+            "text": "Yes. CapMeter tracks Claude and Codex/ChatGPT accounts side by side, each with its own history, extra usage or credits, and notifications. Add one or the other, or both, and switch between them from the same popup without opening a browser."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why $9.99 when there are free ones?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A free counter only helps while you're looking at it. CapMeter turns your burn rate into a time — \"limit in ~1h 18m\" — and then comes to find you: a macOS notification, or straight into Slack or Discord, while there's still room to do something about it. Around that: 90 days of history you can export, and a widget that floats above every window and Space — with a live $/hour rate if you're on pay-as-you-go credits. One payment, not a subscription — less than a month of Claude Pro, and free for the first 14 days. $9.99 is a launch price through October 13, 2026; it goes back up to $14.99 after that."
           }
         },
         {
@@ -155,10 +174,10 @@
         },
         {
           "@type": "Question",
-          "name": "What if Anthropic changes how usage is reported?",
+          "name": "What if Anthropic or OpenAI changes how usage is reported?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Then the number stops updating until I ship a fix through the App Store. It's the one dependency I can't design around, so it's the one I watch — and if it's something I can fix, getting it working again is the only thing I'd be working on. Your purchase doesn't change while that happens — you paid once, not monthly, and your history stays on your Mac."
+            "text": "Then that provider's numbers stop updating until I ship a fix through the App Store — the other provider keeps working normally, since each is read independently. It's the one dependency I can't design around, so it's the one I watch — and if it's something I can fix, getting it working again is the only thing I'd be working on. Your purchase doesn't change while that happens — you paid once, not monthly, and your history stays on your Mac."
           }
         },
         {
@@ -219,8 +238,8 @@
 <meta name="theme-color" content="#09080e">
 
 <!-- Link previews: X ve Reddit og:image olmadan çıplak kart gösteriyor. Görsel mutlak URL olmalı. -->
-<meta property="og:title" content="CapMeter — Claude Usage Monitor for macOS">
-<meta property="og:description" content="See your Claude usage in the macOS menu bar — and know when you'll hit the limit before you do. Works for claude.ai and Claude Code.">
+<meta property="og:title" content="CapMeter — Claude &amp; Codex Usage Monitor for macOS">
+<meta property="og:description" content="See your Claude and Codex usage in the macOS menu bar — and know when you'll hit the limit before you do. Works for claude.ai, Claude Code, Codex and ChatGPT.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://capmeter.app/">
 <meta property="og:site_name" content="CapMeter">
@@ -229,8 +248,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="CapMeter's popup on a Mac desktop showing 38% session usage and 'limit in ~1h 18m'">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="CapMeter — Claude Usage Monitor for macOS">
-<meta name="twitter:description" content="See your Claude usage in the macOS menu bar — and know when you'll hit the limit before you do. Works for claude.ai and Claude Code.">
+<meta name="twitter:title" content="CapMeter — Claude &amp; Codex Usage Monitor for macOS">
+<meta name="twitter:description" content="See your Claude and Codex usage in the macOS menu bar — and know when you'll hit the limit before you do. Works for claude.ai, Claude Code, Codex and ChatGPT.">
 <meta name="twitter:image" content="https://capmeter.app/og-image.jpg">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -778,6 +797,22 @@
     color: var(--accent2); padding: 4px 12px; border-radius: 11px; margin-bottom: 22px;
     background: rgba(217,119,87,0.14); border: 1px solid rgba(217,119,87,0.25);
   }
+  /* .pricing-was / .pricing-save / .pricing-countdown — GEÇİCİ (bkz. dosya başındaki
+     ⚠️ yorum): lansman fiyatı bitince üçü de kaldırılıp .pricing-price tek başına
+     kalmalı. Countdown'un kendi script'i (aşağıda #saleCountdown) süre dolunca bu
+     üçünü zaten otomatik gizliyor — ama unutulup deploy edilirse diye kod da silinmeli. */
+  .pricing-price-row { display: flex; align-items: baseline; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .pricing-was { font-size: 22px; font-weight: 600; color: var(--faint); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+  .pricing-save {
+    display: inline-flex; align-items: center; font-size: 12px; font-weight: 700; color: #fff;
+    background: var(--accent); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.01em;
+    align-self: center; white-space: nowrap;
+  }
+  .pricing-countdown {
+    font-size: 12.5px; font-weight: 600; color: var(--accent2);
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    margin: 2px 0 20px;
+  }
   .pricing-price { font-size: 56px; font-weight: 700; letter-spacing: -0.03em; color: var(--text); line-height: 1; }
   .pricing-price sup { font-size: 24px; vertical-align: super; }
   .pricing-period { font-size: 14px; color: var(--muted); margin: 8px 0 28px; }
@@ -1009,11 +1044,14 @@
      Code alike") satış için gerekli olduğu için tek cümle bırakıldı. Uyarı kanalları
      ve menü çubuğu detayı aşağıdaki bölümlerde zaten yazılı; menü çubuğu artık
      sağdaki görselde de görünüyor. -->
-  <p>CapMeter watches how fast you're burning through your Claude session — browser and Claude&nbsp;Code alike — and tells you when you'll run out.</p>
+  <p>CapMeter watches how fast you're burning through your Claude or Codex session — browser and CLI alike — and tells you when you'll run out.</p>
   <!-- Rozet BAŞLIKTAN ÖNCE değil, açıklamadan SONRA. Kapsam bilgisi ("hangi ürün,
        hangi planlar") vaadi okuduktan sonra anlam kazanıyor; başta dururken H1'in
-       önüne geçen bir ön bilgi oluyordu. Yeri değişince H1 de fold'da yukarı çıktı. -->
-  <div class="hero-badge">For Claude.ai · Pro, Max &amp; Team</div>
+       önüne geçen bir ön bilgi oluyordu. Yeri değişince H1 de fold'da yukarı çıktı.
+       2.0.0: Codex desteği eklenince "Pro, Max & Team" (Claude plan detayı) yerini
+       iki sağlayıcıyı da adlandıran kısa bir etikete bıraktı — App Store ekran
+       görüntülerindeki "CLAUDE & CODEX" eyebrow'uyla aynı dil, yüzeyler arası tutarlı. -->
+  <div class="hero-badge">For Claude &amp; Codex accounts</div>
   <div class="hero-actions">
     <!-- Paylaş ikonu + ana CTA tek bir öbek. Sarmalayıcı şart: mobilde ikon akıştan
          çıkarılıp (absolute) CTA'ya asılıyor, böylece CTA ortalama hesabına ikon
@@ -1062,11 +1100,11 @@
   <!-- ✓ ile metin AYNI SATIR AKIŞINDA, aralarında hiç boşluk karakteri yok.
        </svg> ile "Free" ARASINA SATIR SONU KOYMA: HTML onu boşluğa çevirir ve ✓'nün
        kendi 8px'lik padding'ine ~4px daha eklenir, boşluk sabit olmaktan çıkar.
-       Aynı sebeple </a> ile virgül arasına da satır sonu koyma — "$14.99 once ,"
+       Aynı sebeple </a> ile virgül arasına da satır sonu koyma — "$9.99 once ,"
        diye çizilir.
-       "$14.99" ile "once" arasındaki SERT boşluk kasıtlı: dar ekranda satır tam
+       "$9.99" ile "once" arasındaki SERT boşluk kasıtlı: dar ekranda satır tam
        oradan kırılıyor ve fiyat ikiye bölünüyordu. -->
-  <p class="hero-trial"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Free 14-day trial — then <a href="#pricing">$14.99&nbsp;once</a>, no subscription</p>
+  <p class="hero-trial"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Free 14-day trial — then <a href="#pricing">$9.99&nbsp;once</a>, no subscription</p>
   <p class="hero-note">Opens in demo mode without an account — look around before signing in. · <a href="/privacy">Privacy Policy</a></p>
 
 <!-- SOSYAL KANIT YUVASI — lansmandan sonra doldur, şimdi DEĞİL.
@@ -1120,7 +1158,7 @@
   <div class="trust-item"><svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg><strong>Predicts &amp; warns</strong> — not just a number</div>
   <div class="trust-item"><svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><strong>Fully local</strong> — Keychain-encrypted, no servers</div>
   <div class="trust-item"><!-- Menü çubuğu ikonu: üstünde şerit olan pencere. Burada Apple logosu vardı ama diğer chip'ler kavram anlatırken (zap/lock/tag) o marka anlatıyordu, sistemin dışına düşüyordu; platform bilgisi zaten chip metninde. --><svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/></svg><strong>Menu bar app</strong> — macOS 12+, Apple Silicon</div>
-  <div class="trust-item"><svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg><strong>$14.99 once</strong> — no subscription</div>
+  <div class="trust-item"><svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg><strong>$9.99 once</strong> — no subscription</div>
 </div>
 
 <!-- Demo intro — labels the interactive demo so the fold's peek reads as intentional, not cut off.
@@ -1428,12 +1466,12 @@
     <div class="step">
       <div class="step-num">2</div>
       <h3>It reads your session locally</h3>
-      <p>No API key. You sign in once on Claude's own page — the session stays encrypted on your Mac.</p>
+      <p>No API key. You sign in once on Claude's or OpenAI's own page — the session stays encrypted on your Mac.</p>
     </div>
     <div class="step">
       <div class="step-num">3</div>
-      <h3>See your Claude limits in real time</h3>
-      <p>A live ring in your menu bar and a floating widget show exactly how much session you have left.</p>
+      <h3>See your limits in real time</h3>
+      <p>A live ring in your menu bar and a floating widget show exactly how much session you have left — for Claude, Codex, or both.</p>
     </div>
   </div>
 </div>
@@ -1447,8 +1485,9 @@
     <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg></div><h3>Limit prediction</h3><p>CapMeter measures your burn rate and turns it into a time — "limit in ~1h 18m" — so you pace yourself instead of getting cut off mid-thought. It's an estimate from your recent pace, updated as you go.</p></div>
     <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></div><h3>Alerts that reach you</h3><p>Get warned at your own thresholds — as a macOS notification or pushed straight to Slack &amp; Discord. Set quiet hours so you're never pinged while you sleep.</p></div>
     <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"/><path d="m15 19-3 3-3-3"/><path d="m19 9 3 3-3 3"/><path d="M2 12h20"/><path d="m5 9-3 3 3 3"/><path d="m9 5 3-3 3 3"/></svg></div><h3>Floating widget</h3><p>A draggable mini-widget that floats above every window and Space — your remaining session always in view. When pay-as-you-go credits are on, it adds a second line tracking your spend rate and balance.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M17 14h-6"/><path d="M13 18H7"/><path d="M7 14h.01"/><path d="M17 18h.01"/></svg></div><h3>All your usage windows</h3><p>Your current session (5-hour), your weekly window, and any per-model weekly limits your account reports — each as its own row with its own countdown. Model names come straight from Claude, so new ones appear on their own. Browser and Claude Code draw from the same limits, and both land in one counter.</p></div>
-    <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg></div><h3>History &amp; export</h3><p>7, 14, 30 and 90-day bar charts, weekly comparison and streaks. Export everything as CSV or JSON whenever you want.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M17 14h-6"/><path d="M13 18H7"/><path d="M7 14h.01"/><path d="M17 18h.01"/></svg></div><h3>All your usage windows</h3><p>Your current session (5-hour), your weekly window, and any per-model weekly limits your account reports — each as its own row with its own countdown. Claude's model names come straight from Claude, so new ones appear on their own. Browser and CLI draw from the same account limits — Claude Code and claude.ai, or Codex and ChatGPT — and both land in one counter.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg></div><h3>History &amp; export</h3><p>7, 14, 30 and 90-day charts, weekly comparison and streaks — for usage percentage and separately for extra usage or credits. Export everything as CSV or JSON whenever you want.</p></div>
+    <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><h3>Claude and Codex, one popup</h3><p>Add Claude and Codex accounts side by side, each tracked independently with its own history. Switch between them without opening a browser — no more juggling two menu bar apps.</p></div>
     <div class="feature-card glass"><div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg></div><h3>Live menu-bar ring</h3><p>The baseline, done right: a color-coded ring shifts green → orange → red as you approach the limit. Always visible, zero clicks.</p></div>
   </div>
 </section>
@@ -1459,9 +1498,13 @@
   <h2 class="section-title">Right where you work</h2>
   <p class="section-sub">A rich popup one click away in the menu bar.</p>
   <div class="showcase-pops">
-    <div class="pop-card"><img src="pop-history.png" width="643" height="906" alt="CapMeter history view: 7, 14, 30 and 90-day Claude usage charts with weekly comparison" loading="lazy" decoding="async"><p><strong>History &amp; trends</strong><br>7, 14, 30, 90-day charts, streaks &amp; export</p></div>
-    <div class="pop-card"><img src="pop-notifs.png" width="643" height="906" alt="CapMeter alert settings: Claude usage thresholds, quiet hours, Slack and Discord webhooks" loading="lazy" decoding="async"><p><strong>Alerts your way</strong><br>Thresholds, quiet hours, Slack &amp; Discord</p></div>
-    <div class="pop-card"><img src="pop-accounts.png" width="643" height="906" alt="Switching between multiple Claude accounts in the CapMeter menu bar popup" loading="lazy" decoding="async"><p><strong>Multiple accounts</strong><br>Switch in one click</p></div>
+    <!-- pop-history/pop-notifs/pop-accounts: 2026-09-15'te gerçek uygulamadan yeniden
+         çekildi (smooth line grafik, Codex hesabı, Preferences sekmesi) — Documents/
+         Screenshots/originals/{3_history,5_preferences_appearance,4_accounts}.png'den
+         popup'ın kendi kart sınırları (2196,76,2799,1094) kırpılarak üretildi. -->
+    <div class="pop-card"><img src="pop-history.png" width="603" height="1018" alt="CapMeter history view: 7, 14, 30 and 90-day usage charts with weekly comparison" loading="lazy" decoding="async"><p><strong>History &amp; trends</strong><br>7, 14, 30, 90-day charts, streaks &amp; export</p></div>
+    <div class="pop-card"><img src="pop-notifs.png" width="603" height="1018" alt="CapMeter alert settings: usage thresholds, quiet hours, Slack and Discord webhooks" loading="lazy" decoding="async"><p><strong>Alerts your way</strong><br>Thresholds, quiet hours, Slack &amp; Discord</p></div>
+    <div class="pop-card"><img src="pop-accounts.png" width="603" height="1018" alt="Switching between multiple Claude and Codex accounts in the CapMeter menu bar popup" loading="lazy" decoding="async"><p><strong>Multiple accounts</strong><br>Claude &amp; Codex, switch in one click</p></div>
   </div>
 </section>
 
@@ -1470,7 +1513,7 @@
   <div class="privacy-strip glass">
     <div class="lock"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
     <h3>Your data stays on your Mac</h3>
-    <p>CapMeter reads usage from your own Claude.ai session and keeps everything on-device. Your session token is encrypted in the macOS Keychain, and the app talks only to claude.ai — plus any Slack, Discord or HTTP webhook you set up yourself. No servers of ours, no analytics, no tracking, no backend. It never accesses your conversations.</p>
+    <p>CapMeter reads usage from your own Claude.ai or Codex session and keeps everything on-device. Your session credentials are encrypted in the macOS Keychain, and the app talks only to claude.ai or chatgpt.com — plus any Slack, Discord or HTTP webhook you set up yourself. No servers of ours, no analytics, no tracking, no backend. It never accesses your conversations.</p>
     <p style="margin-top:12px">You don't have to take that on trust: the app is sandboxed by the Mac App Store, and a network monitor like Little Snitch will show you the only host it ever contacts.</p>
   </div>
 </section>
@@ -1487,22 +1530,27 @@
   <h2 class="section-title">Try it free, then pay once</h2>
   <p class="section-sub">Download free and use every feature for 14 days. One in-app purchase unlocks it for good — no subscription.</p>
   <div class="pricing-wrap glass">
-    <div class="pricing-badge">One-time unlock</div>
-    <div class="pricing-price"><sup>$</sup>14.99</div>
-    <p class="pricing-period">After a free 14-day trial · No subscription</p>
-    <p id="soonNote" data-live-text="macOS 12+ · Apple Silicon" style="font-size:12px;color:var(--faint);margin:-18px 0 24px;">Coming soon to the Mac App Store</p>
+    <div class="pricing-badge">🔥 Launch offer</div>
+    <div class="pricing-price-row">
+      <span class="pricing-was">$14.99</span>
+      <div class="pricing-price"><sup>$</sup>9.99</div>
+      <span class="pricing-save">Save 33%</span>
+    </div>
+    <p class="pricing-period">One-time unlock · after a free 14-day trial · No subscription</p>
+    <p class="pricing-countdown" id="saleCountdown"></p>
+    <p id="soonNote" data-live-text="macOS 12+ · Apple Silicon" style="font-size:12px;color:var(--faint);margin:-14px 0 24px;">Coming soon to the Mac App Store</p>
     <ul class="pricing-features">
       <li>Burn-rate limit prediction</li>
       <li>Alerts to Slack, Discord & webhooks + quiet hours</li>
       <li>Floating widget on top of any app + $/hr on credits</li>
       <li>History & export (CSV / JSON)</li>
-      <li>Multiple Claude accounts</li>
+      <li>Multiple Claude and Codex accounts</li>
       <li>Refresh as often as every 30 seconds</li>
     </ul>
     <p style="font-size:12px;color:var(--faint);margin:-16px 0 22px;line-height:1.55">The menu-bar ring, your session and 7-day windows and the frosted glass theme keep working without the unlock — the list above is what the purchase adds.</p>
     <!-- APPSTORE-CTA — yayında hem href hem etiket değişecek ("Get on the App Store") -->
     <a class="btn-cta" data-appstore data-live-label="Get on the App Store" href="#pricing" style="width:100%">Coming soon on the Mac App Store</a>
-    <p class="pricing-trial">Requires an active Claude.ai account · macOS 12+</p>
+    <p class="pricing-trial">Requires an active Claude.ai or Codex account · macOS 12+</p>
   </div>
 </section>
 
@@ -1530,16 +1578,21 @@
     </details>
 
     <details>
-      <summary>Do I have to give it my Anthropic password?</summary>
-      <p>No. CapMeter opens Claude.ai's own sign-in page in a window and stays out of it: it puts no code into that page and reads nothing out of it, so what you type goes to Anthropic, not to the app. It never sees your password.</p>
-      <p>What it keeps afterwards is the session cookie your browser would hold anyway — encrypted with the macOS Keychain and stored only on your Mac. It still can't read your conversations.</p>
+      <summary>Do I have to give it my Anthropic or OpenAI password?</summary>
+      <p>No. CapMeter opens Claude.ai's or OpenAI's own sign-in page in a window and stays out of it: it puts no code into that page and reads nothing out of it, so what you type goes to Anthropic or OpenAI, not to the app. It never sees your password.</p>
+      <p>What it keeps afterwards is the session credentials your browser would hold anyway — encrypted with the macOS Keychain and stored only on your Mac. It still can't read your conversations.</p>
     </details>
 
     <details>
-      <summary>Why $14.99 when there are free ones?</summary>
+      <summary>Does it work with Codex or ChatGPT too?</summary>
+      <p>Yes. CapMeter tracks Claude and Codex/ChatGPT accounts side by side, each with its own history, extra usage or credits, and notifications. Add one or the other, or both, and switch between them from the same popup without opening a browser.</p>
+    </details>
+
+    <details>
+      <summary>Why $9.99 when there are free ones?</summary>
       <p>A free counter only helps while you're looking at it. CapMeter turns your burn rate into a time — <em>"limit in ~1h 18m"</em> — and then comes to find you: a macOS notification, or straight into Slack or Discord, while there's still room to do something about it.</p>
       <p>Around that: 90 days of history you can export, and a widget that floats above every window and Space — with a live $/hour rate if you're on pay-as-you-go credits.</p>
-      <p>One payment, not a subscription — less than a month of Claude Pro, and free for the first 14 days.</p>
+      <p>One payment, not a subscription — less than a month of Claude Pro, and free for the first 14 days. $9.99 is a launch price through October 13, 2026; it goes back up to $14.99 after that.</p>
     </details>
 
     <details>
@@ -1550,8 +1603,8 @@
 
 
     <details>
-      <summary>What if Anthropic changes how usage is reported?</summary>
-      <p>Then the number stops updating until I ship a fix through the App Store. It's the one dependency I can't design around, so it's the one I watch — and if it's something I can fix, getting it working again is the only thing I'd be working on. Your purchase doesn't change while that happens — you paid once, not monthly, and your history stays on your Mac.</p>
+      <summary>What if Anthropic or OpenAI changes how usage is reported?</summary>
+      <p>Then that provider's numbers stop updating until I ship a fix through the App Store — the other provider keeps working normally, since each is read independently. It's the one dependency I can't design around, so it's the one I watch — and if it's something I can fix, getting it working again is the only thing I'd be working on. Your purchase doesn't change while that happens — you paid once, not monthly, and your history stays on your Mac.</p>
     </details>
 
 
@@ -1630,9 +1683,13 @@
        satıcıyla uyuşmazlık izlenimi verirdi. Cümle üç sayfada da birebir aynı; uzun
        hali ("An independent project, …") mobilde footer'ı iki satıra düşürüyordu ve
        "not affiliated" zaten aynı işi görüyor. -->
-  <p>Not affiliated with Anthropic. &copy; 2026 CapMeter</p>
+  <p>Not affiliated with Anthropic or OpenAI. &copy; 2026 CapMeter</p>
   <div class="footer-links">
     <a href="#faq">FAQ</a>
+    <!-- Guides: SessionWatcher (en yakın rakip) da üst nav'a değil footer'a koyuyor —
+         üst nav dönüşüm odaklı kalsın diye burada. Ana sayfadan guide'lara giden tek
+         iç link; öncesinde guide'lar yalnız sitemap/birbirlerine linkle bulunabiliyordu. -->
+    <a href="/guides">Guides</a>
     <a href="/privacy">Privacy</a>
     <!-- Destek sayfası: ASC'deki Support URL de buraya bakıyor. Kanal ya da adres
          değişirse yalnız support.html güncellenir, App Store metadata'sına dokunulmaz. -->
@@ -1641,6 +1698,34 @@
 </footer>
 
 <script>
+
+/* Launch-offer countdown — GERÇEK bir tarihten hesaplanıyor (sabit "3 gün kaldı" gibi
+   uydurma bir sayı DEĞİL): ASC'deki "Price Ending on Oct 13, 2026" ile birebir aynı.
+   Sahte/sıfırlanan geri sayımlar (her sayfa yenilemesinde baştan başlayan) güven kırıyor
+   ve bazı bölgelerde (ör. FTC 16 CFR §233.1, Kaliforniya) yanıltıcı fiyatlandırma sayılıyor
+   — burada öyle bir risk yok çünkü tarih sabit ve gerçek, sayaç yalnız bugünün tarihine göre
+   kalan günü gösteriyor. Süre dolunca (days<=0) indirim UI'ının tamamını (rozet, üstü çizili
+   fiyat, save chip, bu satır) otomatik gizliyor — geri alma commit'i unutulsa bile site yanlış
+   fiyat iddiasıyla kalmasın diye (bkz. dosya başındaki ⚠️ yorum, orada da manuel silinmesi
+   gerektiği yazıyor; bu sadece görünürlük için ikinci bir güvenlik ağı). */
+(function() {
+  var el = document.getElementById('saleCountdown');
+  if (!el) return;
+  var end = new Date('2026-10-13T23:59:59-07:00');
+  var msLeft = end - new Date();
+  var daysLeft = Math.ceil(msLeft / 86400000);
+  if (daysLeft <= 0) {
+    el.style.display = 'none';
+    var badge = document.querySelector('.pricing-badge');
+    var was = document.querySelector('.pricing-was');
+    var save = document.querySelector('.pricing-save');
+    if (badge) badge.style.display = 'none';
+    if (was) was.style.display = 'none';
+    if (save) save.style.display = 'none';
+    return;
+  }
+  el.textContent = '⏳ ' + (daysLeft === 1 ? '1 day left' : daysLeft + ' days left') + ' at this price';
+})();
 
 /* Interactive Demo — scroll-driven (scrollytelling) */
 /* Adımlar SCROLL ile değişir: #idemo uzun bir track, içteki görsel sticky pinli.

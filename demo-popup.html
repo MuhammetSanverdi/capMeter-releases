@@ -375,47 +375,74 @@ html, body {
   }
 })();
 
+/* Monoton kübik Hermite (Fritsch-Carlson) — src/popup.html'deki smoothPath ile
+   birebir aynı algoritma. Klasik Catmull-Rom, düz bir seriden sonra keskin bir
+   yükseliş geldiğinde yükselmeden HEMEN ÖNCE hafifçe aşağı sarkıyordu (overshoot);
+   bu yöntem her segmentin teğetini yerel min/maks'ı aşmayacak şekilde kırpıyor. */
+function smoothPath(pts) {
+  var n = pts.length;
+  if (!n) return '';
+  if (n === 1) return 'M ' + pts[0].x + ' ' + pts[0].y;
+  var d = new Array(n - 1);
+  for (var i = 0; i < n - 1; i++) {
+    var dx = pts[i + 1].x - pts[i].x;
+    d[i] = dx !== 0 ? (pts[i + 1].y - pts[i].y) / dx : 0;
+  }
+  var m = new Array(n);
+  m[0] = d[0];
+  m[n - 1] = d[n - 2];
+  for (var i = 1; i < n - 1; i++) {
+    m[i] = (d[i - 1] === 0 || d[i] === 0 || (d[i - 1] < 0) !== (d[i] < 0)) ? 0 : (d[i - 1] + d[i]) / 2;
+  }
+  for (var i = 0; i < n - 1; i++) {
+    if (d[i] === 0) { m[i] = 0; m[i + 1] = 0; continue; }
+    var a = m[i] / d[i], b = m[i + 1] / d[i];
+    var s = a * a + b * b;
+    if (s > 9) {
+      var tau = 3 / Math.sqrt(s);
+      m[i] = tau * a * d[i];
+      m[i + 1] = tau * b * d[i];
+    }
+  }
+  var path = 'M ' + pts[0].x.toFixed(2) + ' ' + pts[0].y.toFixed(2);
+  for (var i = 0; i < n - 1; i++) {
+    var p1 = pts[i], p2 = pts[i + 1];
+    var dx2 = (p2.x - p1.x) / 3;
+    var cp1x = p1.x + dx2, cp1y = p1.y + m[i] * dx2;
+    var cp2x = p2.x - dx2, cp2y = p2.y - m[i + 1] * dx2;
+    path += ' C ' + cp1x.toFixed(2) + ' ' + cp1y.toFixed(2) + ', ' + cp2x.toFixed(2) + ' ' + cp2y.toFixed(2) + ', ' + p2.x.toFixed(2) + ' ' + p2.y.toFixed(2);
+  }
+  return path;
+}
+
 (function() {
   // same data as demo-history.html
-  const data = [61, 41, 69, 78, 67, 35, 65, 79, 68, 42, 61, 79, 72, 38];
-  const AVG = 0.61;
-  const svg = document.getElementById('miniChart');
-  const W = 268, H = 40, n = data.length;
-  const gap = 2;
-  const barW = Math.floor((W - gap*(n-1)) / n);
+  var data = [61, 41, 69, 78, 67, 35, 65, 79, 68, 42, 61, 79, 72, 38];
+  var svg = document.getElementById('miniChart');
+  var W = 268, H = 40, n = data.length;
+  var padX = 4, padY = 4;
+  var plotW = W - padX * 2, plotH = H - padY * 2;
+  var stepX = n > 1 ? plotW / (n - 1) : 0;
+  var mapY = function(pct) { return padY + plotH - (Math.max(0, Math.min(100, pct)) / 100) * plotH; };
+  var pts = data.map(function(v, i) { return { x: padX + i * stepX, y: mapY(v) }; });
+  var baseline = H - padY;
+  var avgPct = Math.round(data.reduce(function(s, v) { return s + v; }, 0) / n);
+  var GREEN = '#34C759';
 
-  var avgY = H - Math.round(AVG * (H - 2));
-  var dash = document.createElementNS('http://www.w3.org/2000/svg','line');
-  dash.setAttribute('x1', 0); dash.setAttribute('x2', W);
-  dash.setAttribute('y1', avgY); dash.setAttribute('y2', avgY);
-  dash.setAttribute('stroke', 'rgba(255,255,255,0.18)');
-  dash.setAttribute('stroke-width', '1');
-  dash.setAttribute('stroke-dasharray', '3 3');
-  svg.appendChild(dash);
+  var linePath = smoothPath(pts);
+  var areaPath = linePath + ' L ' + pts[n - 1].x.toFixed(2) + ' ' + baseline + ' L ' + pts[0].x.toFixed(2) + ' ' + baseline + ' Z';
 
-  function barColor(v) {
-    if (!v) return { fill: 'rgba(255,255,255,0.07)', opacity: 1 };
-    if (v < 30) return { fill: '#34C759', opacity: 0.25 };
-    if (v < 60) return { fill: '#34C759', opacity: 0.55 };
-    if (v < 80) return { fill: '#34C759', opacity: 0.80 };
-    return { fill: '#34C759', opacity: 1 };
-  }
-
-  data.forEach(function(v, i) {
-    var barH = v ? Math.max(2, Math.round(v / 100 * (H - 2))) : 2;
-    var x = i * (barW + gap);
-    var y = H - barH;
-    var isToday = i === n - 1;
-    var bc = barColor(v);
-    var opacity = isToday ? 1 : bc.opacity * 0.85;
-    var rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
-    rect.setAttribute('x', x); rect.setAttribute('y', y);
-    rect.setAttribute('width', barW); rect.setAttribute('height', barH);
-    rect.setAttribute('rx', '2');
-    rect.setAttribute('fill', v ? bc.fill : 'rgba(255,255,255,0.07)');
-    rect.setAttribute('opacity', v ? opacity : 1);
-    svg.appendChild(rect);
-  });
+  var html = '<defs>'
+    + '<linearGradient id="miniChartGradient" x1="0" y1="0" x2="0" y2="1">'
+    + '<stop offset="0%" stop-color="' + GREEN + '" stop-opacity="0.35"/>'
+    + '<stop offset="100%" stop-color="' + GREEN + '" stop-opacity="0"/>'
+    + '</linearGradient></defs>';
+  html += '<path d="' + areaPath + '" fill="url(#miniChartGradient)" stroke="none"/>';
+  html += '<line x1="' + padX + '" y1="' + mapY(avgPct) + '" x2="' + (W - padX) + '" y2="' + mapY(avgPct) + '" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="3,2"/>';
+  html += '<path d="' + linePath + '" fill="none" stroke="' + GREEN + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+  var todayPt = pts[n - 1];
+  html += '<circle cx="' + todayPt.x + '" cy="' + todayPt.y + '" r="2.5" fill="' + GREEN + '"/>';
+  svg.innerHTML = html;
 })();
 
 /* ?anim=1 — yalnız landing hero'sundan çağrıldığında halka kendini çizer. */

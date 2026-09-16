@@ -288,7 +288,7 @@ html, body {
 </div>
 <script>
 (function() {
-  /* barColor — exact copy from popup.html */
+  /* barColor — liste satırlarında (h-entry) hâlâ kullanılıyor, exact copy from popup.html */
   function barColor(pct) {
     if (!pct) return { fill: 'rgba(255,255,255,0.06)', opacity: 1 };
     if (pct < 30) return { fill: '#34C759', opacity: 0.25 };
@@ -301,6 +301,61 @@ html, body {
     if (!val) return { fill: 'rgba(255,255,255,0.06)', opacity: 1 };
     var ratio = maxVal > 0 ? Math.min(1, val / maxVal) : 0;
     return { fill: '#FFC400', opacity: 0.35 + ratio * 0.65 };
+  }
+
+  /* Monoton kübik Hermite (Fritsch-Carlson) — src/popup.html'deki smoothPath ile
+     birebir aynı algoritma (bkz. oradaki yorum: klasik Catmull-Rom düz→yükseliş
+     geçişinde hafifçe aşağı sarkıyordu, bu yöntem teğetleri yerel min/maks'ı
+     aşmayacak şekilde kırpıyor). */
+  function smoothPath(pts) {
+    var n = pts.length;
+    if (!n) return '';
+    if (n === 1) return 'M ' + pts[0].x + ' ' + pts[0].y;
+    var d = new Array(n - 1);
+    for (var i = 0; i < n - 1; i++) {
+      var dx = pts[i + 1].x - pts[i].x;
+      d[i] = dx !== 0 ? (pts[i + 1].y - pts[i].y) / dx : 0;
+    }
+    var m = new Array(n);
+    m[0] = d[0];
+    m[n - 1] = d[n - 2];
+    for (var i = 1; i < n - 1; i++) {
+      m[i] = (d[i - 1] === 0 || d[i] === 0 || (d[i - 1] < 0) !== (d[i] < 0)) ? 0 : (d[i - 1] + d[i]) / 2;
+    }
+    for (var i = 0; i < n - 1; i++) {
+      if (d[i] === 0) { m[i] = 0; m[i + 1] = 0; continue; }
+      var a = m[i] / d[i], b = m[i + 1] / d[i];
+      var s = a * a + b * b;
+      if (s > 9) {
+        var tau = 3 / Math.sqrt(s);
+        m[i] = tau * a * d[i];
+        m[i + 1] = tau * b * d[i];
+      }
+    }
+    var path = 'M ' + pts[0].x.toFixed(2) + ' ' + pts[0].y.toFixed(2);
+    for (var i = 0; i < n - 1; i++) {
+      var p1 = pts[i], p2 = pts[i + 1];
+      var dx2 = (p2.x - p1.x) / 3;
+      var cp1x = p1.x + dx2, cp1y = p1.y + m[i] * dx2;
+      var cp2x = p2.x - dx2, cp2y = p2.y - m[i + 1] * dx2;
+      path += ' C ' + cp1x.toFixed(2) + ' ' + cp1y.toFixed(2) + ', ' + cp2x.toFixed(2) + ' ' + cp2y.toFixed(2) + ', ' + p2.x.toFixed(2) + ' ' + p2.y.toFixed(2);
+    }
+    return path;
+  }
+
+  /* Her gün için ayrı stop — gradient komşu duraklar arasını doğal olarak
+     yumuşak karıştırdığı için renkler arası geçiş direkt değil smooth olur.
+     Extra Usage'ta kaydı olup değeri 0.00'a yuvarlanan bir gün (hiç kullanılmamış)
+     "veri yok" günü gibi gri sayılır — src/popup.html'deki isZeroEu ile aynı fikir. */
+  function buildGradientStops(daily, activeColor, grayColor) {
+    var n = daily.length;
+    if (!n) return '';
+    var html = '';
+    daily.forEach(function(d, i) {
+      var offset = n > 1 ? (i / (n - 1)) * 100 : 0;
+      html += '<stop offset="' + offset.toFixed(2) + '%" stop-color="' + (d.active ? activeColor : grayColor) + '"/>';
+    });
+    return html;
   }
 
   /* 14 günlük seri — src/main.js demoHistory() ile AYNI (ortalama 61, tepe 79,
@@ -339,31 +394,45 @@ html, body {
     });
     if (cs) cs.textContent = dayLabel(series.length - 1);
 
-    var n = data.length, gap = 2;
-    var barW = Math.max(1, Math.floor((W - gap * (n - 1)) / n));
-    var step = barW + gap;
-
+    var n = data.length;
     var active = data.filter(function (d) { return d.val > 0; });
     var avgVal = active.length ? (active.reduce(function (s, d) { return s + d.val; }, 0) / active.length) : 0;
     var maxVal = mode === 'eu'
       ? Math.max(5, Math.ceil(Math.max.apply(null, active.map(function (d) { return d.val; })) / 5) * 5) // roundUpTo5, popup.html ile aynı
       : 100;
-    var avgY = H - 2 - Math.round((avgVal / maxVal) * (H - 4));
 
-    /* Chart */
-    var html = '<line x1="0" y1="' + avgY + '" x2="' + W + '" y2="' + avgY + '" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="3,2"/>';
-    data.forEach(function (d, i) {
-      var x = i * step;
-      if (d.val > 0) {
-        var h = Math.max(3, Math.round((d.val / maxVal) * (H - 4)));
-        var barTop = H - 2 - h;
-        var bc = mode === 'eu' ? euBarColor(d.val, maxVal) : barColor(d.val);
-        var bOp = i === n - 1 ? 1 : bc.opacity * 0.85;
-        html += '<rect x="' + x + '" y="' + barTop + '" width="' + barW + '" height="' + h + '" fill="' + bc.fill + '" fill-opacity="' + bOp + '" rx="1.5"/>';
-      } else {
-        html += '<rect x="' + x + '" y="' + (H - 3) + '" width="' + barW + '" height="3" fill="rgba(255,255,255,0.06)" rx="1"/>';
-      }
-    });
+    /* Chart — bar yerine tek, yumuşak bir eğri (src/popup.html renderHistoryChart
+       ile aynı yaklaşım). Extra Usage'ta 0 olan gün "veri yok" gibi gri sayılır,
+       Usage %'de her gün zaten dolu olduğu için hep aktif renkte. */
+    var padX = 4, padTop = 4, padBottom = 4;
+    var plotW = W - padX * 2, plotH = H - padTop - padBottom;
+    var stepX = n > 1 ? plotW / (n - 1) : 0;
+    var mapY = function (v) { return padTop + plotH - (Math.max(0, Math.min(maxVal, v)) / maxVal) * plotH; };
+    var lineColor = mode === 'eu' ? '#FFC400' : '#34C759';
+    var GRAY = 'rgba(255,255,255,0.28)';
+    var daily = data.map(function (d) { return { val: d.val, active: mode === 'eu' ? d.val > 0 : true }; });
+    var pts = daily.map(function (d, i) { return { x: padX + i * stepX, y: mapY(d.val), val: d.val }; });
+    var avgY = mapY(avgVal);
+    var baseline = H - padBottom;
+    var todayColor = daily[n - 1].active ? lineColor : GRAY;
+    var stopsHtml = buildGradientStops(daily, lineColor, GRAY);
+
+    var linePath = smoothPath(pts);
+    var areaPath = linePath + ' L ' + pts[n - 1].x.toFixed(2) + ' ' + baseline + ' L ' + pts[0].x.toFixed(2) + ' ' + baseline + ' Z';
+
+    var html = '<defs>'
+      + '<linearGradient id="histLineGrad" x1="0" y1="0" x2="1" y2="0">' + stopsHtml + '</linearGradient>'
+      + '<linearGradient id="histAreaGrad" x1="0" y1="0" x2="0" y2="1">'
+      + '<stop offset="0%" stop-color="' + todayColor + '" stop-opacity="0.3"/>'
+      + '<stop offset="100%" stop-color="' + todayColor + '" stop-opacity="0"/>'
+      + '</linearGradient></defs>';
+    html += '<path d="' + areaPath + '" fill="url(#histAreaGrad)" stroke="none"/>';
+    if (active.length >= 2) {
+      html += '<line x1="' + padX + '" y1="' + avgY + '" x2="' + (W - padX) + '" y2="' + avgY + '" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="3,2"/>';
+    }
+    html += '<path d="' + linePath + '" fill="none" stroke="url(#histLineGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+    var todayPt = pts[n - 1];
+    html += '<circle cx="' + todayPt.x + '" cy="' + todayPt.y + '" r="2.5" fill="' + todayColor + '"/>';
     svg.innerHTML = html;
 
     /* List — reversed, same logic as popup.html */
