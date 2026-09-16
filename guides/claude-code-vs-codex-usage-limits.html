@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code vs Codex: Usage Limits Compared</title>
+<meta name="description" content="Both use a near-identical 5-hour-plus-weekly structure. The one difference that actually matters: what shares the pool with your coding usage, and what doesn't.">
+<link rel="canonical" href="https://capmeter.app/guides/claude-code-vs-codex-usage-limits">
+<link rel="icon" href="/icon.png" type="image/png">
+<meta name="theme-color" content="#09080e">
+<link rel="stylesheet" href="/page.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Claude Code vs Codex: Usage Limits Compared",
+  "url": "https://capmeter.app/guides/claude-code-vs-codex-usage-limits",
+  "datePublished": "2026-09-16",
+  "dateModified": "2026-09-16",
+  "author": { "@type": "Organization", "name": "CapMeter" },
+  "publisher": { "@type": "Organization", "name": "CapMeter", "logo": { "@type": "ImageObject", "url": "https://capmeter.app/icon.png" } },
+  "mainEntityOfPage": "https://capmeter.app/guides/claude-code-vs-codex-usage-limits"
+}
+</script>
+</head>
+<body>
+<div class="bg"></div>
+
+<script src="/glass-filter.js"></script>
+
+<nav>
+  <a class="nav-logo" href="/"><img src="/icon.png" alt=""><span>CapMeter</span></a>
+  <a class="nav-cta" href="/#pricing"><svg viewBox="0 0 814 1000" fill="currentColor" aria-hidden="true" style="height:15px;width:auto;display:block;margin-top:-2px;flex-shrink:0"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57.8-155.5-127.4c-58.3-81.3-105.9-207.6-105.9-329.1 0-193.9 126.1-296.6 250.1-296.6 65.9 0 120.9 43.3 162.2 43.3 39.5 0 101.1-45.9 176.3-45.9 28.5 0 130.9 2.6 198.3 99.2zm-234-181.5c31.1-36.9 53.1-88.1 53.1-139.3 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 83.6-55.1 135.5 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 103.5-30.4 135.5-71.3z"/></svg><span class="nav-cta-full">Get on the App Store</span><span class="nav-cta-short">Get</span></a>
+</nav>
+
+<main class="page glass">
+<h1>Claude Code vs Codex: Usage Limits Compared</h1>
+<p class="meta">Guide · updated 2026-09-16</p>
+
+<p>Two competing companies landed on almost the same design independently, which says something about the shape of the problem. The numbers differ, but the mechanism barely does — except for one difference that actually changes how you should use each tool.</p>
+
+<h2>The shared structure</h2>
+<p>Both meter usage in two layers: a short rolling window (5 hours) that catches an intense burst, and a longer weekly window as a backstop underneath it. Both offer tiered plans that multiply the base allowance — Claude's are literally named Max 5x and Max 20x, OpenAI's Pro 5x and Pro 20x, five and twenty times the entry tier on both sides. Neither publishes a fixed message count for any tier, because actual cost depends on model and context length, not message count. If you've learned one system, you've basically learned the other's shape too.</p>
+
+<h2>The difference that actually matters: what shares the pool</h2>
+<p>Claude Code draws from the <strong>same account-level limit</strong> as claude.ai chat and Cowork — a long conversation in the browser and a long agent run in the terminal compete for the same budget. Codex does not work this way: running Codex (CLI, IDE extension, or cloud agent) draws from a <a href="/guides/codex-rate-limits-explained">completely separate usage budget</a> from ordinary ChatGPT chat messages. Practically: heavy chatting on claude.ai can eat into the budget you meant to spend on Claude Code today. Heavy chatting on chatgpt.com never touches your Codex budget at all, and vice versa.</p>
+<p>Which direction is better depends on what you do. If you use Claude Code and rarely chat on claude.ai, the shared pool costs you nothing. If you do both heavily, it means one activity can quietly starve the other — something Codex's split design can't do to you.</p>
+
+<h2>Getting more when you run out</h2>
+<p>Codex has a real self-serve lever Claude doesn't: a <a href="/guides/can-you-reset-codex-usage-limit-early">banked reset</a>, a one-time reset OpenAI grants periodically that you can trigger yourself from Settings → Usage, no waiting required — if you have one sitting unused. Claude has no equivalent; <a href="/guides/can-you-reset-claude-usage-limit-early">nothing resets a Claude window early</a> except the clock. Both platforms otherwise offer the same two fallbacks: pay-as-you-go credits billed at API rates once your plan limit is spent, and running the CLI against your own API key to remove the plan-based cap entirely.</p>
+
+<h2>Reset timing: one is documented, one is disputed</h2>
+<p>OpenAI states plainly that a banked reset changes your weekly anchor the moment you redeem it — the mechanism is explicit. Anthropic's weekly reset is murkier: it's <a href="/guides/does-claude-weekly-limit-reset-every-7-days">supposed to land on a fixed day and time</a>, but independent measurements and bug reports describe it arriving early often enough that the exact mechanism isn't something Anthropic has confirmed publicly.</p>
+
+<h2>If you use both</h2>
+<p>Nobody publishes a single number that averages "Claude limit" and "Codex limit" into one useful figure, because they're not the same currency and don't reset in sync. Watching them as two separate account-level percentages — rather than trying to mentally merge them — is the only approach that doesn't lie to you. <a href="/">CapMeter</a> tracks both side by side in one popup for exactly that reason, including the asymmetry above: it shows whether your Claude chat usage is quietly cutting into your Claude Code budget, since Codex's split design means that question never comes up on the OpenAI side.</p>
+</main>
+
+<footer class="glass">
+  <p>Not affiliated with Anthropic or OpenAI. &copy; 2026 CapMeter</p>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/guides">Guides</a>
+    <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

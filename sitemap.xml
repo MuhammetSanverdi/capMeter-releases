@@ -20,6 +20,11 @@
   </url>
   <url><loc>https://capmeter.app/keychain</loc></url>
   <url>
+    <loc>https://capmeter.app/tools/claude-burn-rate-calculator</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://capmeter.app/guides</loc>
     <lastmod>2026-09-16</lastmod>
     <priority>0.7</priority>
@@ -47,6 +52,11 @@
   <url>
     <loc>https://capmeter.app/guides/capmeter-vs-sessionwatcher</loc>
     <lastmod>2026-09-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/guides/capmeter-vs-codexbar</loc>
+    <lastmod>2026-09-16</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
@@ -81,6 +91,11 @@
   </url>
   <url>
     <loc>https://capmeter.app/guides/claude-extra-usage-billing-explained</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/guides/claude-code-vs-codex-usage-limits</loc>
     <lastmod>2026-09-16</lastmod>
     <priority>0.6</priority>
   </url>
