@@ -35,4 +35,3 @@ User-agent: DuckDuckBot
 Allow: /
 
 Sitemap: https://capmeter.app/sitemap.xml
-LLM-Content: https://capmeter.app/llms.txt
