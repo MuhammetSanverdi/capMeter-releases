@@ -3,8 +3,14 @@ Allow: /
 
 # Cevap motorlarına açık: bu kategoride kullanıcılar doğrudan asistanlara
 # "Mac için Claude kullanım takip uygulaması öner" diye soruyor. Ürün
-# bilgisinin doğru aktarılması için llms.txt aşağıda referanslı.
+# bilgisinin doğru aktarılması için /llms.txt sabit konumda ayrıca duruyor.
 User-agent: GPTBot
+Allow: /
+
+# ChatGPT-User: GPTBot (eğitim) ve OAI-SearchBot'tan (arama) ayrı — biri
+# ChatGPT'ye bir link verip "buna bak" dediğinde OpenAI'ın sayfayı çektiği
+# user-agent bu.
+User-agent: ChatGPT-User
 Allow: /
 
 User-agent: ClaudeBot
