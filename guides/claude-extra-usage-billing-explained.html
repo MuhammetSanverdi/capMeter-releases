@@ -16,7 +16,7 @@
   "headline": "How Claude's Extra Usage Billing Works",
   "url": "https://capmeter.app/guides/claude-extra-usage-billing-explained",
   "datePublished": "2026-09-16",
-  "dateModified": "2026-09-16",
+  "dateModified": "2026-10-06",
   "author": { "@type": "Organization", "name": "CapMeter" },
   "publisher": { "@type": "Organization", "name": "CapMeter", "logo": { "@type": "ImageObject", "url": "https://capmeter.app/icon.png" } },
   "mainEntityOfPage": "https://capmeter.app/guides/claude-extra-usage-billing-explained"
@@ -35,7 +35,7 @@
 
 <main class="page glass">
 <h1>How Claude's Extra Usage Billing Works</h1>
-<p class="meta">Guide · updated 2026-09-16</p>
+<p class="meta">Guide · updated 2026-10-06</p>
 
 <p>You'll see this called two different things depending on where you look: Anthropic's own interface now calls it <strong>usage credits</strong>, but most people (and CapMeter's own popup) still say <strong>extra usage</strong>, since that's what it was called when it launched and what everyone searches for. Same feature either way.</p>
 
@@ -47,6 +47,9 @@
 
 <h2>What happens at zero</h2>
 <p>This part is more reassuring than people expect: if your usage credit balance runs out — or you never funded it in the first place — Claude simply stops letting you continue past your plan limit until the next reset. It does not overdraft, and it does not bill you for going over. The only way to spend more than you intended is to have funded the balance and left the cap high (or unlimited) while running something heavier than you were watching.</p>
+
+<h2>A different billing change you may have heard about</h2>
+<p>In May 2026 Anthropic announced that, starting June 15, usage through the Claude Agent SDK, <code>claude -p</code> (headless Claude Code), and third-party apps built on the SDK would stop drawing from your plan's usage limits and instead draw from a separate monthly credit pool ($20 on Pro, $100 on Max 5x, $200 on Max 20x, billed at API rates). On the day it was due to take effect, Anthropic paused it: <em>"We're pausing the changes to Claude Agent SDK usage described below. For now, nothing has changed."</em> As of this writing it's still paused, not cancelled, with no new date announced — Agent SDK, <code>claude -p</code>, and third-party app usage still draw from the same subscription limits as everything else. That's a separate billing track from the extra usage credits covered above, which have stayed live and unchanged the whole time.</p>
 
 <h2>Watching it while it's happening</h2>
 <p>The interface shows a running balance, but reading a dollar figure mid-session doesn't tell you whether it's about to become a problem — $8 spent could mean "nearly done" or "just getting started," depending on how fast it's moving. That's the specific gap <a href="/">CapMeter's extra usage tracking</a> is built around: a live $/hour rate next to the balance, so you can tell whether the current pace is fine or worth stopping to check, before the month's total surprises you.</p>
