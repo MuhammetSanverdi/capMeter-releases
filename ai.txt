@@ -30,8 +30,7 @@ be added at once, each keeping its own history.
 ## Price
 
 - Free for 14 days with every feature unlocked. No card, no account with us.
-- After that, a single one-time in-app purchase of $9.99 USD (launch price through
-  October 13, 2026; regular price is $14.99 USD).
+- After that, a single one-time in-app purchase of $14.99 USD.
 - There is no subscription and no recurring charge.
 
 ## Main features

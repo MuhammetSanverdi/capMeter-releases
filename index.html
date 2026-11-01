@@ -8,7 +8,7 @@
      tracker". "Monitor" title'dan çıkmadı, description'a taşındı — ikisi de
      kapsansın ama aynı etikette yığılmasın. 52 karakter, Google ~60'ta kesiyor. -->
 <title>CapMeter — Claude Usage Tracker for the Mac Menu Bar</title>
-<meta name="description" content="Monitor your Claude and Codex (ChatGPT) usage and quota from the macOS menu bar, and know when you'll hit the limit before you do. Free 14 days, then $9.99 once.">
+<meta name="description" content="Monitor your Claude and Codex (ChatGPT) usage and quota from the macOS menu bar, and know when you'll hit the limit before you do. Free 14 days, then $14.99 once.">
 <link rel="canonical" href="https://capmeter.app/">
 
 <!-- Yapısal veri — Google'a "bu bir macOS uygulaması, şu fiyata, şu kategoride"
@@ -23,19 +23,11 @@
        privacy policy'de geçiyor (politikadan kimin sorumlu olduğu için).
      (downloadUrl 2026-08-13'te yayın açılınca eklendi.)
 
-     price: 9.99 → App Store'da uygulama ücretsiz inip kilidi IAP açıyor, ama
+     price: 14.99 → App Store'da uygulama ücretsiz inip kilidi IAP açıyor, ama
      aramada arayanın bilmek istediği rakam tam kullanım bedeli. Deneme süresi
      description'da açıkça yazıyor, yani yanıltıcı değil.
-     ⚠️ GEÇİCİ LANSMAN FİYATI: App Store Connect'te 9.99'a düşürüldü, "Price Ending
-     on Oct 13, 2026" ile bitiyor (2026-09-15'te ayarlandı). O tarihte bu dosyadaki
-     TÜM $9.99 → $14.99 geri alınmalı (grep "9.99" site/ ile bulunur: index.html,
-     llms.txt, ai.txt) — priceValidUntil de dahil, aşağıdaki offer'da. Pricing
-     bölümündeki "🔥 Launch offer" rozeti, üstü çizili "$14.99", "Save 33%" chip'i
-     ve #saleCountdown satırı (+ altındaki script bloğu, "Launch-offer countdown"
-     yorumuyla başlıyor) o gün kaldırılmalı — script zaten süre dolunca bunları
-     otomatik gizliyor (bkz. #pricing, .pricing-was), ama kod da temizlenmeli.
-     FAQ'daki "$9.99 is a launch price through October 13, 2026..." cümlesi de
-     (HEM JSON-LD HEM görünür HTML'de, ikisi birebir aynı kalmalı) silinmeli. -->
+     (15 Eyl–13 Eki 2026 arası geçici $9.99 lansman fiyatı uygulandı ve kaldırıldı;
+     ASC fiyatıyla bu dosya birebir aynı kalmalı.) -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -92,10 +84,10 @@
       },
       "offers": {
         "@type": "Offer",
-        "price": "9.99",
+        "price": "14.99",
         "priceCurrency": "USD",
         "availability": "https://schema.org/InStock",
-        "priceValidUntil": "2026-10-13"
+        "priceValidUntil": "2027-12-31"
       },
       "featureList": [
         "Works with Claude and Codex (ChatGPT) accounts",
@@ -158,10 +150,10 @@
         },
         {
           "@type": "Question",
-          "name": "Why $9.99 when there are free ones?",
+          "name": "Why $14.99 when there are free ones?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "A free counter only helps while you're looking at it. CapMeter turns your burn rate into a time — \"limit in ~1h 18m\" — and then comes to find you: a macOS notification, or straight into Slack or Discord, while there's still room to do something about it. Around that: 90 days of history you can export, and a widget that floats above every window and Space — with a live $/hour rate if you're on pay-as-you-go credits. One payment, not a subscription — less than a month of Claude Pro, and free for the first 14 days. $9.99 is a launch price through October 13, 2026; it goes back up to $14.99 after that."
+            "text": "A free counter only helps while you're looking at it. CapMeter turns your burn rate into a time — \"limit in ~1h 18m\" — and then comes to find you: a macOS notification, or straight into Slack or Discord, while there's still room to do something about it. Around that: 90 days of history you can export, and a widget that floats above every window and Space — with a live $/hour rate if you're on pay-as-you-go credits. One payment, not a subscription — less than a month of Claude Pro, and free for the first 14 days."
           }
         },
         {
@@ -797,22 +789,6 @@
     color: var(--accent2); padding: 4px 12px; border-radius: 11px; margin-bottom: 22px;
     background: rgba(217,119,87,0.14); border: 1px solid rgba(217,119,87,0.25);
   }
-  /* .pricing-was / .pricing-save / .pricing-countdown — GEÇİCİ (bkz. dosya başındaki
-     ⚠️ yorum): lansman fiyatı bitince üçü de kaldırılıp .pricing-price tek başına
-     kalmalı. Countdown'un kendi script'i (aşağıda #saleCountdown) süre dolunca bu
-     üçünü zaten otomatik gizliyor — ama unutulup deploy edilirse diye kod da silinmeli. */
-  .pricing-price-row { display: flex; align-items: baseline; justify-content: center; gap: 10px; flex-wrap: wrap; }
-  .pricing-was { font-size: 22px; font-weight: 600; color: var(--faint); text-decoration: line-through; text-decoration-thickness: 1.5px; }
-  .pricing-save {
-    display: inline-flex; align-items: center; font-size: 12px; font-weight: 700; color: #fff;
-    background: var(--accent); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.01em;
-    align-self: center; white-space: nowrap;
-  }
-  .pricing-countdown {
-    font-size: 12.5px; font-weight: 600; color: var(--accent2);
-    display: flex; align-items: center; justify-content: center; gap: 5px;
-    margin: 2px 0 20px;
-  }
   .pricing-price { font-size: 56px; font-weight: 700; letter-spacing: -0.03em; color: var(--text); line-height: 1; }
   .pricing-price sup { font-size: 24px; vertical-align: super; }
   .pricing-period { font-size: 14px; color: var(--muted); margin: 8px 0 28px; }
@@ -1100,11 +1076,11 @@
   <!-- ✓ ile metin AYNI SATIR AKIŞINDA, aralarında hiç boşluk karakteri yok.
        </svg> ile "Free" ARASINA SATIR SONU KOYMA: HTML onu boşluğa çevirir ve ✓'nün
        kendi 8px'lik padding'ine ~4px daha eklenir, boşluk sabit olmaktan çıkar.
-       Aynı sebeple </a> ile virgül arasına da satır sonu koyma — "$9.99 once ,"
+       Aynı sebeple </a> ile virgül arasına da satır sonu koyma — "$14.99 once ,"
        diye çizilir.
-       "$9.99" ile "once" arasındaki SERT boşluk kasıtlı: dar ekranda satır tam
+       "$14.99" ile "once" arasındaki SERT boşluk kasıtlı: dar ekranda satır tam
        oradan kırılıyor ve fiyat ikiye bölünüyordu. -->
-  <p class="hero-trial"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Free 14-day trial — then <a href="#pricing">$9.99&nbsp;once</a>, no subscription</p>
+  <p class="hero-trial"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Free 14-day trial — then <a href="#pricing">$14.99&nbsp;once</a>, no subscription</p>
   <p class="hero-note">Opens in demo mode without an account — look around before signing in. · <a href="/privacy">Privacy Policy</a></p>
 
 <!-- SOSYAL KANIT YUVASI — lansmandan sonra doldur, şimdi DEĞİL.
@@ -1158,7 +1134,7 @@
   <div class="trust-item"><svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg><strong>Predicts &amp; warns</strong> — not just a number</div>
   <div class="trust-item"><svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><strong>Fully local</strong> — Keychain-encrypted, no servers</div>
   <div class="trust-item"><!-- Menü çubuğu ikonu: üstünde şerit olan pencere. Burada Apple logosu vardı ama diğer chip'ler kavram anlatırken (zap/lock/tag) o marka anlatıyordu, sistemin dışına düşüyordu; platform bilgisi zaten chip metninde. --><svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/></svg><strong>Menu bar app</strong> — macOS 12+, Apple Silicon</div>
-  <div class="trust-item"><svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg><strong>$9.99 once</strong> — no subscription</div>
+  <div class="trust-item"><svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg><strong>$14.99 once</strong> — no subscription</div>
 </div>
 
 <!-- Demo intro — labels the interactive demo so the fold's peek reads as intentional, not cut off.
@@ -1530,15 +1506,10 @@
   <h2 class="section-title">Try it free, then pay once</h2>
   <p class="section-sub">Download free and use every feature for 14 days. One in-app purchase unlocks it for good — no subscription.</p>
   <div class="pricing-wrap glass">
-    <div class="pricing-badge">🔥 Launch offer</div>
-    <div class="pricing-price-row">
-      <span class="pricing-was">$14.99</span>
-      <div class="pricing-price"><sup>$</sup>9.99</div>
-      <span class="pricing-save">Save 33%</span>
-    </div>
-    <p class="pricing-period">One-time unlock · after a free 14-day trial · No subscription</p>
-    <p class="pricing-countdown" id="saleCountdown"></p>
-    <p id="soonNote" data-live-text="macOS 12+ · Apple Silicon" style="font-size:12px;color:var(--faint);margin:-14px 0 24px;">Coming soon to the Mac App Store</p>
+    <div class="pricing-badge">One-time unlock</div>
+    <div class="pricing-price"><sup>$</sup>14.99</div>
+    <p class="pricing-period">After a free 14-day trial · No subscription</p>
+    <p id="soonNote" data-live-text="macOS 12+ · Apple Silicon" style="font-size:12px;color:var(--faint);margin:-18px 0 24px;">Coming soon to the Mac App Store</p>
     <ul class="pricing-features">
       <li>Burn-rate limit prediction</li>
       <li>Alerts to Slack, Discord & webhooks + quiet hours</li>
@@ -1589,10 +1560,10 @@
     </details>
 
     <details>
-      <summary>Why $9.99 when there are free ones?</summary>
+      <summary>Why $14.99 when there are free ones?</summary>
       <p>A free counter only helps while you're looking at it. CapMeter turns your burn rate into a time — <em>"limit in ~1h 18m"</em> — and then comes to find you: a macOS notification, or straight into Slack or Discord, while there's still room to do something about it.</p>
       <p>Around that: 90 days of history you can export, and a widget that floats above every window and Space — with a live $/hour rate if you're on pay-as-you-go credits.</p>
-      <p>One payment, not a subscription — less than a month of Claude Pro, and free for the first 14 days. $9.99 is a launch price through October 13, 2026; it goes back up to $14.99 after that.</p>
+      <p>One payment, not a subscription — less than a month of Claude Pro, and free for the first 14 days.</p>
     </details>
 
     <details>
@@ -1703,34 +1674,6 @@
 </footer>
 
 <script>
-
-/* Launch-offer countdown — GERÇEK bir tarihten hesaplanıyor (sabit "3 gün kaldı" gibi
-   uydurma bir sayı DEĞİL): ASC'deki "Price Ending on Oct 13, 2026" ile birebir aynı.
-   Sahte/sıfırlanan geri sayımlar (her sayfa yenilemesinde baştan başlayan) güven kırıyor
-   ve bazı bölgelerde (ör. FTC 16 CFR §233.1, Kaliforniya) yanıltıcı fiyatlandırma sayılıyor
-   — burada öyle bir risk yok çünkü tarih sabit ve gerçek, sayaç yalnız bugünün tarihine göre
-   kalan günü gösteriyor. Süre dolunca (days<=0) indirim UI'ının tamamını (rozet, üstü çizili
-   fiyat, save chip, bu satır) otomatik gizliyor — geri alma commit'i unutulsa bile site yanlış
-   fiyat iddiasıyla kalmasın diye (bkz. dosya başındaki ⚠️ yorum, orada da manuel silinmesi
-   gerektiği yazıyor; bu sadece görünürlük için ikinci bir güvenlik ağı). */
-(function() {
-  var el = document.getElementById('saleCountdown');
-  if (!el) return;
-  var end = new Date('2026-10-13T23:59:59-07:00');
-  var msLeft = end - new Date();
-  var daysLeft = Math.ceil(msLeft / 86400000);
-  if (daysLeft <= 0) {
-    el.style.display = 'none';
-    var badge = document.querySelector('.pricing-badge');
-    var was = document.querySelector('.pricing-was');
-    var save = document.querySelector('.pricing-save');
-    if (badge) badge.style.display = 'none';
-    if (was) was.style.display = 'none';
-    if (save) save.style.display = 'none';
-    return;
-  }
-  el.textContent = '⏳ ' + (daysLeft === 1 ? '1 day left' : daysLeft + ' days left') + ' at this price';
-})();
 
 /* Interactive Demo — scroll-driven (scrollytelling) */
 /* Adımlar SCROLL ile değişir: #idemo uzun bir track, içteki görsel sticky pinli.
