@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Check Your Claude Usage on Mac</title>
-<meta name="description" content="Three ways to check your Claude session and weekly usage on a Mac: the web app, the Claude Code CLI, and a menu bar app that shows it without asking.">
+<title>How to Check Your Claude and Claude Code Usage (3 Ways)</title>
+<meta name="description" content="Where to see how much of your Claude limit is left: the Usage page on claude.ai, the /usage command in Claude Code, and a menu bar app that shows it without asking.">
 <link rel="canonical" href="https://capmeter.app/guides/how-to-check-claude-usage">
 <link rel="icon" href="/icon.png" type="image/png">
 <meta name="theme-color" content="#09080e">
@@ -13,10 +13,10 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "How to Check Your Claude Usage on Mac",
+  "headline": "How to Check Your Claude and Claude Code Usage (3 Ways)",
   "url": "https://capmeter.app/guides/how-to-check-claude-usage",
   "datePublished": "2026-09-02",
-  "dateModified": "2026-09-02",
+  "dateModified": "2026-11-07",
   "author": { "@type": "Organization", "name": "CapMeter" },
   "publisher": { "@type": "Organization", "name": "CapMeter", "logo": { "@type": "ImageObject", "url": "https://capmeter.app/icon.png" } },
   "mainEntityOfPage": "https://capmeter.app/guides/how-to-check-claude-usage"
@@ -34,8 +34,8 @@
 </nav>
 
 <main class="page glass">
-<h1>How to Check Your Claude Usage on Mac</h1>
-<p class="meta">Guide · updated 2026-09-02</p>
+<h1>How to Check Your Claude and Claude Code Usage (3 Ways)</h1>
+<p class="meta">Guide · updated 2026-11-07</p>
 
 <p>Anthropic gives you two built-in ways to see how much of your Claude limit you've used, and there's a third option if you'd rather not have to remember to look. Here's all three.</p>
 
@@ -45,10 +45,15 @@
 <h2>In Claude Code</h2>
 <p>If you use the terminal, running <code>/usage</code> inside a Claude Code session prints your current session and weekly usage without leaving the CLI. Worth knowing: this is the same account-level limit as the browser. Anthropic's own docs state it directly — <em>"Both Pro and Max plans offer usage limits that are shared across Claude and Claude Code, meaning all activity in both tools counts against the same usage limits."</em> A long agent run in the terminal and a long chat in the browser draw from the same pool. (If you're not sure how much bigger that pool is on Max or Team versus Pro, <a href="/guides/claude-pro-vs-max-vs-team-usage-limits">here's the actual multiplier for each</a>.)</p>
 
+<p>Two related numbers live nearby and are easy to confuse. <code>/cost</code> shows the token cost of the current session, which only means something if you're on an API key rather than a Pro or Max subscription. And if you want history rather than the current window — how many tokens you used per day or per project — open-source tools like <a href="https://github.com/ryoppippi/ccusage" target="_blank" rel="noopener">ccusage</a> read the logs Claude Code keeps on your machine and summarize them. Neither replaces <code>/usage</code> for the question "how close am I to my limit right now."</p>
+
 <h2>Without having to ask</h2>
 <p>Both of the above have the same limitation: you only see the number when you go looking for it, and by the time you think to look you're often already close to the limit. The alternative is a menu bar app that keeps the number in view continuously and can warn you before you hit it rather than after — there's a <a href="/guides/best-claude-usage-trackers">comparison of the ones available for Mac</a>, most of which are free.</p>
 <p>The one I built, <a href="/">CapMeter</a>, takes this a step further than showing the percentage: it watches how fast you're burning through a session and turns that into a time estimate — "limit in ~1h 18m" — so you can plan around it instead of just watching a number climb. Want to do that math once by hand first? <a href="/tools/claude-burn-rate-calculator">Here's a free calculator that does it</a>.</p>
 <p>Split time between Claude and Codex? <a href="/guides/how-to-check-codex-usage">Here's the same three methods for Codex/ChatGPT usage</a> — CapMeter tracks both accounts side by side in the same popup.</p>
+<a class="box" href="https://apps.apple.com/us/app/capmeter-quota-for-claude/id6792936410" style="margin-top:32px">
+  <p><strong>Get CapMeter on the Mac App Store</strong> — your Claude and Codex usage in the menu bar, with a forecast of when you'll hit the limit. 14-day free trial, then $14.99 once.</p>
+</a>
 </main>
 
 <footer class="glass">
