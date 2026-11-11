@@ -5,7 +5,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://capmeter.app/</loc>
-    <lastmod>2026-08-23</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
@@ -31,7 +31,7 @@
   </url>
   <url>
     <loc>https://capmeter.app/guides</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -51,7 +51,7 @@
   </url>
   <url>
     <loc>https://capmeter.app/guides/codex-rate-limits-explained</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
@@ -81,27 +81,69 @@
   </url>
   <url>
     <loc>https://capmeter.app/guides/can-you-reset-claude-usage-limit-early</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://capmeter.app/guides/can-you-reset-codex-usage-limit-early</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://capmeter.app/guides/claude-pro-vs-max-vs-team-usage-limits</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://capmeter.app/guides/claude-extra-usage-billing-explained</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://capmeter.app/guides/claude-code-vs-codex-usage-limits</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.6</priority>
   </url>
+  <!-- news:start -->
+  <url>
+    <loc>https://capmeter.app/news</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/news/methodology</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/news/chatgpt-codex-shared-usage-allowance-december-2026</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/news/codex-pro-no-five-hour-limit</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/news/claude-max-20x-renamed-ultra</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/news/claude-code-weekly-limits-25-percent-higher</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/news/claude-limit-resets</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/news/claude-spend-limit-incident-october-7-2026</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <!-- news:end -->
 </urlset>

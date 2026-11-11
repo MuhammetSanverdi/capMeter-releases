@@ -79,6 +79,22 @@ Full index: https://capmeter.app/tools
   (no signup) that estimates when a Claude session will hit its usage limit,
   from the current percentage and minutes elapsed in the 5-hour window.
 
+<!-- news:start -->
+## News
+
+Dated, source-linked records of changes to Claude and Codex usage limits,
+plans and pricing. Each record separates the source's own date from our
+publication date. Index: https://capmeter.app/news · RSS: https://capmeter.app/news/feed.xml ·
+Method: https://capmeter.app/news/methodology
+
+- https://capmeter.app/news/chatgpt-codex-shared-usage-allowance-december-2026 (2026-11-11) — From December, Plus, Pro and Business plans will draw ChatGPT and Codex usage from one shared, token-based allowance. OpenAI has not given an exact date or size.
+- https://capmeter.app/news/codex-pro-no-five-hour-limit (2026-11-11) — OpenAI's Codex pricing documentation says Pro plans currently have no five-hour limit. Plus and Standard Business still have one, and weekly limits may apply.
+- https://capmeter.app/news/claude-max-20x-renamed-ultra (2026-11-11) — Max 20x has been renamed Ultra at the same $200 a month. Verified Ultra accounts have no five-hour limit and get 10 times Pro usage every week.
+- https://capmeter.app/news/claude-code-weekly-limits-25-percent-higher (2026-11-11) — Anthropic's 50% Claude Code weekly limit promotion ended on September 13, 2026. Since September 14, weekly limits are 25% above the pre-promotion level.
+- https://capmeter.app/news/claude-limit-resets (2026-11-11) — Eligible Claude plans occasionally get a one-time limit reset that refills the five-hour limit, the weekly limit or weekly Fable usage, used from Settings → Usage.
+- https://capmeter.app/news/claude-spend-limit-incident-october-7-2026 (2026-11-11) — Anthropic's status page recorded an issue that wrongly paused some organizations for reaching their spend limit, refusing requests across the API, Claude.ai and Claude Code.
+<!-- news:end -->
+
 ## Guides
 
 Full index: https://capmeter.app/guides
@@ -112,25 +128,27 @@ Full index: https://capmeter.app/guides
 - https://capmeter.app/guides/does-claude-weekly-limit-reset-every-7-days —
   weighs the conflicting user reports about early weekly resets against what
   Anthropic has actually documented, and what to do about it either way.
-- https://capmeter.app/guides/can-you-reset-claude-usage-limit-early — no
-  manual reset exists; what actually helps instead (timing the 5-hour window,
-  extra usage credits, upgrading or API billing) and what doesn't.
-- https://capmeter.app/guides/can-you-reset-codex-usage-limit-early — unlike
-  Claude, Codex has a real self-serve reset (a "banked reset") if you have
-  one; how banked resets work, buying credits, upgrading, and what OpenAI
+- https://capmeter.app/guides/can-you-reset-claude-usage-limit-early — only
+  if Anthropic has given you a one-time limit reset (Settings → Usage);
+  otherwise what actually helps (timing the 5-hour window, extra usage
+  credits, upgrading or API billing) and what doesn't.
+- https://capmeter.app/guides/can-you-reset-codex-usage-limit-early — Codex
+  has a real self-serve reset (a "banked reset") if you have one; how
+  banked resets work, buying credits, upgrading, and what OpenAI
   support won't do.
 - https://capmeter.app/guides/claude-pro-vs-max-vs-team-usage-limits — the
   actual difference between plans, quoted from Anthropic's own pricing page:
-  a multiplier, not a fixed message count, plus how Team seats are metered
-  individually rather than pooled.
+  a multiplier, not a fixed message count, across Pro, Max, Ultra (formerly
+  Max 20x) and Team seats, plus how Team seats are metered individually
+  rather than pooled.
 - https://capmeter.app/guides/claude-extra-usage-billing-explained — how the
   pay-as-you-go usage-credits balance works, the spend-cap setting that
   prevents a surprise charge, and what happens when it hits zero.
 - https://capmeter.app/guides/claude-code-vs-codex-usage-limits — a pure
   provider-to-provider comparison (not a CapMeter comparison): both use a
-  near-identical 5-hour-plus-weekly structure, but Claude Code shares its
-  pool with claude.ai chat while Codex's pool is fully separate from ChatGPT
-  chat — the one structural difference that actually matters.
+  near-identical 5-hour-plus-weekly structure; Claude Code shares its pool
+  with claude.ai chat, while Codex has used a budget separate from ChatGPT
+  chat until OpenAI merges them into one shared allowance in December 2026.
 
 ## Known limitation
 

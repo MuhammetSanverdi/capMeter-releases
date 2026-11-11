@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Claude Pro vs Max vs Team (Standard &amp; Premium Seats): Usage Limits</title>
-<meta name="description" content="Pro, Max 5x, Max 20x, and Team standard vs premium seats — the usage multiplier and price of each, quoted from Anthropic's pricing page, plus premium seat vs Max 5x.">
+<title>Claude Pro vs Max vs Ultra vs Team (Standard &amp; Premium Seats): Usage Limits</title>
+<meta name="description" content="Pro, Max, Ultra, and Team standard vs premium seats — the usage multiplier and price of each, quoted from Anthropic's pricing page, plus premium seat vs Max.">
 <link rel="canonical" href="https://capmeter.app/guides/claude-pro-vs-max-vs-team-usage-limits">
 <link rel="icon" href="/icon.png" type="image/png">
 <meta name="theme-color" content="#09080e">
@@ -13,10 +13,10 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Claude Pro vs Max vs Team (Standard & Premium Seats): Usage Limits",
+  "headline": "Claude Pro vs Max vs Ultra vs Team (Standard & Premium Seats): Usage Limits",
   "url": "https://capmeter.app/guides/claude-pro-vs-max-vs-team-usage-limits",
   "datePublished": "2026-09-16",
-  "dateModified": "2026-11-07",
+  "dateModified": "2026-11-11",
   "author": { "@type": "Organization", "name": "CapMeter" },
   "publisher": { "@type": "Organization", "name": "CapMeter", "logo": { "@type": "ImageObject", "url": "https://capmeter.app/icon.png" } },
   "mainEntityOfPage": "https://capmeter.app/guides/claude-pro-vs-max-vs-team-usage-limits"
@@ -34,8 +34,8 @@
 </nav>
 
 <main class="page glass">
-<h1>Claude Pro vs Max vs Team (Standard &amp; Premium Seats): Usage Limits</h1>
-<p class="meta">Guide · updated 2026-11-07</p>
+<h1>Claude Pro vs Max vs Ultra vs Team (Standard &amp; Premium Seats): Usage Limits</h1>
+<p class="meta">Guide · updated 2026-11-11</p>
 
 <p>Anthropic doesn't publish a fixed "X messages per day" number for any plan — usage cost depends on model, context length, and what you're doing, so a flat count would be misleading the moment it was written. What they do publish, and what actually explains the difference between plans, is a <strong>multiplier</strong>. Here's each one, quoted directly from <a href="https://claude.com/pricing" target="_blank" rel="noopener">Anthropic's own pricing page</a>.</p>
 
@@ -47,25 +47,25 @@
 <tr style="border-bottom:1px solid rgba(255,255,255,0.15)">
   <th style="text-align:left; padding:8px 12px 8px 0; opacity:0.55; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.03em">Plan</th>
   <th style="text-align:left; padding:8px 12px; opacity:0.55; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.03em">Price</th>
-  <th style="text-align:left; padding:8px 12px; opacity:0.55; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.03em">Usage per 5-hour session</th>
+  <th style="text-align:left; padding:8px 12px; opacity:0.55; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.03em">Usage (pricing page wording)</th>
   <th style="text-align:left; padding:8px 0; opacity:0.55; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.03em">Best for</th>
 </tr>
 <tr style="border-bottom:1px solid rgba(255,255,255,0.15)">
   <td style="padding:10px 12px 10px 0; font-weight:600">Pro</td>
   <td style="padding:10px 12px">$17/mo annual<br>$20/mo monthly</td>
-  <td style="padding:10px 12px">"5x more usage than Free"</td>
+  <td style="padding:10px 12px">"More usage than Free, every 5 hours and every week"</td>
   <td style="padding:10px 0">One person, regular daily use</td>
 </tr>
 <tr style="border-bottom:1px solid rgba(255,255,255,0.15)">
-  <td style="padding:10px 12px 10px 0; font-weight:600">Max 5x</td>
-  <td style="padding:10px 12px">From $100/mo</td>
-  <td style="padding:10px 12px">"5x more usage than Pro"</td>
+  <td style="padding:10px 12px 10px 0; font-weight:600">Max</td>
+  <td style="padding:10px 12px">$100/mo</td>
+  <td style="padding:10px 12px">"5x Pro usage every 5 hours and every week"</td>
   <td style="padding:10px 0">One person hitting Pro's limit most days</td>
 </tr>
 <tr style="border-bottom:1px solid rgba(255,255,255,0.15)">
-  <td style="padding:10px 12px 10px 0; font-weight:600">Max 20x</td>
+  <td style="padding:10px 12px 10px 0; font-weight:600">Ultra<br><span style="font-weight:400; opacity:0.6">formerly Max 20x</span></td>
   <td style="padding:10px 12px">$200/mo</td>
-  <td style="padding:10px 12px">"20x more usage than Pro"</td>
+  <td style="padding:10px 12px">"No 5-hour limit" (verified accounts)<br>"10x Pro usage every week"</td>
   <td style="padding:10px 0">One person running Claude Code most of the day</td>
 </tr>
 <tr style="border-bottom:1px solid rgba(255,255,255,0.15)">
@@ -83,18 +83,21 @@
 </table>
 </div>
 
+<p>Two recent changes are reflected above. Anthropic renamed Max 20x to <a href="/news/claude-max-20x-renamed-ultra">Ultra</a> at the same price, and the pricing page now lists Max simply as "Max" at $100 a month. Max and Ultra are billed monthly only.</p>
+
 <h2>What's actually different, mechanically</h2>
-<p>Every paid plan uses the same two-window structure: a session limit that resets every 5 hours, and a weekly limit layered on top of it. Upgrading a plan doesn't change that structure — it only widens both windows by the multiplier above. Claude.ai chat, Claude Code, and Cowork all draw from the same pool on every plan; there's no separate "Code quota" that a higher plan adds. (Codex works differently here — <a href="/guides/claude-code-vs-codex-usage-limits">its coding usage is a fully separate budget from ChatGPT chat</a>, not a shared one.)</p>
+<p>Pro and Max use the same two-window structure: a session limit that resets every 5 hours, and a weekly limit layered on top of it. Ultra is the exception: verified Ultra accounts have no 5-hour limit, only the weekly one. Fable also has its own rules: on Pro it is paid with usage credits, while Max and Ultra include it up to half of the weekly limit.</p>
+<p>Claude.ai chat, Claude Code, and Cowork draw from your account's limits on every plan — Anthropic describes usage limits as shared across your Claude account. Claude Code's weekly limit has had its own adjustment, though: since September 14, 2026 it is <a href="/news/claude-code-weekly-limits-25-percent-higher">25% higher than before Anthropic's summer promotion</a>. (Codex has used a budget separate from ChatGPT chat, but <a href="/news/chatgpt-codex-shared-usage-allowance-december-2026">OpenAI is merging them in December</a> — see <a href="/guides/claude-code-vs-codex-usage-limits">Claude Code vs Codex</a>.)</p>
 
 <h2>Team seats: individual limits, not a shared pool</h2>
 <p>The one place people usually guess wrong: a Team workspace does <strong>not</strong> pool usage across members. Each seat has its own limit, sized by whether it's a standard or premium seat, and one person maxing out their session doesn't take capacity away from anyone else on the team. What <em>is</em> shared within a single seat is the same as everywhere else — chat, Claude Code, and Cowork on that one account all draw from that one seat's allowance.</p>
 
-<h2>Team premium seat vs Max 5x</h2>
-<p>This is the comparison people search for most, because the prices line up: a premium Team seat is $100/seat/month billed annually ($125 monthly), and Max 5x starts at $100/month. They are not the same allowance, though, and Anthropic doesn't publish a number that lets you equate them. Max 5x is defined against Pro ("5x more usage than Pro"); a premium seat is defined against a <em>standard Team seat</em> ("5x more usage than standard seats"), and the standard seat itself is only described as "more usage than Pro," with no exact multiplier. So a premium seat is at least as large as Max 5x, but how much larger isn't stated anywhere official.</p>
-<p>In practice the deciding factor is rarely the multiplier. A premium seat only exists inside a Team workspace, which needs at least two seats and brings shared billing and admin controls. If you're one person, Max 5x gets you the same tier of usage without paying for a second seat. If you're already on Team, a premium seat is how you give your heaviest users more room without moving everyone up.</p>
+<h2>Team premium seat vs Max</h2>
+<p>This is the comparison people search for most, because the prices line up: a premium Team seat is $100/seat/month billed annually ($125 monthly), and Max is $100/month. They are not the same allowance, though, and Anthropic doesn't publish a number that lets you equate them. Max is defined against Pro ("5x Pro usage every 5 hours and every week"); a premium seat is defined against a <em>standard Team seat</em> ("5x more usage than standard seats"), and the standard seat itself is only described as "more usage than Pro," with no exact multiplier. So a premium seat is at least as large as Max, but how much larger isn't stated anywhere official.</p>
+<p>In practice the deciding factor is rarely the multiplier. A premium seat only exists inside a Team workspace, which needs at least two seats and brings shared billing and admin controls. If you're one person, Max gets you the same tier of usage without paying for a second seat. If you're already on Team, a premium seat is how you give your heaviest users more room without moving everyone up.</p>
 
 <h2>Which one to actually pick</h2>
-<p>Pro is enough for occasional-to-regular use where you're not running Claude Code continuously. Max exists specifically for the person who hits Pro's ceiling repeatedly — 5x if that happens a few times a week, 20x if it happens most days you work. Team only makes sense once billing needs to be centralized across more than one person; picking it purely for "more usage" for a single user costs more than Max for less capacity, since Team's per-seat multiplier applies to Pro, not to Max's tiers.</p>
+<p>Pro is enough for occasional-to-regular use where you're not running Claude Code continuously. Max exists specifically for the person who hits Pro's ceiling most days. Ultra is for the person running Claude Code most of the day, or whose long agent runs keep stopping at the 5-hour window rather than the weekly one. Team only makes sense once billing needs to be centralized across more than one person; picking it purely for "more usage" for a single user costs more than Max for less capacity, since Team's per-seat multiplier applies to Pro, not to Max's tiers.</p>
 <p>Whichever plan you're on, the plan itself only sets where the wall is — it doesn't tell you how fast you're approaching it. <a href="/">CapMeter</a> reads whichever plan is active on your account and turns the burn rate into a time estimate, so upgrading isn't the only lever when a session's about to run out.</p>
 <a class="box" href="https://apps.apple.com/us/app/capmeter-quota-for-claude/id6792936410" style="margin-top:32px">
   <p><strong>Get CapMeter on the Mac App Store</strong> — your Claude and Codex usage in the menu bar, with a forecast of when you'll hit the limit. 14-day free trial, then $14.99 once.</p>
@@ -105,6 +108,7 @@
   <p>Not affiliated with Anthropic. &copy; 2026 CapMeter</p>
   <div class="footer-links">
     <a href="/">Home</a>
+    <a href="/news">News</a>
     <a href="/guides">Guides</a>
     <a href="/tools">Tools</a>
     <a href="/privacy">Privacy</a>

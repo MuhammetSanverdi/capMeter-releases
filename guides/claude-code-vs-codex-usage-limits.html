@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Claude Code vs Codex: Usage Limits Compared</title>
-<meta name="description" content="Both use a near-identical 5-hour-plus-weekly structure. The one difference that actually matters: what shares the pool with your coding usage, and what doesn't.">
+<meta name="description" content="Both use a near-identical 5-hour-plus-weekly structure. The difference that matters is what shares the pool with your coding usage — and OpenAI is changing that in December.">
 <link rel="canonical" href="https://capmeter.app/guides/claude-code-vs-codex-usage-limits">
 <link rel="icon" href="/icon.png" type="image/png">
 <meta name="theme-color" content="#09080e">
@@ -16,7 +16,7 @@
   "headline": "Claude Code vs Codex: Usage Limits Compared",
   "url": "https://capmeter.app/guides/claude-code-vs-codex-usage-limits",
   "datePublished": "2026-09-16",
-  "dateModified": "2026-09-16",
+  "dateModified": "2026-11-11",
   "author": { "@type": "Organization", "name": "CapMeter" },
   "publisher": { "@type": "Organization", "name": "CapMeter", "logo": { "@type": "ImageObject", "url": "https://capmeter.app/icon.png" } },
   "mainEntityOfPage": "https://capmeter.app/guides/claude-code-vs-codex-usage-limits"
@@ -35,25 +35,27 @@
 
 <main class="page glass">
 <h1>Claude Code vs Codex: Usage Limits Compared</h1>
-<p class="meta">Guide · updated 2026-09-16</p>
+<p class="meta">Guide · updated 2026-11-11</p>
 
-<p>Two competing companies landed on almost the same design independently, which says something about the shape of the problem. The numbers differ, but the mechanism barely does — except for one difference that actually changes how you should use each tool.</p>
+<p>Two competing companies landed on almost the same design independently, which says something about the shape of the problem. The numbers differ, but the mechanism barely does — except for one difference that changes how you should use each tool, and that difference is shrinking.</p>
 
 <h2>The shared structure</h2>
-<p>Both meter usage in two layers: a short rolling window (5 hours) that catches an intense burst, and a longer weekly window as a backstop underneath it. Both offer tiered plans that multiply the base allowance — Claude's are literally named Max 5x and Max 20x, OpenAI's Pro 5x and Pro 20x, five and twenty times the entry tier on both sides. Neither publishes a fixed message count for any tier, because actual cost depends on model and context length, not message count. If you've learned one system, you've basically learned the other's shape too.</p>
+<p>Both meter usage in two layers: a short rolling window (5 hours) that catches an intense burst, and a longer weekly window as a backstop underneath it. Both sell larger tiers above the entry plan. On <a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude's pricing page</a>, Max gives 5x Pro usage and Ultra gives 10x Pro usage every week. OpenAI's ChatGPT Pro comes in three tiers at $100, $200 and $500 a month. Neither publishes a fixed message count, because actual cost depends on model and context length, not message count. If you've learned one system, you've basically learned the other's shape too.</p>
+<p>The two have converged at the top end as well: the largest tiers drop the 5-hour window. <a href="/news/claude-max-20x-renamed-ultra">Claude Ultra has no 5-hour limit</a> for verified accounts, and OpenAI's Codex documentation says <a href="/news/codex-pro-no-five-hour-limit">Pro plans currently have none</a>. On those plans the weekly limit is the one that stops you.</p>
 
-<h2>The difference that actually matters: what shares the pool</h2>
-<p>Claude Code draws from the <strong>same account-level limit</strong> as claude.ai chat and Cowork — a long conversation in the browser and a long agent run in the terminal compete for the same budget. Codex does not work this way: running Codex (CLI, IDE extension, or cloud agent) draws from a <a href="/guides/codex-rate-limits-explained">completely separate usage budget</a> from ordinary ChatGPT chat messages. Practically: heavy chatting on claude.ai can eat into the budget you meant to spend on Claude Code today. Heavy chatting on chatgpt.com never touches your Codex budget at all, and vice versa.</p>
-<p>Which direction is better depends on what you do. If you use Claude Code and rarely chat on claude.ai, the shared pool costs you nothing. If you do both heavily, it means one activity can quietly starve the other — something Codex's split design can't do to you.</p>
+<h2>The difference that matters: what shares the pool</h2>
+<p>Claude Code draws from the <strong>same account-level limits</strong> as claude.ai chat and Cowork — a long conversation in the browser and a long agent run in the terminal compete for the same budget. (Anthropic has adjusted Claude Code's weekly limit on its own, though: since September 14, 2026 it is <a href="/news/claude-code-weekly-limits-25-percent-higher">25% higher than before its summer promotion</a>.)</p>
+<p>Codex has worked differently. OpenAI's documentation says Codex shares its usage with ChatGPT Work, not with ordinary ChatGPT chat, so heavy chatting on chatgpt.com has not touched your Codex budget.</p>
+<p><strong>That changes in December.</strong> OpenAI says that from December, the allowance on Plus, Pro and Business plans will be <a href="/news/chatgpt-codex-shared-usage-allowance-december-2026">shared across ChatGPT and Codex</a> and measured in tokens, with Instant chat as the stated exception. After that, both companies work the same way in practice: heavy use of one product can leave less room for the other. If you do both heavily, watch both — on either side.</p>
 
 <h2>Getting more when you run out</h2>
-<p>Codex has a real self-serve lever Claude doesn't: a <a href="/guides/can-you-reset-codex-usage-limit-early">banked reset</a>, a one-time reset OpenAI grants periodically that you can trigger yourself from Settings → Usage, no waiting required — if you have one sitting unused. Claude has no equivalent; <a href="/guides/can-you-reset-claude-usage-limit-early">nothing resets a Claude window early</a> except the clock. Both platforms otherwise offer the same two fallbacks: pay-as-you-go credits billed at API rates once your plan limit is spent, and running the CLI against your own API key to remove the plan-based cap entirely.</p>
+<p>Both now have a one-time, self-serve reset — if you have one waiting. Codex calls it a <a href="/guides/can-you-reset-codex-usage-limit-early">banked reset</a>, which OpenAI grants periodically and you trigger yourself from Settings → Usage. Claude's version is a <a href="/news/claude-limit-resets">limit reset</a>, which Anthropic gives "occasionally" to eligible plans; it refills your five-hour or weekly limit and is used from Settings → Usage in the web, desktop or mobile app, not from Claude Code in the terminal. Without one, <a href="/guides/can-you-reset-claude-usage-limit-early">nothing resets a Claude window early</a> except the clock. Both platforms otherwise offer the same two fallbacks: pay-as-you-go credits billed at API rates once your plan limit is spent, and running the CLI against your own API key to remove the plan-based cap entirely.</p>
 
 <h2>Reset timing: one is documented, one is disputed</h2>
 <p>OpenAI states plainly that a banked reset changes your weekly anchor the moment you redeem it — the mechanism is explicit. Anthropic's weekly reset is murkier: it's <a href="/guides/does-claude-weekly-limit-reset-every-7-days">supposed to land on a fixed day and time</a>, but independent measurements and bug reports describe it arriving early often enough that the exact mechanism isn't something Anthropic has confirmed publicly.</p>
 
 <h2>If you use both</h2>
-<p>Nobody publishes a single number that averages "Claude limit" and "Codex limit" into one useful figure, because they're not the same currency and don't reset in sync. Watching them as two separate account-level percentages — rather than trying to mentally merge them — is the only approach that doesn't lie to you. <a href="/">CapMeter</a> tracks both side by side in one popup for exactly that reason, including the asymmetry above: it shows whether your Claude chat usage is quietly cutting into your Claude Code budget, since Codex's split design means that question never comes up on the OpenAI side.</p>
+<p>Nobody publishes a single number that averages "Claude limit" and "Codex limit" into one useful figure, because they're not the same currency and don't reset in sync. Watching them as two separate account-level percentages — rather than trying to mentally merge them — is the only approach that doesn't lie to you. <a href="/">CapMeter</a> tracks both side by side in one popup for exactly that reason, including the shared-pool effect above: it shows when chat usage is quietly cutting into the budget you meant for coding — on Claude today, and on ChatGPT once OpenAI's shared allowance takes effect.</p>
 <a class="box" href="https://apps.apple.com/us/app/capmeter-quota-for-claude/id6792936410" style="margin-top:32px">
   <p><strong>Get CapMeter on the Mac App Store</strong> — your Claude and Codex usage in the menu bar, with a forecast of when you'll hit the limit. 14-day free trial, then $14.99 once.</p>
 </a>
@@ -63,6 +65,7 @@
   <p>Not affiliated with Anthropic or OpenAI. &copy; 2026 CapMeter</p>
   <div class="footer-links">
     <a href="/">Home</a>
+    <a href="/news">News</a>
     <a href="/guides">Guides</a>
     <a href="/tools">Tools</a>
     <a href="/privacy">Privacy</a>

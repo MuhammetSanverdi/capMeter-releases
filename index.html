@@ -889,6 +889,8 @@
     /* Dar ekranda yan boşluk 48 → 32px. 48'de içerik kutusu 286px kalıyor ve telif
        satırı sarıyordu; alt sayfalar (page.css) zaten 32px kullanıyor, üçü eşitlendi. */
     footer { flex-direction: column; align-items: center; text-align: center; width: calc(100% - 32px); }
+    /* News linki eklenince altı link 390px'e sığmadı, Support sağdan taşıyordu. */
+    .footer-links { flex-wrap: wrap; justify-content: center; gap: 10px 18px; }
     .preview-top { flex-direction: column; text-align: center; }
     .preview-hero-txt { text-align: center; }
     /* Trust pills are nowrap by default → a single badge is wider than a phone and
@@ -1663,6 +1665,7 @@
     <!-- Guides: SessionWatcher (en yakın rakip) da üst nav'a değil footer'a koyuyor —
          üst nav dönüşüm odaklı kalsın diye burada. Ana sayfadan guide'lara giden tek
          iç link; öncesinde guide'lar yalnız sitemap/birbirlerine linkle bulunabiliyordu. -->
+    <a href="/news">News</a>
     <a href="/guides">Guides</a>
     <a href="/tools">Tools</a>
     <a href="/privacy">Privacy</a>

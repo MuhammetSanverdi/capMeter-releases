@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Codex Usage Limits Explained: 5-Hour and Weekly Windows</title>
-<meta name="description" content="How Codex usage limits actually work: the 5-hour and weekly windows, how they differ from ChatGPT chat limits, and why the exact numbers keep changing.">
+<meta name="description" content="How Codex usage limits work: the 5-hour and weekly windows, how they relate to ChatGPT limits (and what changes in December), and why the exact numbers keep changing.">
 <link rel="canonical" href="https://capmeter.app/guides/codex-rate-limits-explained">
 <link rel="icon" href="/icon.png" type="image/png">
 <meta name="theme-color" content="#09080e">
@@ -16,7 +16,7 @@
   "headline": "Codex Usage Limits Explained: 5-Hour and Weekly Windows",
   "url": "https://capmeter.app/guides/codex-rate-limits-explained",
   "datePublished": "2026-09-15",
-  "dateModified": "2026-09-15",
+  "dateModified": "2026-11-11",
   "author": { "@type": "Organization", "name": "CapMeter" },
   "publisher": { "@type": "Organization", "name": "CapMeter", "logo": { "@type": "ImageObject", "url": "https://capmeter.app/icon.png" } },
   "mainEntityOfPage": "https://capmeter.app/guides/codex-rate-limits-explained"
@@ -35,15 +35,18 @@
 
 <main class="page glass">
 <h1>Codex Usage Limits Explained: 5-Hour and Weekly Windows</h1>
-<p class="meta">Guide · updated 2026-09-15</p>
+<p class="meta">Guide · updated 2026-11-11</p>
 
-<p>Two questions come up constantly about Codex limits: why did I get cut off when the chat sidebar said I still had messages left, and why does the number on my phone not match the number in the CLI. Both come down to the same misunderstanding — Codex usage and ChatGPT chat usage are not the same pool.</p>
+<p>Two questions come up constantly about Codex limits: why did I get cut off when the chat sidebar said I still had messages left, and why does the number on my phone not match the number in the CLI. Both come down to the same thing — Codex usage and ChatGPT chat usage have not been the same pool. That is about to change, so the details below are dated.</p>
 
-<h2>Two separate limit systems</h2>
-<p>Sending messages to ChatGPT in a normal conversation draws from a per-model message allowance. Running Codex — in the CLI, in the IDE extension, or through the cloud agent — draws from a completely separate usage budget, measured in two rolling windows: a short one (around five hours) and a longer one (about a week). Hitting zero on one doesn't touch the other. If chat still works but Codex refuses to run a task, or the reverse, that's expected, not a bug. Worth knowing if you also use Claude: <a href="/guides/claude-code-vs-codex-usage-limits">Claude Code works the opposite way</a> — it shares its limit with claude.ai chat instead of splitting it.</p>
+<h2>Today: two separate limit systems</h2>
+<p>Sending messages to ChatGPT in a normal conversation draws from a per-model message allowance. Running Codex — in the CLI, in the IDE extension, or through the cloud agent — draws from a separate usage budget, which OpenAI's documentation says is shared with ChatGPT Work. It is measured in two rolling windows: a short one (around five hours) and a longer one (about a week). Hitting zero on one system doesn't touch the other, so if chat still works but Codex refuses to run a task, or the reverse, that's expected, not a bug.</p>
+
+<h2>From December: one shared allowance</h2>
+<p>OpenAI says that starting in December, the usage allowance on Plus, Pro and Business plans will be <a href="/news/chatgpt-codex-shared-usage-allowance-december-2026">shared across ChatGPT and Codex</a> and measured in tokens. Instant chat will not count against it. It hasn't given an exact date or the size of the shared allowance. Once it takes effect, heavy ChatGPT use on advanced models can leave less room for Codex, and the other way round — the way <a href="/guides/claude-code-vs-codex-usage-limits">Claude Code already shares its limit</a> with claude.ai chat.</p>
 
 <h2>Why the windows reset differently</h2>
-<p>The 5-hour window is the one you'll hit first during an active work session — it's what stops a long agent run partway through. The weekly window is the backstop: even with the 5-hour window fully available, you can still be capped for the week. Both show a reset time, and both are visible from the same two places: the CLI's <code>/usage</code> command, and Settings → Usage on chatgpt.com.</p>
+<p>On Plus and Business, the 5-hour window is the one you'll hit first during an active work session — it's what stops a long agent run partway through. (OpenAI's Codex documentation says <a href="/news/codex-pro-no-five-hour-limit">Pro plans currently have no five-hour limit</a>.) The weekly window is the backstop: even with the 5-hour window fully available, you can still be capped for the week. Both show a reset time, and both are visible from the same two places: the CLI's <code>/usage</code> command, and Settings → Usage on chatgpt.com.</p>
 
 <h2>The allowance depends on your plan, and it moves</h2>
 <p>Free, Plus, Pro, Business and Enterprise accounts get different multiples of the base allowance, and OpenAI has adjusted the specific numbers repeatedly over 2026 — pausing the 5-hour limit outright for a period, resetting weekly limits multiple times after fixing consumption bugs, and adding a "banked reset" system that lets you save an unused reset and spend it later instead of losing it. Any specific number written down here would likely be wrong within a few weeks. The reset time and remaining percentage on your own account, checked at <a href="https://chatgpt.com" target="_blank" rel="noopener">chatgpt.com</a> or via <code>/usage</code>, is the only number worth trusting.</p>
@@ -59,6 +62,7 @@
   <p>Not affiliated with OpenAI. &copy; 2026 CapMeter</p>
   <div class="footer-links">
     <a href="/">Home</a>
+    <a href="/news">News</a>
     <a href="/guides">Guides</a>
     <a href="/tools">Tools</a>
     <a href="/privacy">Privacy</a>
