@@ -880,6 +880,9 @@
   .footer-links { display: flex; gap: 22px; }
   .footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; }
   .footer-links a:hover { color: var(--text); }
+  .footer-badges { flex-basis: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; opacity: .8; }
+  .footer-badges a { display: inline-flex; }
+  .footer-badges img { height: 22px; width: auto; display: block; }
 
   @media (max-width: 600px) {
     .hero { padding-top: 130px; }
@@ -1666,10 +1669,17 @@
     <!-- Destek sayfası: ASC'deki Support URL de buraya bakıyor. Kanal ya da adres
          değişirse yalnız support.html güncellenir, App Store metadata'sına dokunulmaz. -->
     <a href="/support">Support</a>
-    <!-- Buildlist rozeti — ücretsiz dizin kaydının koşulu (nofollow link karşılığı).
-         Yükseklik onların embed kodundaki 40px değil: metin linkleriyle aynı satırda
-         göze battırmadan durması için küçültüldü. -->
-    <a href="https://buildlist.io/?ref=8345c66c-b6ab-49f0-8665-96bbc458aac8" target="_blank" rel="noopener" style="display:inline-flex;align-items:center"><img src="https://buildlist.io/badge.svg" alt="Featured on Buildlist" style="height:20px;width:auto;display:block"></a>
+  </div>
+  <!-- Dizin rozetleri — üçü de ücretsiz kaydın koşulu (karşılık link). Link satırından
+       ayrı satırda: link satırı nowrap, üç rozet oraya girince mobilde taşıyordu.
+       Twelve Tools ve Fazier'in dofollow'u bu linkin varlığına bağlı — nofollow EKLEME,
+       kaldırırsan listelemeleri düşebilir. Bilinçli olarak en fazla bu kadar rozet:
+       fazlası footer'ı link takası görüntüsüne sokar (bkz. docs/backlink-directories.md).
+       Yükseklik embed kodlarındaki 40–54px değil, 20px: göze battırmasın diye. -->
+  <div class="footer-badges">
+    <a href="https://buildlist.io/?ref=8345c66c-b6ab-49f0-8665-96bbc458aac8" target="_blank" rel="noopener"><img src="https://buildlist.io/badge.svg" alt="Featured on Buildlist"></a>
+    <a href="https://twelve.tools" target="_blank" rel="noopener"><img src="https://twelve.tools/badge0-dark.svg" alt="Featured on Twelve Tools" width="200" height="54"></a>
+    <a href="https://fazier.com" target="_blank" rel="noopener"><img src="https://fazier.com/api/v1/public/badges/launch_badges.svg?badge_type=featured&amp;theme=dark" alt="Featured on Fazier" width="182" height="43"></a>
   </div>
 </footer>
 
