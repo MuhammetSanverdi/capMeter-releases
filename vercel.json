@@ -1,4 +1,26 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/news/claude-code-weekly-limits-25-percent-higher",
+      "destination": "/news/claude-code-summer-boost-half-kept",
+      "permanent": true
+    },
+    {
+      "source": "/news/chatgpt-codex-shared-usage-allowance-december-2026",
+      "destination": "/news/codex-chatgpt-one-token-budget-plus-pro-business",
+      "permanent": true
+    },
+    {
+      "source": "/news/claude-max-20x-renamed-ultra",
+      "destination": "/news/claude-ultra-weekly-caps-no-five-hour-window",
+      "permanent": true
+    },
+    {
+      "source": "/news/claude-spend-limit-incident-october-7-2026",
+      "destination": "/news/claude-organizations-paused-by-mistake-2026-10-07",
+      "permanent": true
+    }
+  ]
 }
