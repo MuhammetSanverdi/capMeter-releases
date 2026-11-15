@@ -6,7 +6,15 @@
   <atom:link href="https://capmeter.app/news/feed.xml" rel="self" type="application/rss+xml"/>
   <description>Dated, source-linked records of changes to Claude and Codex usage limits, plans and pricing.</description>
   <language>en-us</language>
-  <lastBuildDate>Wed, 11 Nov 2026 12:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Sun, 15 Nov 2026 12:00:00 +0000</lastBuildDate>
+  <item>
+    <title>Claude Fable 5.2 launch: a free Fable week for Pro and up to three Fable resets for Max and Ultra</title>
+    <link>https://capmeter.app/news/claude-fable-5-2-launch-offers</link>
+    <guid isPermaLink="true">https://capmeter.app/news/claude-fable-5-2-launch-offers</guid>
+    <pubDate>Sun, 15 Nov 2026 12:00:00 +0000</pubDate>
+    <category>Claude</category>
+    <description>From November 9 to 16, 2026, Pro plans can spend up to 50% of their weekly limit on Fable models. Max and Ultra get one to three Fable limit resets, valid until March 8, 2027.</description>
+  </item>
   <item>
     <title>ChatGPT and Codex will share one usage allowance starting in December</title>
     <link>https://capmeter.app/news/chatgpt-codex-shared-usage-allowance-december-2026</link>

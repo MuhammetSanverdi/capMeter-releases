@@ -107,13 +107,18 @@
   <!-- news:start -->
   <url>
     <loc>https://capmeter.app/news</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://capmeter.app/news/methodology</loc>
     <lastmod>2026-11-11</lastmod>
     <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://capmeter.app/news/claude-fable-5-2-launch-offers</loc>
+    <lastmod>2026-11-15</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://capmeter.app/news/chatgpt-codex-shared-usage-allowance-december-2026</loc>

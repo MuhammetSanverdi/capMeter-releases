@@ -87,6 +87,7 @@ plans and pricing. Each record separates the source's own date from our
 publication date. Index: https://capmeter.app/news · RSS: https://capmeter.app/news/feed.xml ·
 Method: https://capmeter.app/news/methodology
 
+- https://capmeter.app/news/claude-fable-5-2-launch-offers (2026-11-15) — From November 9 to 16, 2026, Pro plans can spend up to 50% of their weekly limit on Fable models. Max and Ultra get one to three Fable limit resets, valid until March 8, 2027.
 - https://capmeter.app/news/chatgpt-codex-shared-usage-allowance-december-2026 (2026-11-11) — From December, Plus, Pro and Business plans will draw ChatGPT and Codex usage from one shared, token-based allowance. OpenAI has not given an exact date or size.
 - https://capmeter.app/news/codex-pro-no-five-hour-limit (2026-11-11) — OpenAI's Codex pricing documentation says Pro plans currently have no five-hour limit. Plus and Standard Business still have one, and weekly limits may apply.
 - https://capmeter.app/news/claude-max-20x-renamed-ultra (2026-11-11) — Max 20x has been renamed Ultra at the same $200 a month. Verified Ultra accounts have no five-hour limit and get 10 times Pro usage every week.
